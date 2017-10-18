@@ -51,6 +51,7 @@ import android.view.View;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityManager;
 
+import com.android.launcher3.config.FeatureFlags;
 import com.android.launcher3.config.ProviderConfig;
 
 import java.io.ByteArrayOutputStream;
@@ -124,6 +125,11 @@ public final class Utilities {
             TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>());
 
     public static final String ALLOW_ROTATION_PREFERENCE_KEY = "pref_allowRotation";
+    public static final String ADAPTIVE_ICONS_PREFERENCE_KEY = "pref_adaptiveIcons";
+    public static final String ICON_PACK_PREFERENCE_KEY = "pref_iconPackPackage";
+    public static final String LEGACY_ICON_PREFERENCE_KEY = "pref_legacyIcons";
+    public static final String ICON_SHAPE_PREFERENCE_KEY = "pref_iconShape";
+    public static final String ICON_SHADOW_PREFERENCE_KEY = "pref_iconShadow";
 
     public static boolean isPropertyEnabled(String propertyName) {
         return Log.isLoggable(propertyName, Log.VERBOSE);
@@ -132,6 +138,22 @@ public final class Utilities {
     public static boolean isAllowRotationPrefEnabled(Context context) {
         return getPrefs(context).getBoolean(ALLOW_ROTATION_PREFERENCE_KEY,
                 getAllowRotationDefaultValue(context));
+    }
+
+    public static boolean isAdaptiveIcons(Context context) {
+        return getPrefs(context).getBoolean(ADAPTIVE_ICONS_PREFERENCE_KEY, FeatureFlags.ADAPTIVE_ICON_ENABLED);
+    }
+
+    public static boolean isLegacyIcons(Context context) {
+        return getPrefs(context).getBoolean(LEGACY_ICON_PREFERENCE_KEY, FeatureFlags.LEGACY_ICON_TREATMENT);
+    }
+
+    public static String getIconShapePath(Context context) {
+        return getPrefs(context).getString(ICON_SHAPE_PREFERENCE_KEY, context.getResources().getString(R.string.icon_mask_square_string));
+    }
+
+    public static boolean isIconShadow(Context context) {
+        return getPrefs(context).getBoolean(ICON_SHADOW_PREFERENCE_KEY, FeatureFlags.ADAPTIVE_ICON_SHADOW);
     }
 
     public static boolean getAllowRotationDefaultValue(Context context) {
