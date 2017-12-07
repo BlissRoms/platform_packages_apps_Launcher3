@@ -20,6 +20,7 @@ import static com.android.launcher3.SessionCommitReceiver.ADD_ICON_PREFERENCE_KE
 import static com.android.launcher3.util.SecureSettingsObserver.newNotificationSettingsObserver;
 
 import android.app.ActionBar;
+import android.app.ActivityManager;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
@@ -115,17 +116,19 @@ public class UserInterface extends SettingsActivity implements PreferenceFragmen
         protected boolean initPreference(Preference preference) {
             switch (preference.getKey()) {
                 case NOTIFICATION_DOTS_PREFERENCE_KEY:
-                    // Listen to system notification dot settings while this UI is active.
-                    mNotificationDotsObserver = newNotificationSettingsObserver(
-                            getActivity(), (NotificationDotsPreference) preference);
-                    mNotificationDotsObserver.register();
-                    // Also listen if notification permission changes
-                    mNotificationDotsObserver.getResolver().registerContentObserver(
-                            Settings.Secure.getUriFor(NOTIFICATION_ENABLED_LISTENERS), false,
-                            mNotificationDotsObserver);
-                    mNotificationDotsObserver.dispatchOnChange();
-                    return true;
-
+                    if (!getContext().getSystemService(ActivityManager.class).isLowRamDevice()) {
+                        // Listen to system notification dot settings while this UI is active.
+                        mNotificationDotsObserver = newNotificationSettingsObserver(
+                                getActivity(), (NotificationDotsPreference) preference);
+                        mNotificationDotsObserver.register();
+                        // Also listen if notification permission changes
+                        mNotificationDotsObserver.getResolver().registerContentObserver(
+                                Settings.Secure.getUriFor(NOTIFICATION_ENABLED_LISTENERS), false,
+                                mNotificationDotsObserver);
+                        mNotificationDotsObserver.dispatchOnChange();
+                        return true;
+                    }
+                    return false;
                 case ADD_ICON_PREFERENCE_KEY:
                     return Utilities.ATLEAST_OREO;
 
