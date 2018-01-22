@@ -1166,7 +1166,8 @@ public abstract class PagedView<T extends View & PageIndicator> extends ViewGrou
                 velocityTracker.computeCurrentVelocity(1000, mMaximumVelocity);
                 int velocityX = (int) velocityTracker.getXVelocity(mActivePointerId);
                 final int deltaX = (int) (x - mDownMotionX);
-                final int pageWidth = getPageAt(mCurrentPage).getMeasuredWidth();
+                final int pageWidth = getPageAt(mCurrentPage) != null ? 
+                                        getPageAt(mCurrentPage).getMeasuredWidth() : 0;
                 boolean isSignificantMove = Math.abs(deltaX) > pageWidth *
                         SIGNIFICANT_MOVE_THRESHOLD;
 
