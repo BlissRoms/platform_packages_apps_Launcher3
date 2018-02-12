@@ -169,6 +169,7 @@ public final class Utilities {
     public static final String KEY_FEED_INTEGRATION = "pref_feed_integration";
     public static final String DESKTOP_SHOW_QSB = "pref_qsb_show";
     public static final String KEY_SWIPE_DOWN_GESTURE = "pref_allowSwipeDownClearAll";
+    public static final String KEY_ICON_SIZE = "pref_icon_size";
 
     public static final String PACKAGE_NAME = "com.google.android.googlequicksearchbox";
 
@@ -206,6 +207,32 @@ public final class Utilities {
 
     public static int getHotseatIcons(Context context, int fallback) {
         return getIconCount(context, HOTSEAT_ICONS, fallback);
+    }
+
+    public static float getIconSizeModifier(Context context) {
+        String saved = getPrefs(context).getString(KEY_ICON_SIZE, "average");
+        float offset;
+        switch (saved) {
+            case "extrasmall":
+                offset = 0.75F;
+                break;
+            case "small":
+                offset = 0.90F;
+                break;
+            case "average":
+                offset = 1.00F;
+                break;
+            case "large":
+                offset = 1.10F;
+                break;
+            case "extralarge":
+                offset = 1.25F;
+                break;
+            default:
+                offset = 1.00F;
+                break;
+        }
+        return offset;
     }
 
     private static int getIconCount(Context context, String preferenceName, int preferenceFallback) {

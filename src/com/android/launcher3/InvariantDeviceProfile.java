@@ -210,11 +210,12 @@ public class InvariantDeviceProfile {
                     .putString(KEY_IDP_GRID_NAME, closestProfile.name).apply();
         }
 
-        iconSize = interpolatedDisplayOption.iconSize;
+        float iconSizeModifier = Utilities.getIconSizeModifier(context);
+        iconSize = interpolatedDisplayOption.iconSize * iconSizeModifier;
         iconShapePath = getIconShapePath(context);
-        landscapeIconSize = interpolatedDisplayOption.landscapeIconSize;
+        landscapeIconSize = interpolatedDisplayOption.landscapeIconSize * iconSizeModifier;
         iconBitmapSize = ResourceUtils.pxFromDp(iconSize, dm);
-        iconTextSize = interpolatedDisplayOption.iconTextSize;
+        iconTextSize = interpolatedDisplayOption.iconTextSize * iconSizeModifier;
         fillResIconDpi = getLauncherIconDensity(iconBitmapSize);
 
         // If the partner customization apk contains any grid overrides, apply them

@@ -29,6 +29,7 @@ import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import androidx.preference.ListPreference;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragment;
 import androidx.preference.PreferenceScreen;
@@ -94,6 +95,9 @@ public class UserInterface extends SettingsActivity implements PreferenceFragmen
             assert actionBar != null;
             actionBar.setDisplayHomeAsUpEnabled(true);
 
+            final ListPreference iconSizes = (ListPreference) findPreference(Utilities.KEY_ICON_SIZE);
+            iconSizes.setSummary(iconSizes.getEntry());
+
             PreferenceScreen screen = getPreferenceScreen();
             for (int i = screen.getPreferenceCount() - 1; i >= 0; i--) {
                 Preference preference = screen.getPreference(i);
@@ -124,6 +128,9 @@ public class UserInterface extends SettingsActivity implements PreferenceFragmen
                 case ADD_ICON_PREFERENCE_KEY:
                     return Utilities.ATLEAST_OREO;
 
+                case Utilities.KEY_ICON_SIZE:
+                    preference.setOnPreferenceChangeListener(this);
+                    return true;
             }
 
             return true;
@@ -146,6 +153,9 @@ public class UserInterface extends SettingsActivity implements PreferenceFragmen
         @Override
         public boolean onPreferenceChange(Preference preference, final Object newValue) {
             switch (preference.getKey()) {
+                case Utilities.KEY_ICON_SIZE:
+                Utilities.restart(getActivity());
+                return true;
             }
             return false;
         }
