@@ -129,6 +129,26 @@ public final class Utilities {
     public static final String KEY_HIDDEN_APPS = "hidden_app";
     public static final String KEY_HIDDEN_APPS_SET = "hidden_app_set";
 
+    public static final String BOTTOM_SEARCH_BAR_KEY = "pref_bottom_search_bar";
+    public static final String TOP_SEARCH_BAR_KEY = "pref_top_search_bar";
+
+    private static final boolean BOTTOM_SEARCH_BAR_DEFAULT = true;
+    private static final boolean TOP_SEARCH_BAR_DEFAULT = true;
+
+    public static final String KEY_SHOW_SWIPEUP_ARROW = "pref_show_swipeup_arrow";
+
+    public static final String GRID_COLUMNS = "pref_grid_columns";
+    public static final String GRID_ROWS = "pref_grid_rows";
+    public static final String HOTSEAT_ICONS = "pref_hotseat_icons";
+    private static final String GRID_COLUMNS_DEFAULT = "default";
+    private static final String GRID_ROWS_DEFAULT = "default";
+    private static final String HOTSEAT_ICONS_DEFAULTS = "default";
+
+    public static boolean showSwipeUpIndicator(Context context) {
+        return getPrefs(context).getBoolean(KEY_SHOW_SWIPEUP_ARROW,
+                true);
+    }
+
     public static boolean isPropertyEnabled(String propertyName) {
         return Log.isLoggable(propertyName, Log.VERBOSE);
     }
@@ -148,6 +168,59 @@ public final class Utilities {
             return originalSmallestWidth >= 600;
         }
         return false;
+    }
+
+    public static boolean isBottomSearchBarVisible(Context context) {
+        return getPrefs(context).getBoolean(BOTTOM_SEARCH_BAR_KEY, BOTTOM_SEARCH_BAR_DEFAULT);
+    }
+
+    public static boolean isTopSearchBarVisible(Context context) {
+        return getPrefs(context).getBoolean(TOP_SEARCH_BAR_KEY, TOP_SEARCH_BAR_DEFAULT);
+    }
+
+    public static boolean qsbEnabled(Context context) {
+        return Integer.valueOf(getDevicePrefs(context).getString("pref_show_clock_weather", "0")) != 1;
+    }
+
+    public static int getGridColumns(Context context, int fallback) {
+        return getIconCount(context, GRID_COLUMNS, GRID_COLUMNS_DEFAULT, fallback);
+    }
+
+    public static int getGridRows(Context context, int fallback) {
+        return getIconCount(context, GRID_ROWS, GRID_ROWS_DEFAULT, fallback);
+    }
+
+    public static int getHotseatIcons(Context context, int fallback) {
+        return getIconCount(context, HOTSEAT_ICONS, HOTSEAT_ICONS_DEFAULTS, fallback);
+    }
+
+    private static int getIconCount(Context context, String preferenceName, String preferenceFallback, int deviceProfileFallback) {
+        String saved = getPrefs(context).getString(preferenceName, preferenceFallback);
+        int num;
+        switch (saved) {
+            case "default":
+                num = deviceProfileFallback;
+                break;
+            case "three":
+                num = 3;
+                break;
+            case "four":
+                num = 4;
+                break;
+            case "five":
+                num = 5;
+                break;
+            case "six":
+                num = 6;
+                break;
+            case "seven":
+                num = 7;
+                break;
+            default:
+                num = deviceProfileFallback;
+                break;
+        }
+        return num;
     }
 
     /**

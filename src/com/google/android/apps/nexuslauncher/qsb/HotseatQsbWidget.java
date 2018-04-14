@@ -4,6 +4,7 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
+import android.app.ActivityManager;
 import android.app.WallpaperInfo;
 import android.app.WallpaperManager;
 import android.content.BroadcastReceiver;
@@ -13,6 +14,8 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Rect;
+import android.os.UserHandle;
+import android.support.v4.graphics.ColorUtils;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.ContextThemeWrapper;
@@ -24,9 +27,11 @@ import com.android.launcher3.CellLayout;
 import com.android.launcher3.Launcher;
 import com.android.launcher3.R;
 import com.android.launcher3.Utilities;
+import com.android.launcher3.dynamicui.WallpaperColorInfo;
 import com.android.launcher3.dragndrop.DragLayer;
+import com.android.launcher3.util.Themes;
 
-public class HotseatQsbWidget extends AbstractQsbLayout {
+public class HotseatQsbWidget extends AbstractQsbLayout implements WallpaperColorInfo.OnChangeListener {
     private boolean mIsDefaultLiveWallpaper;
     private boolean mGoogleHasFocus;
     private AnimatorSet mAnimatorSet;
@@ -52,6 +57,8 @@ public class HotseatQsbWidget extends AbstractQsbLayout {
         mIsDefaultLiveWallpaper = isDefaultLiveWallpaper();
         setColors();
         setOnClickListener(this);
+
+        setVisibility(Utilities.isBottomSearchBarVisible(context) ? VISIBLE : GONE);
     }
 
     static int getBottomMargin(Launcher launcher) {
@@ -64,7 +71,8 @@ public class HotseatQsbWidget extends AbstractQsbLayout {
 
     private void setColors() {
         View.inflate(new ContextThemeWrapper(getContext(), mIsDefaultLiveWallpaper ? R.style.HotseatQsbTheme_Colored : R.style.HotseatQsbTheme), R.layout.qsb_hotseat_content, this);
-        bz(mIsDefaultLiveWallpaper ? 0xCCFFFFFF : 0x99FAFAFA);
+        int color = Themes.getAttrBoolean(mActivity, R.attr.isMainColorDark) ? 0xCC444444 : 0x99FAFAFA;
+        bz(mIsDefaultLiveWallpaper ? 0xCCFFFFFF : color);
     }
 
     private void openQSB() {
@@ -117,7 +125,7 @@ public class HotseatQsbWidget extends AbstractQsbLayout {
             devicePrefs.edit().putInt("key_hotseat_qsb_tap_count", devicePrefs.getInt("key_hotseat_qsb_tap_count", 0) + 1).apply();
             playQsbAnimation();
         } else {
-            getContext().sendOrderedBroadcast(getSearchIntent(), null,
+            getContext().sendOrderedBroadcastAsUser(getSearchIntent(), new UserHandle(ActivityManager.getCurrentUser()), null,
                     new BroadcastReceiver() {
                         @Override
                         public void onReceive(Context context, Intent intent) {
@@ -185,6 +193,9 @@ public class HotseatQsbWidget extends AbstractQsbLayout {
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
         getContext().registerReceiver(mBroadcastReceiver, new IntentFilter(Intent.ACTION_WALLPAPER_CHANGED));
+        WallpaperColorInfo instance = WallpaperColorInfo.getInstance(getContext());
+        instance.addOnChangeListener(this);
+        //onExtractedColorsChanged(instance);
     }
 
     public void onClick(View view) {
@@ -195,8 +206,13 @@ public class HotseatQsbWidget extends AbstractQsbLayout {
     }
 
     protected void onDetachedFromWindow() {
-        super.onDetachedFromWindow();
         getContext().unregisterReceiver(mBroadcastReceiver);
+        WallpaperColorInfo.getInstance(getContext()).removeOnChangeListener(this);
+        super.onDetachedFromWindow();
+    }
+
+    public void onExtractedColorsChanged(final WallpaperColorInfo wallpaperColorInfo) {
+        setColors();
     }
 
     public void onWindowFocusChanged(boolean hasWindowFocus) {

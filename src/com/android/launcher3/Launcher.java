@@ -1395,6 +1395,7 @@ public class Launcher extends BaseActivity
      */
     public void setAllAppsButton(View allAppsButton) {
         mAllAppsButton = allAppsButton;
+        mAllAppsButton.setVisibility(showSwipeUpIndicator() ? View.VISIBLE : View.INVISIBLE);
     }
 
     public View getStartViewForAllAppsRevealAnimation() {
@@ -3233,12 +3234,12 @@ public class Launcher extends BaseActivity
     @Override
     public void bindScreens(ArrayList<Long> orderedScreenIds) {
         // Make sure the first screen is always at the start.
-        if (FeatureFlags.QSB_ON_FIRST_SCREEN &&
+        if (FeatureFlags.QSB_ON_FIRST_SCREEN && Utilities.qsbEnabled(getApplicationContext()) &&
                 orderedScreenIds.indexOf(Workspace.FIRST_SCREEN_ID) != 0) {
             orderedScreenIds.remove(Workspace.FIRST_SCREEN_ID);
             orderedScreenIds.add(0, Workspace.FIRST_SCREEN_ID);
             LauncherModel.updateWorkspaceScreenOrder(this, orderedScreenIds);
-        } else if (!FeatureFlags.QSB_ON_FIRST_SCREEN && orderedScreenIds.isEmpty()) {
+        } else if (!(FeatureFlags.QSB_ON_FIRST_SCREEN && Utilities.qsbEnabled(getApplicationContext())) && orderedScreenIds.isEmpty()) {
             // If there are no screens, we need to have an empty screen
             mWorkspace.addExtraEmptyScreen();
         }
@@ -3261,7 +3262,7 @@ public class Launcher extends BaseActivity
         int count = orderedScreenIds.size();
         for (int i = 0; i < count; i++) {
             long screenId = orderedScreenIds.get(i);
-            if (!FeatureFlags.QSB_ON_FIRST_SCREEN || screenId != Workspace.FIRST_SCREEN_ID) {
+            if (!(FeatureFlags.QSB_ON_FIRST_SCREEN && Utilities.qsbEnabled(getApplicationContext())) || screenId != Workspace.FIRST_SCREEN_ID) {
                 // No need to bind the first screen, as its always bound.
                 mWorkspace.insertNewWorkspaceScreenBeforeEmptyScreen(screenId);
             }
@@ -4063,6 +4064,10 @@ public class Launcher extends BaseActivity
         return ((Launcher) ((ContextWrapper) context).getBaseContext());
     }
 
+    public boolean showSwipeUpIndicator() {
+        return Utilities.showSwipeUpIndicator(getApplicationContext());
+    }
+
     private class RotationPrefChangeHandler implements OnSharedPreferenceChangeListener {
 
         @Override
@@ -4071,6 +4076,9 @@ public class Launcher extends BaseActivity
             if (Utilities.ALLOW_ROTATION_PREFERENCE_KEY.equals(key)) {
                 // Recreate the activity so that it initializes the rotation preference again.
                 recreate();
+            }
+            if (Utilities.KEY_SHOW_SWIPEUP_ARROW.equals(key)) {
+                mAllAppsButton.setVisibility(showSwipeUpIndicator() ? View.VISIBLE : View.INVISIBLE);
             }
         }
     }

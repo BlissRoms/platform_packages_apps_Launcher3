@@ -16,9 +16,11 @@
 
 package com.android.launcher3.hideapps;
 
+import android.app.ActionBar;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.graphics.drawable.Drawable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,24 +32,39 @@ import android.widget.TextView;
 import com.android.launcher3.R;
 import com.android.launcher3.hideapps.SelectableAdapter;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+
 
 class MultiSelectRecyclerViewAdapter extends SelectableAdapter<MultiSelectRecyclerViewAdapter.ViewHolder> {
 
-    private List<ResolveInfo> mResolveInfos;
+    private List<Packages> mPackages;
     private ItemClickListener mClickListener;
     private PackageManager mPackageManager;
+    private final Set<String> mBlackList = new HashSet<>();
 
     MultiSelectRecyclerViewAdapter(Context context, List<ResolveInfo> resolveInfos, ItemClickListener clickListener) {
-        mResolveInfos = resolveInfos;
         mClickListener = clickListener;
         mPackageManager = context.getPackageManager();
+
+        mBlackList.add("com.google.android.googlequicksearchbox");
+        mBlackList.add("com.google.android.apps.wallpaper");
+        mBlackList.add("com.google.android.launcher");
+        mPackages = new ArrayList<>();
+        for (int i = 0; i < resolveInfos.size(); i++) {
+            ResolveInfo info = resolveInfos.get(i);
+            String pn = info.activityInfo.packageName;
+            if (!mBlackList.contains(pn)) {
+                mPackages.add(new Packages(info, pn));
+            }
+        }
     }
 
     // Create new views
     @Override
-    public MultiSelectRecyclerViewAdapter.ViewHolder onCreateViewHolder(ViewGroup parent,
-                                                                        int viewType) {
+    public MultiSelectRecyclerViewAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemLayoutView = LayoutInflater.from(parent.getContext()).inflate(
                 R.layout.hide_item, null);
 
@@ -56,17 +73,38 @@ class MultiSelectRecyclerViewAdapter extends SelectableAdapter<MultiSelectRecycl
 
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, int position) {
-
-        String packageName = mResolveInfos.get(position).activityInfo.packageName;
-        viewHolder.label.setText(mResolveInfos.get(position).loadLabel(mPackageManager));
-        viewHolder.icon.setImageDrawable(mResolveInfos.get(position).loadIcon(mPackageManager));
-
-        viewHolder.checkBox.setChecked(isSelected(packageName));
+        viewHolder.label.setText(mPackages.get(position).getLabel());
+        viewHolder.icon.setImageDrawable(mPackages.get(position).getIcon());
+        viewHolder.checkBox.setChecked(isSelected(mPackages.get(position).getPackageName()));
     }
 
     @Override
     public int getItemCount() {
-        return mResolveInfos.size();
+        return mPackages.size();
+    }
+
+    private class Packages {
+        private String mPackageName;
+        private CharSequence mLabel;
+        private Drawable mIcon;
+
+        public Packages(ResolveInfo info, String packageName) {
+            mPackageName = packageName;
+            mLabel = info.loadLabel(mPackageManager);
+            mIcon = info.loadIcon(mPackageManager);
+        }
+
+        public String getPackageName() {
+            return mPackageName;
+        }
+
+        public CharSequence getLabel() {
+            return mLabel;
+        }
+
+        public Drawable getIcon() {
+            return mIcon;
+        }
     }
 
     class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -98,6 +136,22 @@ class MultiSelectRecyclerViewAdapter extends SelectableAdapter<MultiSelectRecycl
 
     interface ItemClickListener {
         void onItemClicked(int position);
+    }
+
+    @Override
+    void toggleSelection(ActionBar actionBar, int position) {
+        String packageName = mPackages.get(position).getPackageName();
+        if (mSelections.contains(packageName)) {
+            mSelections.remove(packageName);
+        } else {
+            mSelections.add(packageName);
+        }
+        if (!mSelections.isEmpty()) {
+            actionBar.setTitle(String.valueOf(mSelections.size()) + mContext.getString(R.string.hide_app_selected));
+        } else {
+            actionBar.setTitle(mContext.getString(R.string.hidden_app));
+        }
+        notifyItemChanged(position);
     }
 }
 

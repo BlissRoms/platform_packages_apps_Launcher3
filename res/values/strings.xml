@@ -360,5 +360,53 @@
     <string name="hidden_app">All apps</string>
     <string name="hide_selected">Hide selected app(s)</string>
     <string name="more">More</string>
+    <string name="reset_hidden_apps">Reset all</string>
+    <string name="reset_hidden_apps_done">Hidden apps are now available</string>
 
+    <!-- Swipe up indicator -->
+    <string name="show_swipeup_arrow">Swipe up indicator</string>
+    <string name="show_swipeup_arrow_summary">Show the swipe up arrow indicator on top of the dock</string>
+
+
+    <string name="pref_show_clock_weather">Home screen date and weather</string>
+    <string name="pref_show_clock_weather_both">Show both date and weather</string>
+    <string name="pref_show_clock_weather_nothing">Don\'t show</string>
+    <string name="pref_show_clock_weather_clock_only">Show date only</string>
+    <string name="pref_show_clock_weather_weather_only">Show weather only</string>
+
+    <!-- Hide/Show search bars -->
+    <string name="bottom_search_bar_title">Bottom search bar</string>
+    <string name="bottom_search_bar_summary">Show the bottom search bar at the bottom of the dock</string>
+    <string name="top_search_bar_title">Top search bar</string>
+    <string name="top_search_bar_summary">Show the bottom search at the top of the app drawer</string>
+
+    <string name="num_default">Default</string>
+    <string name="num_three">Three</string>
+    <string name="num_four">Four</string>
+    <string name="num_five">Five</string>
+    <string name="num_six">Six</string>
+    <string name="num_seven">Seven</string>
+
+    <string-array name="grid_names">
+        <item>@string/num_default</item>
+        <item>@string/num_three</item>
+        <item>@string/num_four</item>
+        <item>@string/num_five</item>
+        <item>@string/num_six</item>
+        <item>@string/num_seven</item>
+    </string-array>
+
+    <string-array name="grid_values">
+        <item>default</item>
+        <item>three</item>
+        <item>four</item>
+        <item>five</item>
+        <item>six</item>
+        <item>seven</item>
+    </string-array>
+
+    <string name="grid_category_title">Columns and rows</string>
+    <string name="number_of_columns_title">Grid columns</string>
+    <string name="number_of_rows_title">Grid rows</string>
+    <string name="number_of_hotseat_title">Hotseat icons</string>
 </resources>

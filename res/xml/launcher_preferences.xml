@@ -39,6 +39,62 @@
             android:summary="@string/pref_show_google_now_summary"
             android:defaultValue="true" />
 
+        <SwitchPreference
+            android:key="pref_show_swipeup_arrow"
+            android:title="@string/show_swipeup_arrow"
+            android:summary="@string/show_swipeup_arrow_summary"
+            android:defaultValue="true" />
+
+        <ListPreference
+            android:key="pref_show_clock_weather"
+            android:title="@string/pref_show_clock_weather"
+            android:summary="%s"
+            android:entries="@array/pref_show_clock_weather_names"
+            android:entryValues="@array/pref_show_clock_weather_values"
+            android:defaultValue=""
+            android:persistent="false" />
+
+        <SwitchPreference
+            android:key="pref_bottom_search_bar"
+            android:title="@string/bottom_search_bar_title"
+            android:summary="@string/bottom_search_bar_summary"
+            android:defaultValue="true"
+            android:persistent="true" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:key="grid_category"
+        android:title="@string/grid_category_title">
+        <ListPreference
+            android:key="pref_grid_columns"
+            android:title="@string/number_of_columns_title"
+            android:summary="%s"
+            android:entries="@array/grid_names"
+            android:entryValues="@array/grid_values"
+            android:defaultValue="default"
+            android:persistent="true"
+            />
+
+        <ListPreference
+            android:key="pref_grid_rows"
+            android:title="@string/number_of_rows_title"
+            android:summary="%s"
+            android:entries="@array/grid_names"
+            android:entryValues="@array/grid_values"
+            android:defaultValue="default"
+            android:persistent="true"
+            />
+
+        <ListPreference
+            android:key="pref_hotseat_icons"
+            android:title="@string/number_of_hotseat_title"
+            android:summary="%s"
+            android:entries="@array/grid_names"
+            android:entryValues="@array/grid_values"
+            android:defaultValue="default"
+            android:persistent="true"
+            />
     </PreferenceCategory>
 
     <PreferenceCategory
@@ -50,6 +106,13 @@
             android:title="@string/title_app_suggestions"
             android:summary="@string/summary_app_suggestions"
             android:defaultValue="true" />
+
+        <SwitchPreference
+            android:key="pref_top_search_bar"
+            android:title="@string/top_search_bar_title"
+            android:summary="@string/top_search_bar_summary"
+            android:defaultValue="true"
+            android:persistent="true" />
 
         <Preference
             android:key="hidden_app"
