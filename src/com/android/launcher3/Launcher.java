@@ -33,6 +33,7 @@ import android.content.ActivityNotFoundException;
 import android.content.BroadcastReceiver;
 import android.content.ComponentCallbacks2;
 import android.content.ComponentName;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.DialogInterface;
@@ -127,6 +128,7 @@ import com.android.launcher3.util.MultiHashMap;
 import com.android.launcher3.util.PackageManagerHelper;
 import com.android.launcher3.util.PackageUserKey;
 import com.android.launcher3.util.PendingRequestArgs;
+import com.android.launcher3.util.CustomSettingsObserver;
 import com.android.launcher3.util.SystemUiController;
 import com.android.launcher3.util.TestingUtils;
 import com.android.launcher3.util.Themes;
@@ -348,6 +350,21 @@ public class Launcher extends BaseActivity
 
     private RotationPrefChangeHandler mRotationPrefChangeHandler;
 
+    private int mSystemTheme = 0;
+    private SystemThemeObserver mSettingsObserver;
+
+    private class SystemThemeObserver extends CustomSettingsObserver.System {
+        public SystemThemeObserver(ContentResolver resolver) {
+            super(resolver);
+        }
+
+        @Override
+        public void onSettingChanged(int keySettingInt) {
+            mSystemTheme = keySettingInt;
+            onThemeChanged();
+        }
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         if (DEBUG_STRICT_MODE) {
@@ -374,7 +391,13 @@ public class Launcher extends BaseActivity
 
         WallpaperColorInfo wallpaperColorInfo = WallpaperColorInfo.getInstance(this);
         wallpaperColorInfo.setOnThemeChangeListener(this);
-        overrideTheme(wallpaperColorInfo.isDark(), wallpaperColorInfo.supportsDarkText());
+
+        mSettingsObserver = new SystemThemeObserver(this.getContentResolver());
+        mSettingsObserver.register("system_ui_theme");
+        mSystemTheme = mSettingsObserver.getSettingInt();
+        boolean forceDark = mSystemTheme == 2;
+        boolean forceLight = mSystemTheme == 1;
+        overrideTheme(wallpaperColorInfo.isDark(), wallpaperColorInfo.supportsDarkText(), forceDark, forceLight);
 
         super.onCreate(savedInstanceState);
 
@@ -494,8 +517,8 @@ public class Launcher extends BaseActivity
         recreate();
     }
 
-    protected void overrideTheme(boolean isDark, boolean supportsDarkText) {
-        if (isDark) {
+    protected void overrideTheme(boolean isDark, boolean supportsDarkText, boolean forceDark, boolean forceLight) {
+        if (isDark || forceDark) {
             setTheme(R.style.LauncherThemeDark);
         } else if (supportsDarkText) {
             setTheme(R.style.LauncherThemeDarkText);
@@ -891,6 +914,9 @@ public class Launcher extends BaseActivity
     @Override
     protected void onStop() {
         super.onStop();
+
+        getWorkspace().switchTouchListeners(false);
+
         FirstFrameAnimatorHelper.setIsVisible(false);
 
         if (mLauncherCallbacks != null) {
@@ -1054,6 +1080,9 @@ public class Launcher extends BaseActivity
             mLauncherCallbacks.onResume();
         }
 
+        if (!isWorkspaceLoading()) {
+            getWorkspace().switchTouchListeners(true);
+        }
     }
 
     @Override
@@ -1065,6 +1094,8 @@ public class Launcher extends BaseActivity
         mPaused = true;
         mDragController.cancelDrag();
         mDragController.resetLastGestureUpTime();
+
+        getWorkspace().switchTouchListeners(false);
 
         // We call onHide() aggressively. The custom content callbacks should be able to
         // debounce excess onHide calls.
@@ -1827,6 +1858,7 @@ public class Launcher extends BaseActivity
         super.onDestroy();
 
         unregisterReceiver(mReceiver);
+        getWorkspace().switchTouchListeners(false);
         mWorkspace.removeCallbacks(mBuildLayersRunnable);
         mWorkspace.removeFolderListeners();
 
@@ -1855,6 +1887,7 @@ public class Launcher extends BaseActivity
                 .removeAccessibilityStateChangeListener(this);
 
         WallpaperColorInfo.getInstance(this).setOnThemeChangeListener(null);
+        mSettingsObserver.unregister();
 
         LauncherAnimUtils.onDestroyActivity();
 
@@ -2508,10 +2541,13 @@ public class Launcher extends BaseActivity
                 .putExtra(Utilities.EXTRA_WALLPAPER_OFFSET, offset);
 
         String pickerPackage = getString(R.string.wallpaper_picker_package);
-        boolean hasTargetPackage = !TextUtils.isEmpty(pickerPackage);
-        if (hasTargetPackage) {
-            intent.setPackage(pickerPackage);
-        }
+        boolean hasTargetPackage = /*!TextUtils.isEmpty(pickerPackage);
+        try {
+            if (hasTargetPackage && getPackageManager().getApplicationInfo(pickerPackage, 0).enabled) {
+                intent.setPackage(pickerPackage);
+            }
+        } catch (PackageManager.NameNotFoundException ex) {
+        }*/false;
 
         intent.setSourceBounds(getViewBounds(v));
         try {
@@ -2534,6 +2570,7 @@ public class Launcher extends BaseActivity
                 .setPackage(getPackageName());
         intent.setSourceBounds(getViewBounds(v));
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        showWorkspace(false);
         startActivity(intent, getActivityLaunchOptions(v));
     }
 

@@ -72,5 +72,4 @@
         android:textAllCaps="true"
         android:textColor="?attr/workspaceTextColor"
         android:textSize="12sp" />
-
 </LinearLayout>

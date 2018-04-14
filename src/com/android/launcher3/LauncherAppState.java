@@ -47,6 +47,7 @@ public class LauncherAppState {
     // We do not need any synchronization for this variable as its only written on UI thread.
     private static LauncherAppState INSTANCE;
 
+    private final AppFilter mAppFilter;
     private final Context mContext;
     private final LauncherModel mModel;
     private final IconCache mIconCache;
@@ -98,7 +99,8 @@ public class LauncherAppState {
         mInvariantDeviceProfile = new InvariantDeviceProfile(mContext);
         mIconCache = new IconCache(mContext, mInvariantDeviceProfile);
         mWidgetCache = new WidgetPreviewLoader(mContext, mIconCache);
-        mModel = new LauncherModel(this, mIconCache, AppFilter.newInstance(mContext));
+        mAppFilter = new StringSetAppFilter();
+        mModel = new LauncherModel(this, mIconCache, mAppFilter);
 
         LauncherAppsCompat.getInstance(mContext).addOnAppsChangedCallback(mModel);
 
@@ -131,7 +133,7 @@ public class LauncherAppState {
                     mContext.getContentResolver()) {
                 @Override
                 public void onSettingChanged(boolean isNotificationBadgingEnabled) {
-                    if (isNotificationBadgingEnabled) {
+                    if (isNotificationBadgingEnabled && Utilities.ATLEAST_NOUGAT) {
                         NotificationListener.requestRebind(new ComponentName(
                                 mContext, NotificationListener.class));
                     }
@@ -184,9 +186,9 @@ public class LauncherAppState {
     }
 
     private static LauncherProvider getLocalProvider(Context context) {
-        try (ContentProviderClient cl = context.getContentResolver()
-                .acquireContentProviderClient(LauncherProvider.AUTHORITY)) {
-            return (LauncherProvider) cl.getLocalContentProvider();
-        }
+        ContentProviderClient cl = context.getContentResolver().acquireContentProviderClient(LauncherProvider.AUTHORITY);
+        LauncherProvider provider = (LauncherProvider) cl.getLocalContentProvider();
+        cl.release();
+        return provider;
     }
 }

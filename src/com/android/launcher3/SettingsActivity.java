@@ -47,6 +47,7 @@ public class SettingsActivity extends Activity {
     public static final String NOTIFICATION_BADGING = "notification_badging";
     /** Hidden field Settings.Secure.ENABLED_NOTIFICATION_LISTENERS */
     private static final String NOTIFICATION_ENABLED_LISTENERS = "enabled_notification_listeners";
+    private static final String HIDDEN_APPS = "hidden_app";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,8 +98,8 @@ public class SettingsActivity extends Activity {
             if (!Utilities.ATLEAST_OREO) {
                 getPreferenceScreen().removePreference(
                         findPreference(SessionCommitReceiver.ADD_ICON_PREFERENCE_KEY));
-                getPreferenceScreen().removePreference(iconBadgingPref);
-            } else if (!getResources().getBoolean(R.bool.notification_badging_enabled)) {
+            }
+            if (!getResources().getBoolean(R.bool.notification_badging_enabled)) {
                 getPreferenceScreen().removePreference(iconBadgingPref);
             } else {
                 // Listen to system notification badge settings while this UI is active.
@@ -115,6 +116,16 @@ public class SettingsActivity extends Activity {
                     getPreferenceScreen().removePreference(iconShapeOverride);
                 }
             }
+
+            Preference hiddenApp = findPreference(Utilities.KEY_HIDDEN_APPS);
+            hiddenApp.setOnPreferenceClickListener(
+                preference -> {
+                    Intent intent = new Intent("com.android.launcher3.hideapps.HIDE_APPS")
+                            .setPackage("com.android.launcher3");
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    getActivity().startActivity(intent);
+                    return false;
+            });
         }
 
         @Override
@@ -163,6 +174,7 @@ public class SettingsActivity extends Activity {
         private final ButtonPreference mBadgingPref;
         private final ContentResolver mResolver;
         private final FragmentManager mFragmentManager;
+        private boolean serviceEnabled = true;
 
         public IconBadgingObserver(ButtonPreference badgingPref, ContentResolver resolver,
                 FragmentManager fragmentManager) {
@@ -176,7 +188,6 @@ public class SettingsActivity extends Activity {
         public void onSettingChanged(boolean enabled) {
             int summary = enabled ? R.string.icon_badging_desc_on : R.string.icon_badging_desc_off;
 
-            boolean serviceEnabled = true;
             if (enabled) {
                 // Check if the listener is enabled or not.
                 String enabledListeners =
@@ -191,14 +202,22 @@ public class SettingsActivity extends Activity {
                 }
             }
             mBadgingPref.setWidgetFrameVisible(!serviceEnabled);
-            mBadgingPref.setOnPreferenceClickListener(serviceEnabled ? null : this);
+            mBadgingPref.setOnPreferenceClickListener(serviceEnabled && Utilities.ATLEAST_OREO ? null : this);
             mBadgingPref.setSummary(summary);
 
         }
 
         @Override
         public boolean onPreferenceClick(Preference preference) {
-            new NotificationAccessConfirmation().show(mFragmentManager, "notification_access");
+            if (!Utilities.ATLEAST_OREO && serviceEnabled) {
+                ComponentName cn = new ComponentName(preference.getContext(), NotificationListener.class);
+                Intent intent = new Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS)
+                        .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                        .putExtra(":settings:fragment_args_key", cn.flattenToString());
+                preference.getContext().startActivity(intent);
+            } else {
+                new NotificationAccessConfirmation().show(mFragmentManager, "notification_access");
+            }
             return true;
         }
     }
