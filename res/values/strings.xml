@@ -339,4 +339,7 @@
 
     <!-- Failed action error message: e.g. Failed: Pause -->
     <string name="remote_action_failed">Failed: <xliff:g id="what" example="Pause">%1$s</xliff:g></string>
+
+    <string name="keep_scroll_state_pref_title">Save scroll position</string>
+
 </resources>
