@@ -344,4 +344,7 @@
     <string name="iconPackPackageDefault" translatable="false">""</string>
     <string name="icon_pack">Icon pack</string>
     <string name="icon_pack_summary">Select a custom icon pack</string>
+
+    <string name="keep_scroll_state_pref_title">Save scroll position</string>
+
 </resources>
