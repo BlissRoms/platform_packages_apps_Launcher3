@@ -14,8 +14,6 @@
      limitations under the License.
 -->
 <resources>
-    <!-- Application name -->
-    <string name="lineageos_app_name" translatable="false">Trebuchet</string>
 
     <!-- Settings -->
 
