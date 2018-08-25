@@ -163,6 +163,7 @@ public final class Utilities {
     public static final String DATE_STYLE_TRANSFORM = "pref_date_transform";
     public static final String DATE_STYLE_SPACING = "pref_date_spacing";
     public static final String KEY_ALLAPPS_SHOW_PREDICTIONS = "last_prediction_enabled_state";
+    public static final String KEY_SCROLL_POSITION = "pref_keepScrollState";
 
     public static final String KEY_HOMESCREEN_DT_GESTURES = "pref_homescreen_dt_gestures";
 
@@ -262,6 +263,10 @@ public final class Utilities {
 
     public static boolean showAllAppsPredictions(Context context) {
          return getPrefs(context).getBoolean(KEY_ALLAPPS_SHOW_PREDICTIONS, false);
+    }
+
+    public static boolean scrollPosition(Context context) {
+         return getPrefs(context).getBoolean(KEY_SCROLL_POSITION, false);
     }
 
     public static boolean showQuickspace(Context context) {
