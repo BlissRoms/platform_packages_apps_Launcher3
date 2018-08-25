@@ -35,6 +35,7 @@ import com.android.launcher3.DeviceProfile;
 import com.android.launcher3.Insettable;
 import com.android.launcher3.Launcher;
 import com.android.launcher3.R;
+import com.android.launcher3.Utilities;
 import com.android.launcher3.anim.PropertySetter;
 import com.android.launcher3.uioverrides.plugins.PluginManagerWrapper;
 import com.android.systemui.plugins.AllAppsRow;
@@ -269,6 +270,8 @@ public class FloatingHeaderView extends LinearLayout implements
 
     protected void applyVerticalMove() {
         int uncappedTranslationY = mTranslationY;
+        int maxTranslation = mMaxTranslation - mCurrentRV.getCurrentScrollY();
+
         mTranslationY = Math.max(mTranslationY, -mMaxTranslation);
 
         if (mCollapsed || uncappedTranslationY < mTranslationY - mHeaderTopPadding) {
@@ -281,9 +284,8 @@ public class FloatingHeaderView extends LinearLayout implements
                 row.setVerticalScroll(uncappedTranslationY, false /* isScrolledOut */);
             }
         }
-
         mTabLayout.setTranslationY(mTranslationY);
-        mClip.top = mMaxTranslation + mTranslationY;
+        mClip.top = maxTranslation + mTranslationY;
         // clipping on a draw might cause additional redraw
         mMainRV.setClipBounds(mClip);
         if (mWorkRV != null) {
@@ -316,7 +318,9 @@ public class FloatingHeaderView extends LinearLayout implements
         }
         mHeaderCollapsed = false;
         mSnappedScrolledY = -mMaxTranslation;
-        mCurrentRV.scrollToTop();
+        if(!Utilities.scrollPosition(getContext())) {
+            mCurrentRV.scrollToTop();
+        }
     }
 
     public boolean isExpanded() {

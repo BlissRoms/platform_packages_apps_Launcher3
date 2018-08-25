@@ -155,6 +155,7 @@ public final class Utilities {
     public static final String EXTRA_WALLPAPER_FLAVOR = "com.android.launcher3.WALLPAPER_FLAVOR";
 
     public static final String SEARCH_PACKAGE = "com.google.android.googlequicksearchbox";
+    public static final String KEY_SCROLL_POSITION = "pref_keepScrollState";
 
     public static final String DATE_FORMAT_KEY = "pref_date_format";
 
@@ -205,6 +206,10 @@ public final class Utilities {
             Log.e(TAG, "Error formatting At A Glance date", t);
             return DateUtils.formatDateTime(context, timeInMillis, DateUtils.FORMAT_SHOW_WEEKDAY | DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_ABBREV_MONTH);
         }
+    }
+
+    public static boolean scrollPosition(Context context) {
+         return getPrefs(context).getBoolean(KEY_SCROLL_POSITION, false);
     }
 
     /**
