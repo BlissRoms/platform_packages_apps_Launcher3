@@ -128,7 +128,7 @@ public class Homescreen extends SettingsActivity implements PreferenceFragment.O
 
         @Override
         public boolean onPreferenceChange(Preference preference, final Object newValue) {
-            Utilities.restart(getActivity());
+            SettingsActivity.restartNeeded = true;
             return true;
         }
 

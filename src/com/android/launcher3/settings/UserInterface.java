@@ -154,7 +154,7 @@ public class UserInterface extends SettingsActivity implements PreferenceFragmen
         public boolean onPreferenceChange(Preference preference, final Object newValue) {
             switch (preference.getKey()) {
                 case Utilities.KEY_ICON_SIZE:
-                Utilities.restart(getActivity());
+                SettingsActivity.restartNeeded = true;
                 return true;
             }
             return false;
