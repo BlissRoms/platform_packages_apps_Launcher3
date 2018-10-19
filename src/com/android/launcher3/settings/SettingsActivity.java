@@ -79,6 +79,8 @@ public class SettingsActivity extends Activity
 
     private static Context mContext;
 
+    public static boolean restartNeeded = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -113,9 +115,8 @@ public class SettingsActivity extends Activity
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        if (Utilities.KEY_DT_GESTURE.equals(key)) {
-                Utilities.restart(this);
-   }
+        restartNeeded = true;
+    }
 
     public interface OnResumePreferenceCallback {
         void onResume();
@@ -182,6 +183,14 @@ public class SettingsActivity extends Activity
 
             getPreferenceManager().setSharedPreferencesName(LauncherFiles.SHARED_PREFERENCES_KEY);
             setPreferencesFromResource(R.xml.launcher_preferences, rootKey);
+
+            HomeKeyWatcher mHomeKeyListener = new HomeKeyWatcher(getActivity());
+            mHomeKeyListener.setOnHomePressedListener(() -> {
+                if (restartNeeded) {
+                    Utilities.restart(getActivity());
+                }
+            });
+            mHomeKeyListener.startWatch();
 
             PreferenceScreen screen = getPreferenceScreen();
             for (int i = screen.getPreferenceCount() - 1; i >= 0; i--) {
@@ -327,6 +336,9 @@ public class SettingsActivity extends Activity
                 mNotificationDotsObserver = null;
             }
             super.onDestroy();
+            if (restartNeeded) {
+                Utilities.restart(getActivity());
+            }
         }
     }
 }
