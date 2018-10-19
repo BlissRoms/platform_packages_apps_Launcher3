@@ -21,6 +21,8 @@ import static com.android.launcher3.ItemInfoWithIcon.FLAG_ICON_BADGED;
 import android.animation.ValueAnimator;
 import android.annotation.TargetApi;
 import android.app.ActivityManager;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.app.Person;
 import android.app.ProgressDialog;
 import android.app.WallpaperManager;
@@ -166,6 +168,7 @@ public final class Utilities {
     public static final String ALLAPPS_SHOW_LABEL = "pref_allapps_show_label";
     public static final String KEY_FEED_INTEGRATION = "pref_feed_integration";
     public static final String DESKTOP_SHOW_QSB = "pref_qsb_show";
+    public static final String KEY_SWIPE_DOWN_GESTURE = "pref_allowSwipeDownClearAll";
 
     public static final String PACKAGE_NAME = "com.google.android.googlequicksearchbox";
 
@@ -834,12 +837,25 @@ public final class Utilities {
 
     public static void restart(final Context context) {
         ProgressDialog.show(context, null, context.getString(R.string.state_loading), true, false);
-        new LooperExecutor(LauncherModel.getWorkerLooper()).execute(() -> {
-            try {
-                Thread.sleep(WAIT_BEFORE_RESTART);
-            } catch (Exception ignored) {
+        new LooperExecutor(LauncherModel.getWorkerLooper()).execute(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Thread.sleep(WAIT_BEFORE_RESTART);
+                } catch (Exception e) {
+                }
+
+                Intent intent = new Intent(Intent.ACTION_MAIN)
+                        .addCategory(Intent.CATEGORY_HOME)
+                        .setPackage(context.getPackageName())
+                        .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+                PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT | PendingIntent.FLAG_ONE_SHOT);
+                AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+                alarmManager.setExact(AlarmManager.ELAPSED_REALTIME, SystemClock.elapsedRealtime() + 50, pendingIntent);
+
+                android.os.Process.killProcess(android.os.Process.myPid());
             }
-            android.os.Process.killProcess(android.os.Process.myPid());
         });
     }
 }

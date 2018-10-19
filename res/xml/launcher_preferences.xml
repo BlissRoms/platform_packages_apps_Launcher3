@@ -17,110 +17,58 @@
 <androidx.preference.PreferenceScreen
     xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <com.android.launcher3.settings.NotificationDotsPreference
-        android:key="pref_icon_badging"
-        android:title="@string/notification_dots_title"
-        android:persistent="false"
-        android:widgetLayout="@layout/notification_pref_warning" >
-        <intent android:action="android.settings.NOTIFICATION_SETTINGS">
-            <!-- This extra highlights the "Allow notification dots" field in Notification settings -->
-            <extra
-                android:name=":settings:fragment_args_key"
-                android:value="notification_badging" />
-        </intent>
-    </com.android.launcher3.settings.NotificationDotsPreference>
+    <Preference
+        android:key="home_screen"
+        android:title="@string/home_category_title"
+        android:summary="@string/home_category_summary"
+        android:icon="@drawable/homescreen"
+        android:layout="@layout/settings_layout">
+    <intent
+            android:action="android.settings.APPLICATION_DETAILS_SETTINGS"
+            android:targetPackage="com.android.launcher3"
+            android:targetClass="com.android.launcher3.settings.Homescreen" />
+    </Preference>
 
-    <SwitchPreference
-        android:defaultValue="false"
-        android:key="pref_feed_integration"
-        android:persistent="true"
-        android:title="@string/settings_feed" />
+    <Preference
+        android:key="ui"
+        android:title="@string/ui_category_title"
+        android:summary="@string/ui_category_summary"
+        android:icon="@drawable/ui"
+        android:layout="@layout/settings_layout">
+        <intent
+            android:action="android.settings.APPLICATION_DETAILS_SETTINGS"
+            android:targetPackage="com.android.launcher3"
+            android:targetClass="com.android.launcher3.settings.UserInterface" />
+    </Preference>
 
-    <SwitchPreference
-        android:key="pref_add_icon_to_home"
-        android:title="@string/auto_add_shortcuts_label"
-        android:summary="@string/auto_add_shortcuts_description"
-        android:defaultValue="true"
-        android:persistent="true" />
+    <Preference
+        android:key="app_drawer"
+        android:title="@string/app_drawer_category_title"
+        android:summary="@string/app_drawer_category_summary"
+        android:icon="@drawable/appdrawer"
+        android:layout="@layout/settings_layout">
+    <intent
+            android:action="android.settings.APPLICATION_DETAILS_SETTINGS"
+            android:targetPackage="com.android.launcher3"
+            android:targetClass="com.android.launcher3.settings.AppDrawer" />
+    </Preference>
 
-    <SwitchPreference
-        android:key="pref_allowRotation"
-        android:title="@string/allow_rotation_title"
-        android:summary="@string/allow_rotation_desc"
-        android:defaultValue="@bool/allow_rotation"
-        android:persistent="true" />
-
-    <SwitchPreference
-        android:key="pref_allowSwipeDownClearAll"
-        android:title="@string/allow_swipe_down_clearall_title"
-        android:summary="@string/allow_swipe_down_clearall_desc"
-        android:defaultValue="@bool/allow_swipe_down_clearall"
-        android:persistent="true" />
-
-    <SwitchPreference
-        android:key="pref_grid_options"
-        android:title="Enable grid options"
-        android:defaultValue="false"
-        android:persistent="true" />
-
-    <SwitchPreference
-        android:defaultValue="true"
-        android:key="pref_qsb_show"
-        android:persistent="true"
-        android:summary="@string/pref_qsb_show_summary"
-        android:title="@string/pref_qsb_show_title"/>
+    <Preference
+        android:key="gestures"
+        android:title="@string/gestures_category_title"
+        android:summary="@string/gestures_category_summary"
+        android:icon="@drawable/gestures"
+        android:layout="@layout/settings_layout">
+    <intent
+            android:action="android.settings.APPLICATION_DETAILS_SETTINGS"
+            android:targetPackage="com.android.launcher3"
+            android:targetClass="com.android.launcher3.settings.Gestures" />
+    </Preference>
 
     <androidx.preference.PreferenceScreen
         android:key="pref_developer_options"
         android:persistent="false"
         android:title="Developer Options"
         android:fragment="com.android.launcher3.settings.DeveloperOptionsFragment"/>
-
-    <SwitchPreference
-        android:key="pref_desktop_show_label"
-        android:title="@string/desktop_show_label_title"
-        android:summary="@string/desktop_show_label_summary"
-        android:defaultValue="true"
-        android:persistent="true"/>
-
-    <SwitchPreference
-        android:key="pref_allapps_show_label"
-        android:title="@string/allapps_show_label_title"
-        android:summary="@string/allapps_show_label_summary"
-        android:defaultValue="true"
-        android:persistent="true"/>
-
-    <PreferenceCategory
-        android:key="grid_category"
-        android:title="@string/grid_category_title">
-
-    <ListPreference
-        android:key="pref_grid_columns"
-        android:title="@string/number_of_columns_title"
-        android:summary="%s"
-        android:entries="@array/grid_names"
-        android:entryValues="@array/grid_values"
-        android:defaultValue="-1"
-        android:persistent="true" />
-
-    <ListPreference
-        android:key="pref_grid_rows"
-        android:title="@string/number_of_rows_title"
-        android:summary="%s"
-        android:entries="@array/grid_names"
-        android:entryValues="@array/grid_values"
-        android:defaultValue="-1"
-        android:persistent="true" />
-
-
-    <ListPreference
-        android:key="pref_hotseat_icons"
-        android:title="@string/number_of_hotseat_title"
-        android:summary="%s"
-        android:entries="@array/grid_names"
-        android:entryValues="@array/grid_values"
-        android:defaultValue="-1"
-        android:persistent="true" />
-     </PreferenceCategory>
 
 </androidx.preference.PreferenceScreen>

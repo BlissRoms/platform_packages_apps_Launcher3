@@ -16,25 +16,12 @@
 
 package com.android.launcher3.settings;
 
-import static com.android.launcher3.SessionCommitReceiver.ADD_ICON_PREFERENCE_KEY;
-import static com.android.launcher3.states.RotationHelper.ALLOW_ROTATION_PREFERENCE_KEY;
-import static com.android.launcher3.states.RotationHelper.getAllowRotationDefaultValue;
-import static com.android.launcher3.util.SecureSettingsObserver.newNotificationSettingsObserver;
-
 import android.app.Activity;
-import android.app.AlarmManager;
 import android.app.DialogFragment;
 import android.app.Fragment;
-import android.app.PendingIntent;
-import android.app.ProgressDialog;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.content.pm.ApplicationInfo;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.os.SystemClock;
 import android.provider.Settings;
 import android.text.TextUtils;
 import android.util.Log;
@@ -48,23 +35,19 @@ import com.android.launcher3.graphics.GridOptionsProvider;
 import com.android.launcher3.uioverrides.plugins.PluginManagerWrapper;
 import com.android.launcher3.util.SecureSettingsObserver;
 
-import androidx.preference.ListPreference;
 import androidx.preference.Preference;
-import androidx.preference.Preference.OnPreferenceChangeListener;
 import androidx.preference.PreferenceFragment;
 import androidx.preference.PreferenceFragment.OnPreferenceStartFragmentCallback;
 import androidx.preference.PreferenceFragment.OnPreferenceStartScreenCallback;
 import androidx.preference.PreferenceGroup.PreferencePositionCallback;
 import androidx.preference.PreferenceScreen;
-import androidx.preference.SwitchPreference;
 import androidx.recyclerview.widget.RecyclerView;
 
 /**
  * Settings activity for Launcher. Currently implements the following setting: Allow rotation
  */
 public class SettingsActivity extends Activity
-        implements OnPreferenceStartFragmentCallback, OnPreferenceStartScreenCallback,
-        SharedPreferences.OnSharedPreferenceChangeListener{
+        implements OnPreferenceStartFragmentCallback, OnPreferenceStartScreenCallback {
 
     private static final String DEVELOPER_OPTIONS_KEY = "pref_developer_options";
     private static final String FLAGS_PREFERENCE_KEY = "flag_toggler";
@@ -100,28 +83,6 @@ public class SettingsActivity extends Activity
             getFragmentManager().beginTransaction()
                     .replace(android.R.id.content, f)
                     .commit();
-        }
-        Utilities.getPrefs(getApplicationContext()).registerOnSharedPreferenceChangeListener(this);
-    }
-    @Override
-    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        if (GRID_OPTIONS_PREFERENCE_KEY.equals(key)) {
-
-            final ComponentName cn = new ComponentName(getApplicationContext(),
-                    GridOptionsProvider.class);
-            Context c = getApplicationContext();
-            int oldValue = c.getPackageManager().getComponentEnabledSetting(cn);
-            int newValue;
-            if (Utilities.getPrefs(c).getBoolean(GRID_OPTIONS_PREFERENCE_KEY, false)) {
-                newValue = PackageManager.COMPONENT_ENABLED_STATE_ENABLED;
-            } else {
-                newValue = PackageManager.COMPONENT_ENABLED_STATE_DISABLED;
-            }
-
-            if (oldValue != newValue) {
-                c.getPackageManager().setComponentEnabledSetting(cn, newValue,
-                        PackageManager.DONT_KILL_APP);
-            }
         }
     }
 
@@ -162,8 +123,6 @@ public class SettingsActivity extends Activity
      */
     public static class LauncherSettingsFragment extends PreferenceFragment {
 
-        private SecureSettingsObserver mNotificationDotsObserver;
-
         private String mHighLightKey;
         private boolean mPreferenceHighlighted = false;
 
@@ -189,83 +148,6 @@ public class SettingsActivity extends Activity
                     screen.removePreference(preference);
                 }
             }
-
-            final ListPreference gridColumns = (ListPreference) findPreference(Utilities.GRID_COLUMNS);
-            gridColumns.setSummary(gridColumns.getEntry());
-            gridColumns.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
-                public boolean onPreferenceChange(Preference preference, Object newValue) {
-                    int index = gridColumns.findIndexOfValue((String) newValue);
-                    gridColumns.setSummary(gridColumns.getEntries()[index]);
-                    Utilities.restart(getActivity());
-                    return true;
-                }
-            });
-
-            final ListPreference gridRows = (ListPreference) findPreference(Utilities.GRID_ROWS);
-            gridRows.setSummary(gridRows.getEntry());
-            gridRows.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
-                public boolean onPreferenceChange(Preference preference, Object newValue) {
-                    int index = gridRows.findIndexOfValue((String) newValue);
-                    gridRows.setSummary(gridRows.getEntries()[index]);
-                    Utilities.restart(getActivity());
-                    return true;
-                }
-            });
-
-            final ListPreference hotseatColumns = (ListPreference) findPreference(Utilities.HOTSEAT_ICONS);
-            hotseatColumns.setSummary(hotseatColumns.getEntry());
-            hotseatColumns.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
-                public boolean onPreferenceChange(Preference preference, Object newValue) {
-                    int index = hotseatColumns.findIndexOfValue((String) newValue);
-                    hotseatColumns.setSummary(hotseatColumns.getEntries()[index]);
-                    Utilities.restart(getActivity());
-                    return true;
-                }
-            });
-
-            SwitchPreference desktopShowLabel = (SwitchPreference) findPreference(Utilities.DESKTOP_SHOW_LABEL);
-            SwitchPreference allAppsShowLabel = (SwitchPreference) findPreference(Utilities.ALLAPPS_SHOW_LABEL);
-            desktopShowLabel.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
-                public boolean onPreferenceChange(Preference preference, Object newValue) {
-                    Utilities.restart(getActivity());
-                    return true;
-                }
-            });
-            allAppsShowLabel.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
-                public boolean onPreferenceChange(Preference preference, Object newValue) {
-                    Utilities.restart(getActivity());
-                    return true;
-                }
-            });
-            SwitchPreference feedIntegration = (SwitchPreference)
-                    findPreference(Utilities.KEY_FEED_INTEGRATION);
-            if (!hasPackageInstalled(Utilities.PACKAGE_NAME)) {
-                getPreferenceScreen().removePreference(feedIntegration);
-            } else {
-                feedIntegration.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
-                    public boolean onPreferenceChange(Preference preference, Object newValue) {
-                        Utilities.restart(getActivity());
-                        return true;
-                    }
-                });
-            }
-            Preference showQsbWidget = findPreference(Utilities.DESKTOP_SHOW_QSB);
-            showQsbWidget.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-                public boolean onPreferenceChange(Preference preference, Object newValue) {
-                    Utilities.restart(getActivity());
-                    return true;
-                }
-            });
-        }
-
-        private boolean hasPackageInstalled(String pkgName) {
-            try {
-                ApplicationInfo ai = getContext().getPackageManager()
-                        .getApplicationInfo(pkgName, 0);
-                return ai.enabled;
-            } catch (PackageManager.NameNotFoundException e) {
-                return false;
-            }
         }
 
         @Override
@@ -284,35 +166,6 @@ public class SettingsActivity extends Activity
          */
         protected boolean initPreference(Preference preference) {
             switch (preference.getKey()) {
-                case NOTIFICATION_DOTS_PREFERENCE_KEY:
-                    if (!Utilities.ATLEAST_OREO ||
-                            !getResources().getBoolean(R.bool.notification_dots_enabled)) {
-                        return false;
-                    }
-
-                    // Listen to system notification dot settings while this UI is active.
-                    mNotificationDotsObserver = newNotificationSettingsObserver(
-                            getActivity(), (NotificationDotsPreference) preference);
-                    mNotificationDotsObserver.register();
-                    // Also listen if notification permission changes
-                    mNotificationDotsObserver.getResolver().registerContentObserver(
-                            Settings.Secure.getUriFor(NOTIFICATION_ENABLED_LISTENERS), false,
-                            mNotificationDotsObserver);
-                    mNotificationDotsObserver.dispatchOnChange();
-                    return true;
-
-                case ADD_ICON_PREFERENCE_KEY:
-                    return Utilities.ATLEAST_OREO;
-
-                case ALLOW_ROTATION_PREFERENCE_KEY:
-                    if (getResources().getBoolean(R.bool.allow_rotation)) {
-                        // Launcher supports rotation by default. No need to show this setting.
-                        return false;
-                    }
-                    // Initialize the UI once
-                    preference.setDefaultValue(getAllowRotationDefaultValue());
-                    return true;
-
                 case FLAGS_PREFERENCE_KEY:
                     // Only show flag toggler UI if this build variant implements that.
                     return FeatureFlags.showFlagTogglerUi(getContext());
@@ -361,10 +214,6 @@ public class SettingsActivity extends Activity
 
         @Override
         public void onDestroy() {
-            if (mNotificationDotsObserver != null) {
-                mNotificationDotsObserver.unregister();
-                mNotificationDotsObserver = null;
-            }
             super.onDestroy();
         }
     }
