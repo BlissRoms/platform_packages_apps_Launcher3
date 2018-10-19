@@ -163,6 +163,7 @@ public final class Utilities {
     public static final String DESKTOP_SHOW_LABEL = "pref_desktop_show_label";
     public static final String ALLAPPS_SHOW_LABEL = "pref_allapps_show_label";
     public static final String DESKTOP_SHOW_QSB = "pref_desktop_show_qsb";
+    public static final String KEY_FEED_INTEGRATION = "pref_feed_integration";
 
     public static final String PACKAGE_NAME = "com.google.android.googlequicksearchbox";
 
@@ -225,6 +226,10 @@ public final class Utilities {
 
     public static boolean showDesktopQsb(Context context) {
         return getPrefs(context).getBoolean(DESKTOP_SHOW_QSB, true);
+    }
+
+    public static boolean hasFeedIntegration(Context context) {
+        return getPrefs(context).getBoolean(KEY_FEED_INTEGRATION, false /* Spirit Effect */);
     }
 
     /**
