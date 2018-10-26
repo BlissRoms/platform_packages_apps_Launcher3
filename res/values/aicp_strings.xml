@@ -86,4 +86,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     <!-- Always how labels irrespective of orientation -->
     <string name="apps_always_show_label_title">Ignore orientation for labels</string>
     <string name="apps_always_show_label_summary">Always show app labels on homescreen and app drawer</string>
+
+    <!-- Hidden apps -->
+    <string name="customize">Customize</string>
+    <string name="hide_app">Hide apps</string>
+    <string name="hide_app_sum">Hide apps from app drawer</string>
+    <string name="hide_app_selected">&#160;selected</string>
+    <string name="hidden_app">All apps</string>
+    <string name="hide_selected">Hide selected app(s)</string>
+    <string name="more">More</string>
+    <string name="reset_hidden_apps">Reset all</string>
+    <string name="reset_hidden_apps_done">Hidden apps are now available</string>
 </resources>

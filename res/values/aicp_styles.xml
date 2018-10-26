@@ -24,5 +24,4 @@
     <style name="QuickSpaceText">
         <item name="android:fontFamily">@*android:string/config_bodyFontFamily</item>
     </style>
-
 </resources>

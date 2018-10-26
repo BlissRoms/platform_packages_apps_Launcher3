@@ -52,6 +52,7 @@ import android.widget.ListView;
 
 import com.android.launcher3.LauncherAppState;
 import com.android.launcher3.LauncherFiles;
+import com.android.launcher3.HiddenAppsActivity;
 import com.android.launcher3.R;
 import com.android.launcher3.Utilities;
 import android.util.Log;
@@ -104,6 +105,9 @@ public class AppDrawer extends SettingsActivity implements PreferenceFragment.On
             SwitchPreference allAppsShowLabel = (SwitchPreference) findPreference(Utilities.ALLAPPS_SHOW_LABEL);
             allAppsShowLabel.setOnPreferenceChangeListener(this);
 
+            Preference hiddenApp = findPreference(Utilities.KEY_HIDDEN_APPS);
+            hiddenApp.setOnPreferenceClickListener(this);
+
             PreferenceScreen screen = getPreferenceScreen();
             for (int i = screen.getPreferenceCount() - 1; i >= 0; i--) {
                 Preference preference = screen.getPreference(i);
@@ -120,6 +124,8 @@ public class AppDrawer extends SettingsActivity implements PreferenceFragment.On
         protected boolean initPreference(Preference preference) {
             switch (preference.getKey()) {
                 case Utilities.ALLAPPS_SHOW_LABEL:
+                    return true;
+                case Utilities.KEY_HIDDEN_APPS:
                     return true;
             }
             return true;
@@ -147,6 +153,11 @@ public class AppDrawer extends SettingsActivity implements PreferenceFragment.On
 
         @Override
         public boolean onPreferenceClick(Preference preference) {
+            switch (preference.getKey()) {
+                case Utilities.KEY_HIDDEN_APPS:
+                    startActivity(new Intent(getActivity(), HiddenAppsActivity.class));
+                    return false;
+            }
             return false;
         }
     }

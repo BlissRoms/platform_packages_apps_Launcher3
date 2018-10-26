@@ -175,6 +175,9 @@ public final class Utilities {
 
     public static final String PACKAGE_NAME = "com.google.android.googlequicksearchbox";
 
+    public static final String KEY_HIDDEN_APPS = "hidden_app";
+    public static final String KEY_HIDDEN_APPS_SET = "hidden_app_set";
+
     /**
      * An {@link Executor} to be used with async task with no limit on the queue size.
      */

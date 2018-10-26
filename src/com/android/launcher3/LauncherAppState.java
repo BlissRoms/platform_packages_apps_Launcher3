@@ -49,6 +49,7 @@ public class LauncherAppState {
     private static final MainThreadInitializedObject<LauncherAppState> INSTANCE =
             new MainThreadInitializedObject<>(LauncherAppState::new);
 
+    private final AppFilter mAppFilter;
     private final Context mContext;
     private final LauncherModel mModel;
     private final IconCache mIconCache;
@@ -87,7 +88,8 @@ public class LauncherAppState {
         mInvariantDeviceProfile = InvariantDeviceProfile.INSTANCE.get(mContext);
         mIconCache = new IconCache(mContext, mInvariantDeviceProfile);
         mWidgetCache = new WidgetPreviewLoader(mContext, mIconCache);
-        mModel = new LauncherModel(this, mIconCache, AppFilter.newInstance(mContext));
+        mAppFilter = new StringSetAppFilter(mContext);
+        mModel = new LauncherModel(this, mIconCache, mAppFilter);
 
         LauncherAppsCompat.getInstance(mContext).addOnAppsChangedCallback(mModel);
 

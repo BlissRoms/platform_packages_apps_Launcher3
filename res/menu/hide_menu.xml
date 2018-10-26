@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-     Copyright (C) 2016 The Android Open Source Project
+     Copyright (C) 2017 Paranoid Android
 
      Licensed under the Apache License, Version 2.0 (the "License");
      you may not use this file except in compliance with the License.
@@ -14,7 +14,12 @@
      See the License for the specific language governing permissions and
      limitations under the License.
 -->
-<Space
-      xmlns:android="http://schemas.android.com/apk/res/android"
-      android:layout_width="0dp"
-      android:layout_height="0dp" />
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.android.launcher3.HiddenAppsActivity">
+    <item
+        android:id="@+id/reset"
+        android:icon="@drawable/ic_reset_hidden_apps"
+        android:showAsAction="ifRoom"
+        android:title="@string/reset_hidden_apps" />
+</menu>
