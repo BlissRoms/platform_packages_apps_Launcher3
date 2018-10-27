@@ -33,6 +33,7 @@ import androidx.preference.Preference.OnPreferenceChangeListener;
 import androidx.preference.SwitchPreference;
 import android.view.MenuItem;
 
+import com.android.launcher3.LauncherAppState;
 import com.android.launcher3.LauncherFiles;
 import com.android.launcher3.R;
 import com.android.launcher3.Utilities;
@@ -131,7 +132,6 @@ public class Homescreen extends SettingsActivity implements PreferenceFragment.O
 
         @Override
         public boolean onPreferenceChange(Preference preference, final Object newValue) {
-            SettingsActivity.restartNeeded = true;
             String key = preference.getKey();
             if (Utilities.GRID_COLUMNS.equals(key)) {
                 int index = gridColumns.findIndexOfValue((String) newValue);
@@ -143,6 +143,7 @@ public class Homescreen extends SettingsActivity implements PreferenceFragment.O
                 int index = hotseatColumns.findIndexOfValue((String) newValue);
                 hotseatColumns.setSummary(hotseatColumns.getEntries()[index]);
             }
+            LauncherAppState.getInstanceNoCreate().setNeedsRestart();
             return true;
         }
 

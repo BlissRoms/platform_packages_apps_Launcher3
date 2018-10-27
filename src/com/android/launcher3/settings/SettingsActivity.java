@@ -27,6 +27,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.MenuItem;
 
+import com.android.launcher3.LauncherAppState;
 import com.android.launcher3.LauncherFiles;
 import com.android.launcher3.R;
 import com.android.launcher3.Utilities;
@@ -65,8 +66,6 @@ public class SettingsActivity extends Activity
     public static final String SAVE_HIGHLIGHTED_KEY = "android:preference_highlighted";
 
     public static final String GRID_OPTIONS_PREFERENCE_KEY = "pref_grid_options";
-
-    public static boolean restartNeeded = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -125,14 +124,12 @@ public class SettingsActivity extends Activity
      */
     public static class LauncherSettingsFragment extends PreferenceFragment {
 
-        private Context mContext;
         private String mHighLightKey;
         private boolean mPreferenceHighlighted = false;
 
         @Override
         public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
             final Bundle args = getArguments();
-            mContext = getActivity();
             mHighLightKey = args == null ? null : args.getString(EXTRA_FRAGMENT_ARG_KEY);
             if (rootKey == null && !TextUtils.isEmpty(mHighLightKey)) {
                 rootKey = getParentKeyForPref(mHighLightKey);
@@ -144,14 +141,6 @@ public class SettingsActivity extends Activity
 
             getPreferenceManager().setSharedPreferencesName(LauncherFiles.SHARED_PREFERENCES_KEY);
             setPreferencesFromResource(R.xml.launcher_preferences, rootKey);
-
-            HomeKeyWatcher mHomeKeyListener = new HomeKeyWatcher(getActivity());
-            mHomeKeyListener.setOnHomePressedListener(() -> {
-                if (restartNeeded) {
-                    Utilities.restart(mContext);
-                }
-            });
-            mHomeKeyListener.startWatch();
 
             PreferenceScreen screen = getPreferenceScreen();
             for (int i = screen.getPreferenceCount() - 1; i >= 0; i--) {
@@ -226,10 +215,10 @@ public class SettingsActivity extends Activity
 
         @Override
         public void onDestroy() {
+            // if we don't press the home button but the back button to close Settings,
+            // then we must force a restart because the home button watcher wouldn't trigger it
+            LauncherAppState.getInstanceNoCreate().checkIfRestartNeeded();
             super.onDestroy();
-            if (restartNeeded) {
-                Utilities.restart(mContext);
-            }
         }
     }
 }

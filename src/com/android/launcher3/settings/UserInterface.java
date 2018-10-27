@@ -36,6 +36,7 @@ import androidx.preference.PreferenceScreen;
 import android.provider.Settings;
 import android.view.MenuItem;
 
+import com.android.launcher3.LauncherAppState;
 import com.android.launcher3.LauncherFiles;
 import com.android.launcher3.R;
 import com.android.launcher3.Utilities;
@@ -154,7 +155,7 @@ public class UserInterface extends SettingsActivity implements PreferenceFragmen
         public boolean onPreferenceChange(Preference preference, final Object newValue) {
             switch (preference.getKey()) {
                 case Utilities.KEY_ICON_SIZE:
-                SettingsActivity.restartNeeded = true;
+                LauncherAppState.getInstanceNoCreate().setNeedsRestart();
                 return true;
             }
             return false;

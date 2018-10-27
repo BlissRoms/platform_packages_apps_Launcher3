@@ -50,6 +50,7 @@ import android.view.View;
 import android.widget.Adapter;
 import android.widget.ListView;
 
+import com.android.launcher3.LauncherAppState;
 import com.android.launcher3.LauncherFiles;
 import com.android.launcher3.R;
 import com.android.launcher3.Utilities;
@@ -138,7 +139,7 @@ public class AppDrawer extends SettingsActivity implements PreferenceFragment.On
         public boolean onPreferenceChange(Preference preference, final Object newValue) {
             switch (preference.getKey()) {
                 case Utilities.ALLAPPS_SHOW_LABEL:
-                    SettingsActivity.restartNeeded = true;
+                    LauncherAppState.getInstanceNoCreate().setNeedsRestart();
                     return true;
             }
             return false;
