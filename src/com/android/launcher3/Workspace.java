@@ -109,6 +109,8 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.function.Predicate;
 
+import static com.android.launcher3.Utilities.getDevicePrefs;
+
 /**
  * The workspace is a wide area with a wallpaper and a finite number of pages.
  * Each page contains a number of icons, folders or widgets the user can
@@ -256,6 +258,7 @@ public class Workspace extends PagedView<WorkspacePageIndicator>
     private final WorkspaceStateTransitionAnimation mStateTransitionAnimation;
 
     private GestureDetector mGestureListener;
+    private int mGestureMode;
 
     /**
      * Used to inflate the Workspace from XML.
@@ -289,11 +292,13 @@ public class Workspace extends PagedView<WorkspacePageIndicator>
         // Disable multitouch across the workspace/all apps/customize tray
         setMotionEventSplittingEnabled(true);
 
+        mGestureMode = Integer.valueOf(
+                getDevicePrefs(getContext()).getString(Utilities.KEY_HOMESCREEN_DT_GESTURES, "0"));
         mGestureListener =
                 new GestureDetector(context, new GestureDetector.SimpleOnGestureListener() {
             @Override
             public boolean onDoubleTap(MotionEvent event) {
-                AicpUtils.goToSleep(context);
+                triggerGesture(event);
                 return true;
             }
         });
@@ -301,7 +306,23 @@ public class Workspace extends PagedView<WorkspacePageIndicator>
         setOnTouchListener(new WorkspaceTouchListener(mLauncher, this));
     }
 
-    public boolean checkDoubleTap(MotionEvent ev) {
+    private void triggerGesture(MotionEvent event) {
+        switch(mGestureMode) {
+            // Stock behavior
+            case 0:
+                break;
+            // Sleep
+            case 1:
+                AicpUtils.goToSleep(getContext());
+                break;
+        }
+    }
+
+    public void setGestures(int mode) {
+        mGestureMode = mode;
+    }
+
+    public boolean checkCustomGestures(MotionEvent ev) {
         return mGestureListener.onTouchEvent(ev);
     }
 

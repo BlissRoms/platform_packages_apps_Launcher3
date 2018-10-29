@@ -170,6 +170,8 @@ public final class Utilities {
     public static final String KEY_SWIPE_DOWN_GESTURE = "pref_allowSwipeDownClearAll";
     public static final String KEY_ICON_SIZE = "pref_icon_size";
 
+    public static final String KEY_HOMESCREEN_DT_GESTURES = "pref_homescreen_dt_gestures";
+
     public static final String PACKAGE_NAME = "com.google.android.googlequicksearchbox";
 
     /**

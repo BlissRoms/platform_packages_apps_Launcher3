@@ -16,10 +16,14 @@
 
 package com.android.launcher3.settings;
 
+import static com.android.launcher3.Utilities.getDevicePrefs;
+
 import android.app.ActionBar;
 import android.app.DialogFragment;
 import android.app.Fragment;
+import android.content.Context;
 import android.os.Bundle;
+import androidx.preference.ListPreference;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragment;
 import androidx.preference.PreferenceScreen;
@@ -55,7 +59,11 @@ public class Gestures extends SettingsActivity implements PreferenceFragment.OnP
     public static class GesturesSettingsFragment extends PreferenceFragment
             implements Preference.OnPreferenceChangeListener, Preference.OnPreferenceClickListener {
 
+        private Context mContext;
+
         ActionBar actionBar;
+
+        private ListPreference mHomescreenGestures;
 
         @Override
         public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
@@ -63,9 +71,14 @@ public class Gestures extends SettingsActivity implements PreferenceFragment.OnP
             getPreferenceManager().setSharedPreferencesName(LauncherFiles.SHARED_PREFERENCES_KEY);
             setPreferencesFromResource(R.xml.gestures_preferences, rootKey);
 
+            mContext = getActivity();
+
             actionBar=getActivity().getActionBar();
             assert actionBar != null;
             actionBar.setDisplayHomeAsUpEnabled(true);
+
+            mHomescreenGestures = (ListPreference) findPreference(Utilities.KEY_HOMESCREEN_DT_GESTURES);
+            mHomescreenGestures.setValue(getDevicePrefs(mContext).getString(Utilities.KEY_HOMESCREEN_DT_GESTURES, "0"));
 
             PreferenceScreen screen = getPreferenceScreen();
             for (int i = screen.getPreferenceCount() - 1; i >= 0; i--) {
@@ -84,6 +97,9 @@ public class Gestures extends SettingsActivity implements PreferenceFragment.OnP
             switch (preference.getKey()) {
                 case Utilities.KEY_SWIPE_DOWN_GESTURE:
                     return true;
+                case Utilities.KEY_HOMESCREEN_DT_GESTURES:
+                    preference.setOnPreferenceChangeListener(this);
+                    return true;
             }
             return true;
         }
@@ -101,6 +117,12 @@ public class Gestures extends SettingsActivity implements PreferenceFragment.OnP
         @Override
         public boolean onPreferenceChange(Preference preference, final Object newValue) {
             switch (preference.getKey()) {
+                case Utilities.KEY_HOMESCREEN_DT_GESTURES:
+                    String gestureValue = (String) newValue;
+                    getDevicePrefs(mContext).edit().putString(Utilities.KEY_HOMESCREEN_DT_GESTURES, gestureValue).commit();
+                    mHomescreenGestures.setValue(gestureValue);
+                    SettingsActivity.restartNeeded = true;
+                    break;
             }
             return false;
         }
