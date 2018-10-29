@@ -159,6 +159,8 @@ public final class Utilities {
 
     public static final String DATE_FORMAT_KEY = "pref_date_format";
 
+    public static final String KEY_HOMESCREEN_DT_GESTURES = "pref_homescreen_dt_gestures";
+
     public static boolean IS_RUNNING_IN_TEST_HARNESS =
                     ActivityManager.isRunningInTestHarness();
 

@@ -80,7 +80,7 @@ public class WorkspaceTouchListener extends GestureDetector.SimpleOnGestureListe
 
     @Override
     public boolean onTouch(View view, MotionEvent ev) {
-        mWorkspace.checkDoubleTap(ev);
+        mWorkspace.checkCustomGestures(ev);
         mGestureDetector.onTouchEvent(ev);
 
         int action = ev.getActionMasked();

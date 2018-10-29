@@ -48,4 +48,15 @@
         <item>@string/date_format_daydate_long</item>
     </string-array>
 
+    <!-- Homescreen double tap gestures -->
+    <string-array translatable="false" name="pref_homescreen_dt_gestures_values">
+        <item>0</item>
+        <item>1</item>
+    </string-array>
+
+    <string-array name="pref_homescreen_dt_gestures_names">
+        <item>@string/pref_homescreen_dt_gestures_none</item>
+        <item>@string/pref_homescreen_dt_gestures_sleep</item>
+    </string-array>
+
 </resources>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <ListPreference
+        android:key="pref_homescreen_dt_gestures"
+        android:title="@string/pref_homescreen_dt_gestures_title"
+        android:summary="@string/pref_homescreen_dt_gestures_summary"
+        android:entries="@array/pref_homescreen_dt_gestures_names"
+        android:entryValues="@array/pref_homescreen_dt_gestures_values"
+        android:defaultValue=""
+        android:persistent="false" />
+
+</PreferenceScreen>
