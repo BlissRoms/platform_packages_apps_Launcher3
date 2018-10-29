@@ -125,12 +125,14 @@ public class SettingsActivity extends Activity
      */
     public static class LauncherSettingsFragment extends PreferenceFragment {
 
+        private Context mContext;
         private String mHighLightKey;
         private boolean mPreferenceHighlighted = false;
 
         @Override
         public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
             final Bundle args = getArguments();
+            mContext = getActivity();
             mHighLightKey = args == null ? null : args.getString(EXTRA_FRAGMENT_ARG_KEY);
             if (rootKey == null && !TextUtils.isEmpty(mHighLightKey)) {
                 rootKey = getParentKeyForPref(mHighLightKey);
@@ -146,7 +148,7 @@ public class SettingsActivity extends Activity
             HomeKeyWatcher mHomeKeyListener = new HomeKeyWatcher(getActivity());
             mHomeKeyListener.setOnHomePressedListener(() -> {
                 if (restartNeeded) {
-                    Utilities.restart(getActivity());
+                    Utilities.restart(mContext);
                 }
             });
             mHomeKeyListener.startWatch();
@@ -226,7 +228,7 @@ public class SettingsActivity extends Activity
         public void onDestroy() {
             super.onDestroy();
             if (restartNeeded) {
-                Utilities.restart(getActivity());
+                Utilities.restart(mContext);
             }
         }
     }
