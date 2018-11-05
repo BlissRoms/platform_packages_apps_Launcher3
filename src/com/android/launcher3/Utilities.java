@@ -22,6 +22,7 @@ import android.animation.ValueAnimator;
 import android.annotation.TargetApi;
 import android.app.ActivityManager;
 import android.app.Person;
+import android.app.ProgressDialog;
 import android.app.WallpaperManager;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
@@ -52,6 +53,7 @@ import android.os.DeadObjectException;
 import android.os.Handler;
 import android.os.Message;
 import android.os.PowerManager;
+import android.os.SystemClock;
 import android.os.TransactionTooLargeException;
 import android.provider.Settings;
 import android.text.Spannable;
@@ -163,6 +165,7 @@ public final class Utilities {
     public static final String DESKTOP_SHOW_LABEL = "pref_desktop_show_label";
     public static final String ALLAPPS_SHOW_LABEL = "pref_allapps_show_label";
     public static final String KEY_FEED_INTEGRATION = "pref_feed_integration";
+    public static final String DESKTOP_SHOW_QSB = "pref_qsb_show";
 
     public static final String PACKAGE_NAME = "com.google.android.googlequicksearchbox";
 
@@ -225,6 +228,10 @@ public final class Utilities {
 
     public static boolean hasFeedIntegration(Context context) {
         return getPrefs(context).getBoolean(KEY_FEED_INTEGRATION, false /* Spirit Effect */);
+    }
+
+    public static boolean showQsbWidget(Context context) {
+         return getPrefs(context).getBoolean(DESKTOP_SHOW_QSB, FeatureFlags.QSB_ON_FIRST_SCREEN);
     }
 
     /**
@@ -826,7 +833,7 @@ public final class Utilities {
     }
 
     public static void restart(final Context context) {
-        //ProgressDialog.show(context, null, context.getString(R.string.state_loading), true, false);
+        ProgressDialog.show(context, null, context.getString(R.string.state_loading), true, false);
         new LooperExecutor(LauncherModel.getWorkerLooper()).execute(() -> {
             try {
                 Thread.sleep(WAIT_BEFORE_RESTART);
