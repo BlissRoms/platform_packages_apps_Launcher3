@@ -23,6 +23,7 @@ import android.animation.ValueAnimator;
 import android.annotation.TargetApi;
 import android.app.ActivityManager;
 import android.app.Person;
+import android.app.ProgressDialog;
 import android.app.WallpaperManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -46,6 +47,7 @@ import android.os.DeadObjectException;
 import android.os.Handler;
 import android.os.Message;
 import android.os.PowerManager;
+import android.os.SystemClock;
 import android.os.TransactionTooLargeException;
 import android.provider.Settings;
 import android.text.Spannable;
@@ -137,6 +139,8 @@ public final class Utilities {
     public static final String EXTRA_WALLPAPER_OFFSET = "com.android.launcher3.WALLPAPER_OFFSET";
     public static final String EXTRA_WALLPAPER_FLAVOR = "com.android.launcher3.WALLPAPER_FLAVOR";
 
+    public static final String DESKTOP_SHOW_QSB = "pref_qsb_show";
+
     public static boolean IS_RUNNING_IN_TEST_HARNESS =
                     ActivityManager.isRunningInTestHarness();
 
@@ -152,6 +156,10 @@ public final class Utilities {
         ResolveInfo ri = context.getPackageManager().resolveActivity(
                 PackageManagerHelper.getStyleWallpapersIntent(context), 0);
         return ri != null;
+    }
+
+    public static boolean showQsbWidget(Context context) {
+         return getPrefs(context).getBoolean(DESKTOP_SHOW_QSB, FeatureFlags.QSB_ON_FIRST_SCREEN);
     }
 
     /**
