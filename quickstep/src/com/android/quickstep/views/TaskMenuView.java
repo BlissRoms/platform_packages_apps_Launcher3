@@ -56,6 +56,7 @@ public class TaskMenuView extends AbstractFloatingView {
             new TaskSystemShortcut.SplitScreen(),
             new TaskSystemShortcut.Pin(),
             new TaskSystemShortcut.Install(),
+            new TaskSystemShortcut.KillApp(),
     };
 
     private static final long OPEN_CLOSE_DURATION = 220;
