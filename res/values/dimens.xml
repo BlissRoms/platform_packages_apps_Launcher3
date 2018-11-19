@@ -185,6 +185,7 @@
     <dimen name="rounded_button_height">48dp</dimen>
     <dimen name="rounded_button_radius">200dp</dimen>
     <dimen name="rounded_button_padding">8dp</dimen>
+    <dimen name="rounded_search_radius">24dp</dimen>
 
 
     <!-- Widget tray -->
