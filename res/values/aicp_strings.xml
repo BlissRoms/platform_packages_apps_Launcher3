@@ -196,4 +196,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         <item>Winner Winner ....?</item>
         <item>rm -rf \/</item>
     </string-array>
+
+    <!-- QuickSpace Date format -->
+    <string name="date_format_title">Date format</string>
+    <string name="date_format_long_name">Long</string>
+    <string name="date_format_normal_name">Normal</string>
+    <string name="date_format_short_name">Short</string>
+    <string name="date_format_long" translatable="false">EEEE, MMMM d</string>
+    <string name="date_format_normal" translatable="false">EEEE, MMM d</string>
+    <string name="date_format_short" translatable="false">EEE, MMM d</string>
 </resources>

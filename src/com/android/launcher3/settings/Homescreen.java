@@ -98,6 +98,7 @@ public class Homescreen extends SettingsActivity
         ListPreference gridColumns;
         ListPreference gridRows;
         ListPreference hotseatColumns;
+        ListPreference atAGlanceDateFormat;
 
         @Override
         public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
@@ -120,6 +121,9 @@ public class Homescreen extends SettingsActivity
 
             hotseatColumns = (ListPreference) findPreference(Utilities.HOTSEAT_ICONS);
             hotseatColumns.setSummary(hotseatColumns.getEntry());
+
+            atAGlanceDateFormat = (ListPreference) findPreference(Utilities.DATE_FORMAT_ATAGLANCE);
+            atAGlanceDateFormat.setSummary(atAGlanceDateFormat.getEntry());
 
             PreferenceScreen screen = getPreferenceScreen();
             for (int i = screen.getPreferenceCount() - 1; i >= 0; i--) {
@@ -145,6 +149,7 @@ public class Homescreen extends SettingsActivity
                 case Utilities.GRID_COLUMNS:
                 case Utilities.GRID_ROWS:
                 case Utilities.HOTSEAT_ICONS:
+                case Utilities.DATE_FORMAT_ATAGLANCE:
                     preference.setOnPreferenceChangeListener(this);
                     return true;
             }
@@ -173,6 +178,10 @@ public class Homescreen extends SettingsActivity
             } else if (Utilities.HOTSEAT_ICONS.equals(key)) {
                 int index = hotseatColumns.findIndexOfValue((String) newValue);
                 hotseatColumns.setSummary(hotseatColumns.getEntries()[index]);
+            } else if (Utilities.DATE_FORMAT_ATAGLANCE.equals(key)) {
+                int index = atAGlanceDateFormat.findIndexOfValue((String) newValue);
+                atAGlanceDateFormat.setSummary(atAGlanceDateFormat.getEntries()[index]);
+                return true;
             }
             LauncherAppState.getInstanceNoCreate().setNeedsRestart();
             return true;

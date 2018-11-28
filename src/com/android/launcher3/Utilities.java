@@ -54,6 +54,7 @@ import android.os.Message;
 import android.os.PowerManager;
 import android.os.TransactionTooLargeException;
 import android.provider.Settings;
+import android.text.format.DateUtils;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.TextUtils;
@@ -80,6 +81,7 @@ import com.android.launcher3.util.IntArray;
 import com.android.launcher3.util.PackageManagerHelper;
 import com.android.launcher3.views.Transposable;
 import com.android.launcher3.widget.PendingAddShortcutInfo;
+import com.android.launcher3.R;
 
 import java.lang.reflect.Method;
 import java.util.Arrays;
@@ -154,6 +156,7 @@ public final class Utilities {
     public static final String KEY_SWIPE_DOWN_GESTURE = "pref_allowSwipeDownClearAll";
     public static final String KEY_ICON_SIZE = "pref_icon_size";
     public static final String APPS_ALWAYS_SHOW_LABEL = "pref_apps_always_show_label";
+    public static final String DATE_FORMAT_ATAGLANCE = "pref_date_format";
 
     public static final String KEY_HOMESCREEN_DT_GESTURES = "pref_homescreen_dt_gestures";
 
@@ -230,21 +233,6 @@ public final class Utilities {
         }
     }
 
-    public static String formatDateTime(Context context, long timeInMillis) {
-        try {
-            String format = "EEEE, MMM d";
-            String formattedDate;
-            DateFormat dateFormat = DateFormat.getInstanceForSkeleton(format, Locale.getDefault());
-            dateFormat.setContext(DisplayContext.CAPITALIZATION_FOR_STANDALONE);
-            formattedDate = dateFormat.format(timeInMillis);
-            return formattedDate;
-        } catch (Throwable t) {
-            Log.e(TAG, "Error formatting At A Glance date", t);
-            return DateUtils.formatDateTime(context, timeInMillis, DateUtils.FORMAT_SHOW_WEEKDAY | DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_ABBREV_MONTH);
-        }
-
-    }
-
     public static boolean showDesktopLabel(Context context) {
         return getPrefs(context).getBoolean(DESKTOP_SHOW_LABEL, true);
     }
@@ -281,6 +269,38 @@ public final class Utilities {
 
     public static boolean isQuickspacePersonalityEnabled(Context context) {
         return getPrefs(context).getBoolean(KEY_SHOW_QUICKSPACE_PSONALITY, true);
+    }
+
+    public static String getDateFormat(Context context) {
+        return getPrefs(context).getString(DATE_FORMAT_ATAGLANCE, context.getString(R.string.date_format_normal));
+    }
+
+    public static String formatDateTime(Context context, long timeInMillis) {
+        try {
+            String format = getDateFormat(context);
+            String formattedDate;
+            if (Utilities.ATLEAST_OREO) {
+                DateFormat dateFormat = DateFormat.getInstanceForSkeleton(format, Locale.getDefault());
+                dateFormat.setContext(DisplayContext.CAPITALIZATION_FOR_STANDALONE);
+                formattedDate = dateFormat.format(timeInMillis);
+            } else {
+                int flags;
+                if (format.equals(context.getString(R.string.date_format_long))) {
+                    flags = DateUtils.FORMAT_SHOW_WEEKDAY | DateUtils.FORMAT_SHOW_DATE;
+                } else if (format.equals(context.getString(R.string.date_format_normal))) {
+                    flags = DateUtils.FORMAT_SHOW_WEEKDAY | DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_ABBREV_MONTH;
+                } else if (format.equals(context.getString(R.string.date_format_short))) {
+                    flags = DateUtils.FORMAT_SHOW_WEEKDAY | DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_ABBREV_MONTH | DateUtils.FORMAT_ABBREV_WEEKDAY;
+                } else {
+                    flags = DateUtils.FORMAT_SHOW_WEEKDAY | DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_ABBREV_MONTH;
+                }
+                 formattedDate = DateUtils.formatDateTime(context, timeInMillis, flags);
+            }
+            return formattedDate;
+        } catch (Throwable t) {
+            Log.e(TAG, "Error formatting At A Glance date", t);
+            return DateUtils.formatDateTime(context, timeInMillis, DateUtils.FORMAT_SHOW_WEEKDAY | DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_ABBREV_MONTH);
+        }
     }
 
     /**
@@ -770,5 +790,4 @@ public final class Utilities {
             android.os.Process.killProcess(android.os.Process.myPid());
         });
     }
-
 }
