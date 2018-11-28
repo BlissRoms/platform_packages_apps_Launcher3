@@ -77,6 +77,7 @@ public class Homescreen extends SettingsActivity implements PreferenceFragment.O
         ListPreference gridRows;
         ListPreference hotseatColumns;
         ListPreference atAGlanceDateFormat;
+        ListPreference dateFont;
 
         @Override
         public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
@@ -102,6 +103,9 @@ public class Homescreen extends SettingsActivity implements PreferenceFragment.O
 
             atAGlanceDateFormat = (ListPreference) findPreference(Utilities.DATE_FORMAT_ATAGLANCE);
             atAGlanceDateFormat.setSummary(atAGlanceDateFormat.getEntry());
+
+            dateFont = (ListPreference) findPreference(Utilities.DATE_STYLE_FONT);
+            dateFont.setSummary(dateFont.getEntry());
 
             PreferenceScreen screen = getPreferenceScreen();
             for (int i = screen.getPreferenceCount() - 1; i >= 0; i--) {
@@ -131,6 +135,7 @@ public class Homescreen extends SettingsActivity implements PreferenceFragment.O
                 case Utilities.KEY_SHOW_QUICKSPACE_NOWPLAYING:
                 case Utilities.KEY_SHOW_QUICKSPACE_PSONALITY:
                 case Utilities.DATE_FORMAT_ATAGLANCE:
+                case Utilities.DATE_STYLE_FONT:
                     preference.setOnPreferenceChangeListener(this);
                     return true;
             }
@@ -163,6 +168,9 @@ public class Homescreen extends SettingsActivity implements PreferenceFragment.O
                 int index = atAGlanceDateFormat.findIndexOfValue((String) newValue);
                 atAGlanceDateFormat.setSummary(atAGlanceDateFormat.getEntries()[index]);
                 return true;
+            } else if (Utilities.DATE_STYLE_FONT.equals(key)) {
+                int index = dateFont.findIndexOfValue((String) newValue);
+                dateFont.setSummary(dateFont.getEntries()[index]);
             }
             LauncherAppState.getInstanceNoCreate().setNeedsRestart();
             return true;

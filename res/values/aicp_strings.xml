@@ -211,4 +211,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     <string name="date_format_daydate_long" translatable="false">EEEEd</string>
     <string name="date_format_daydate_short" translatable="false">EEEd</string>
     <string name="date_format_dayonly" translatable="false">EEEE</string>
+
+    <!-- At a glance style -->
+    <string name="date_style_font">Date font</string>
+    <string name="date_style_font_system_header">System headline</string>
+    <string name="date_style_font_system_body">System body</string>
+    <string name="date_style_headline_font" translatable="false">@*android:string/config_headlineFontFamily</string>
+    <string name="date_style_body_font" translatable="false">@*android:string/config_bodyFontFamily</string>
 </resources>
