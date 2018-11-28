@@ -212,4 +212,8 @@
     <string name="date_style_font_system_body">System body</string>
     <string name="date_style_headline_font" translatable="false">@*android:string/config_headlineFontFamily</string>
     <string name="date_style_body_font" translatable="false">@*android:string/config_bodyFontFamily</string>
+
+    <!-- At a glance uppercase -->
+    <string name="date_style_transform_title">Show uppercase on date</string>
+    <string name="date_style_transform_summary">Transform all the date/at a glance with uppercased text</string>
 </resources>

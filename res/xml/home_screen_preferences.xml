@@ -42,6 +42,14 @@
         android:persistent="true" />
 
     <SwitchPreference
+        android:key="pref_date_transform"
+        android:dependency="pref_show_quickspace"
+        android:title="@string/date_style_transform_title"
+        android:summary="@string/date_style_transform_summary"
+        android:defaultValue="false"
+        android:persistent="true"/>
+
+    <SwitchPreference
         android:dependency="pref_show_quickspace"
         android:key="pref_quickspace_np"
         android:summary="@string/quickspace_now_playing_summary"
