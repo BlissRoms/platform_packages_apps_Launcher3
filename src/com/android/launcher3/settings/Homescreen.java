@@ -78,6 +78,7 @@ public class Homescreen extends SettingsActivity implements PreferenceFragment.O
         ListPreference hotseatColumns;
         ListPreference atAGlanceDateFormat;
         ListPreference dateFont;
+        ListPreference dateSpacing;
 
         @Override
         public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
@@ -106,6 +107,9 @@ public class Homescreen extends SettingsActivity implements PreferenceFragment.O
 
             dateFont = (ListPreference) findPreference(Utilities.DATE_STYLE_FONT);
             dateFont.setSummary(dateFont.getEntry());
+
+            dateSpacing = (ListPreference) findPreference(Utilities.DATE_STYLE_SPACING);
+            dateSpacing.setSummary(dateSpacing.getEntry());
 
             PreferenceScreen screen = getPreferenceScreen();
             for (int i = screen.getPreferenceCount() - 1; i >= 0; i--) {
@@ -137,6 +141,7 @@ public class Homescreen extends SettingsActivity implements PreferenceFragment.O
                 case Utilities.DATE_FORMAT_ATAGLANCE:
                 case Utilities.DATE_STYLE_FONT:
                 case Utilities.DATE_STYLE_TRANSFORM:
+                case Utilities.DATE_STYLE_SPACING:
                     preference.setOnPreferenceChangeListener(this);
                     return true;
             }
@@ -172,6 +177,9 @@ public class Homescreen extends SettingsActivity implements PreferenceFragment.O
             } else if (Utilities.DATE_STYLE_FONT.equals(key)) {
                 int index = dateFont.findIndexOfValue((String) newValue);
                 dateFont.setSummary(dateFont.getEntries()[index]);
+            } else if (Utilities.DATE_STYLE_SPACING.equals(key)) {
+                int index = dateSpacing.findIndexOfValue((String) newValue);
+                dateSpacing.setSummary(dateSpacing.getEntries()[index]);
             }
             LauncherAppState.getInstanceNoCreate().setNeedsRestart();
             return true;
