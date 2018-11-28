@@ -136,6 +136,7 @@ public class Homescreen extends SettingsActivity implements PreferenceFragment.O
                 case Utilities.KEY_SHOW_QUICKSPACE_PSONALITY:
                 case Utilities.DATE_FORMAT_ATAGLANCE:
                 case Utilities.DATE_STYLE_FONT:
+                case Utilities.DATE_STYLE_TRANSFORM:
                     preference.setOnPreferenceChangeListener(this);
                     return true;
             }

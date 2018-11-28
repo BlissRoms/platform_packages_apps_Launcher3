@@ -158,6 +158,7 @@ public final class Utilities {
     public static final String APPS_ALWAYS_SHOW_LABEL = "pref_apps_always_show_label";
     public static final String DATE_FORMAT_ATAGLANCE = "pref_date_format";
     public static final String DATE_STYLE_FONT = "pref_date_font";
+    public static final String DATE_STYLE_TRANSFORM = "pref_date_transform";
 
     public static final String KEY_HOMESCREEN_DT_GESTURES = "pref_homescreen_dt_gestures";
 
@@ -278,6 +279,10 @@ public final class Utilities {
 
     public static String getDateStyleFont(Context context) {
         return getPrefs(context).getString(DATE_STYLE_FONT, "system-headline");
+    }
+
+    public static boolean isDateStyleUppercase(Context context) {
+        return getPrefs(context).getBoolean(DATE_STYLE_TRANSFORM, false);
     }
 
     public static String formatDateTime(Context context, long timeInMillis) {

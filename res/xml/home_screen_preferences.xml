@@ -29,6 +29,14 @@
         android:title="@string/date_style_font" />
 
     <SwitchPreference
+        android:key="pref_date_transform"
+        android:dependency="pref_show_quickspace"
+        android:title="@string/date_style_transform_title"
+        android:summary="@string/date_style_transform_summary"
+        android:defaultValue="false"
+        android:persistent="true"/>
+
+    <SwitchPreference
         android:key="pref_show_alt_quickspace"
         android:dependency="pref_show_quickspace"
         android:title="@string/quickspace_alternate_style_title"
