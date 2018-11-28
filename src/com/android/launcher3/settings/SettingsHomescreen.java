@@ -167,6 +167,17 @@ public class SettingsHomescreen extends Activity
                     return true;
                 }
             });
+
+            ListPreference dateFont = (ListPreference) findPreference(Utilities.DATE_STYLE_FONT);
+            dateFont.setSummary(dateFont.getEntry());
+            dateFont.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
+                public boolean onPreferenceChange(Preference preference, Object newValue) {
+                    int index = dateFont.findIndexOfValue((String) newValue);
+                    dateFont.setSummary(dateFormat.getEntries()[index]);
+                    LauncherAppState.getInstanceNoCreate().setNeedsRestart();
+                    return true;
+                }
+            });
         }
 
         @Override
