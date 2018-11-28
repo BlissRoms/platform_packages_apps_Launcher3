@@ -159,6 +159,7 @@ public final class Utilities {
     public static final String DATE_STYLE_FONT = "pref_date_font";
     public static final String DATE_FORMAT_KEY = "pref_date_format";
     public static final String DATE_STYLE_TRANSFORM = "pref_date_transform";
+    public static final String DATE_STYLE_SPACING = "pref_date_spacing";
 
     public static final String KEY_HOMESCREEN_DT_GESTURES = "pref_homescreen_dt_gestures";
 
@@ -183,6 +184,33 @@ public final class Utilities {
 
     public static boolean isDateStyleUppercase(Context context) {
         return getPrefs(context).getBoolean(DATE_STYLE_TRANSFORM, false);
+    }
+
+    public static float getDateStyleTextSpacing(Context context) {
+        String modifier = getPrefs(context).getString(DATE_STYLE_SPACING, "normal");
+        return translateSpacing(modifier);
+    }
+
+     private static float translateSpacing(String spacingamount) {
+        float amountsp;
+        switch (spacingamount) {
+            case "normal":
+                amountsp = 0F;
+                break;
+            case "barely":
+                amountsp = 0.07F;
+                break;
+            case "aesthetic":
+                amountsp = 0.12F;
+                break;
+            case "overthetop":
+                amountsp = 0.20F;
+                break;
+            default:
+                amountsp = 0F;
+                break;
+        }
+        return amountsp;
     }
 
     public static String formatDateTime(Context context, long timeInMillis) {
