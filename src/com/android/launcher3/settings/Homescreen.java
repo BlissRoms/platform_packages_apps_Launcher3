@@ -110,7 +110,7 @@ public class Homescreen extends SettingsActivity implements PreferenceFragment.O
                 case ALLOW_ROTATION_PREFERENCE_KEY:
                     return false;
                 case Utilities.DESKTOP_SHOW_LABEL:
-                case Utilities.DESKTOP_SHOW_QSB:
+                case Utilities.DESKTOP_SHOW_QUICKSPACE:
                 case Utilities.GRID_COLUMNS:
                 case Utilities.GRID_ROWS:
                 case Utilities.HOTSEAT_ICONS:

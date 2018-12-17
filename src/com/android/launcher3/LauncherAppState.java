@@ -39,6 +39,8 @@ import com.android.launcher3.util.MainThreadInitializedObject;
 import com.android.launcher3.util.Preconditions;
 import com.android.launcher3.util.SecureSettingsObserver;
 
+import com.android.internal.util.aicp.PackageUtils;
+
 public class LauncherAppState {
 
     public static final String ACTION_FORCE_ROLOAD = "force-reload-launcher";
@@ -56,6 +58,8 @@ public class LauncherAppState {
 
     private HomeKeyWatcher mHomeKeyListener = null;
     private boolean mNeedsRestart;
+    private boolean mIsSearchAppAvailable;
+    private boolean mIsCalendarAppAvailable;
 
     public static LauncherAppState getInstance(final Context context) {
         return INSTANCE.get(context);
@@ -78,6 +82,8 @@ public class LauncherAppState {
         Preconditions.assertUIThread();
         mContext = context;
 
+        setSearchAppAvailable(PackageUtils.isPackageInstalled(context, Utilities.PACKAGE_NAME));
+        setCalendarAppAvailable(PackageUtils.isPackageInstalled(context, "com.google.android.calendar"));
         mInvariantDeviceProfile = InvariantDeviceProfile.INSTANCE.get(mContext);
         mIconCache = new IconCache(mContext, mInvariantDeviceProfile);
         mWidgetCache = new WidgetPreviewLoader(mContext, mIconCache);
@@ -210,4 +216,21 @@ public class LauncherAppState {
             return (LauncherProvider) cl.getLocalContentProvider();
         }
     }
+
+    public void setSearchAppAvailable(boolean available) {
+        mIsSearchAppAvailable = available;
+    }
+
+    public boolean isSearchAppAvailable() {
+        return mIsSearchAppAvailable;
+    }
+
+    public void setCalendarAppAvailable(boolean available) {
+        mIsCalendarAppAvailable = available;
+    }
+
+    public boolean isCalendarAppAvailable() {
+        return mIsCalendarAppAvailable;
+    }
+
 }

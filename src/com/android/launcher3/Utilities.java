@@ -166,7 +166,7 @@ public final class Utilities {
     public static final String DESKTOP_SHOW_LABEL = "pref_desktop_show_label";
     public static final String ALLAPPS_SHOW_LABEL = "pref_allapps_show_label";
     public static final String KEY_FEED_INTEGRATION = "pref_feed_integration";
-    public static final String DESKTOP_SHOW_QSB = "pref_qsb_show";
+    public static final String DESKTOP_SHOW_QUICKSPACE = "pref_show_quickspace";
     public static final String KEY_SWIPE_DOWN_GESTURE = "pref_allowSwipeDownClearAll";
     public static final String KEY_ICON_SIZE = "pref_icon_size";
 
@@ -261,8 +261,9 @@ public final class Utilities {
         return getPrefs(context).getBoolean(KEY_FEED_INTEGRATION, false /* Spirit Effect */);
     }
 
-    public static boolean showQsbWidget(Context context) {
-         return getPrefs(context).getBoolean(DESKTOP_SHOW_QSB, FeatureFlags.QSB_ON_FIRST_SCREEN);
+    public static boolean showQuickspace(Context context) {
+        SharedPreferences prefs = getPrefs(context.getApplicationContext());
+        return prefs.getBoolean(DESKTOP_SHOW_QUICKSPACE, true);
     }
 
     /**

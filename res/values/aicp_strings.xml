@@ -75,4 +75,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     <string name="pref_qsb_show_title">Quick Search Bar</string>
     <string name="pref_qsb_show_summary">Show quick searchbar on homescreen</string>
 
+    <!-- QuickSpace -->
+    <string name="show_quickspace_title">At A Glance</string>
+    <string name="show_quickspace_summary">Show at the top of your Home screen</string>
+    <string name="abbrev_wday_month_day_no_year">EEEEMMMd</string>
 </resources>
