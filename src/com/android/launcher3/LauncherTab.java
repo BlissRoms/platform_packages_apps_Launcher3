@@ -20,66 +20,33 @@ import com.android.launcher3.Launcher.LauncherOverlay;
 import com.android.launcher3.Launcher.LauncherOverlayCallbacks;
 import com.android.launcher3.Utilities;
 
-import com.google.android.libraries.launcherclient.LauncherClient;
-import com.google.android.libraries.launcherclient.LauncherClientCallbacksAdapter;
+import com.google.android.libraries.gsa.launcherclient.LauncherClient;
+import com.google.android.libraries.gsa.launcherclient.ClientOptions;
+import com.google.android.libraries.gsa.launcherclient.LauncherClientCallbacks;
 
 public class LauncherTab {
 
     private Launcher mLauncher;
+
+    private OverlayCallbackImpl mOverlayCallbacks;
     private LauncherClient mLauncherClient;
+
     private Workspace mWorkspace;
 
     public LauncherTab(Launcher launcher, boolean enabled) {
         mLauncher = launcher;
-        mLauncherClient = new LauncherClient(launcher, new LauncherClientCallbacks(), Utilities.PACKAGE_NAME, true);
-
         mWorkspace = launcher.getWorkspace();
 
         updateLauncherTab(enabled);
-        if (enabled && mLauncherClient.isConnected()) {
-            launcher.setLauncherOverlay(new LauncherOverlays());
-        }
     }
 
     protected void updateLauncherTab(boolean enabled) {
-        if (enabled) {
-            mLauncherClient = new LauncherClient(mLauncher,
-                    new LauncherClientCallbacks(), Utilities.PACKAGE_NAME, true);
-            mLauncher.setLauncherOverlay(new LauncherOverlays());
-        } else {
-            mLauncher.setLauncherOverlay(null);
-        }
+        mOverlayCallbacks = new OverlayCallbackImpl(mLauncher);
+        mLauncherClient = new LauncherClient(mLauncher, mOverlayCallbacks, new ClientOptions(enabled ? 1 : 0));
+        mOverlayCallbacks.setClient(mLauncherClient);
     }
 
     protected LauncherClient getClient() {
         return mLauncherClient;
-    }
-
-    private class LauncherOverlays implements LauncherOverlay {
-        @Override
-        public void onScrollInteractionBegin() {
-            mLauncherClient.startMove();
-        }
-
-        @Override
-        public void onScrollInteractionEnd() {
-            mLauncherClient.endMove();
-        }
-
-        @Override
-        public void onScrollChange(float progress, boolean rtl) {
-            mLauncherClient.updateMove(progress);
-        }
-
-        @Override
-        public void setOverlayCallbacks(LauncherOverlayCallbacks callbacks) {
-        }
-    }
-
-    private class LauncherClientCallbacks extends LauncherClientCallbacksAdapter {
-        @Override
-        public void onOverlayScrollChanged(float progress) {
-            mWorkspace.onOverlayScrollChanged(progress);
-        }
     }
 }

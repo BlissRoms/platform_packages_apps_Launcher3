@@ -40,6 +40,19 @@ LOCAL_MODULE := LauncherPluginLib
 include $(BUILD_STATIC_JAVA_LIBRARY)
 
 #
+# Prebuilt Google Feed library
+#
+include $(CLEAR_VARS)
+LOCAL_MODULE := libGoogleFeed
+LOCAL_MODULE_TAGS := optional
+LOCAL_PRIVATE_PLATFORM_APIS := true
+LOCAL_MODULE_CLASS := JAVA_LIBRARIES
+LOCAL_SRC_FILES := libs/libGoogleFeed.jar
+LOCAL_UNINSTALLABLE_MODULE := true
+LOCAL_CERTIFICATE := platform
+include $(BUILD_PREBUILT)
+
+#
 # Build rule for Launcher3 dependencies lib.
 #
 include $(CLEAR_VARS)
@@ -53,7 +66,7 @@ LOCAL_STATIC_ANDROID_LIBRARIES := \
     androidx.preference_preference \
     iconloader_base
 
-LOCAL_STATIC_JAVA_LIBRARIES := LauncherPluginLib
+LOCAL_STATIC_JAVA_LIBRARIES := LauncherPluginLib libGoogleFeed
 
 LOCAL_SRC_FILES := \
     $(call all-proto-files-under, protos) \
@@ -83,6 +96,7 @@ include $(CLEAR_VARS)
 LOCAL_USE_AAPT2 := true
 LOCAL_MODULE_TAGS := optional
 
+LOCAL_STATIC_JAVA_LIBRARIES := libGoogleFeed
 LOCAL_STATIC_ANDROID_LIBRARIES := \
     Launcher3CommonDepsLib \
     SecondaryDisplayLauncherLib
@@ -116,6 +130,7 @@ include $(BUILD_PACKAGE)
 include $(CLEAR_VARS)
 LOCAL_USE_AAPT2 := true
 LOCAL_MODULE_TAGS := optional
+LOCAL_STATIC_JAVA_LIBRARIES := libGoogleFeed
 LOCAL_STATIC_ANDROID_LIBRARIES := Launcher3CommonDepsLib
 
 LOCAL_SRC_FILES := \
@@ -155,7 +170,7 @@ ifneq (,$(wildcard frameworks/base))
   LOCAL_STATIC_JAVA_LIBRARIES := SystemUISharedLib launcherprotosnano
   LOCAL_PRIVATE_PLATFORM_APIS := true
 else
-  LOCAL_STATIC_JAVA_LIBRARIES := libSharedSystemUI libLauncherProtos
+  LOCAL_STATIC_JAVA_LIBRARIES := libSharedSystemUI libGoogleFeed libLauncherProtos
   LOCAL_SDK_VERSION := system_current
   LOCAL_MIN_SDK_VERSION := 26
 endif
@@ -223,7 +238,7 @@ LOCAL_MODULE_TAGS := optional
 ifneq (,$(wildcard frameworks/base))
   LOCAL_STATIC_JAVA_LIBRARIES := SystemUISharedLib launcherprotosnano
 else
-  LOCAL_STATIC_JAVA_LIBRARIES := libSharedSystemUI libLauncherProtos
+  LOCAL_STATIC_JAVA_LIBRARIES := libSharedSystemUI libGoogleFeed libLauncherProtos
 endif
 LOCAL_STATIC_ANDROID_LIBRARIES := Launcher3CommonDepsLib
 
@@ -269,7 +284,7 @@ LOCAL_MODULE_TAGS := optional
 ifneq (,$(wildcard frameworks/base))
   LOCAL_STATIC_JAVA_LIBRARIES := SystemUISharedLib launcherprotosnano
 else
-  LOCAL_STATIC_JAVA_LIBRARIES := libSharedSystemUI libLauncherProtos
+  LOCAL_STATIC_JAVA_LIBRARIES := libSharedSystemUI libGoogleFeed libLauncherProtos
 endif
 LOCAL_STATIC_ANDROID_LIBRARIES := Launcher3CommonDepsLib
 
