@@ -35,23 +35,28 @@ import com.android.launcher3.LauncherFiles;
 import com.android.launcher3.R;
 import com.android.launcher3.Utilities;
 
-public class Gestures extends SettingsActivity implements PreferenceFragment.OnPreferenceStartFragmentCallback {
+public class Gestures extends SettingsActivity
+        implements PreferenceFragment.OnPreferenceStartFragmentCallback {
 
     @Override
     protected void onCreate(final Bundle bundle) {
         super.onCreate(bundle);
         if (bundle == null) {
-            getFragmentManager().beginTransaction().replace(android.R.id.content, new GesturesSettingsFragment()).commit();
+            getFragmentManager().beginTransaction().replace(android.R.id.content,
+                new GesturesSettingsFragment()).commit();
         }
     }
 
     @Override
-    public boolean onPreferenceStartFragment(PreferenceFragment preferenceFragment, Preference preference) {
-        Fragment instantiate = Fragment.instantiate(this, preference.getFragment(), preference.getExtras());
+    public boolean onPreferenceStartFragment(PreferenceFragment preferenceFragment,
+            Preference preference) {
+        Fragment instantiate = Fragment.instantiate(this, preference.getFragment(),
+            preference.getExtras());
         if (instantiate instanceof DialogFragment) {
             ((DialogFragment) instantiate).show(getFragmentManager(), preference.getKey());
         } else {
-            getFragmentManager().beginTransaction().replace(android.R.id.content, instantiate).addToBackStack(preference.getKey()).commit();
+            getFragmentManager().beginTransaction().replace(
+                android.R.id.content, instantiate).addToBackStack(preference.getKey()).commit();
         }
         return true;
     }
@@ -63,7 +68,7 @@ public class Gestures extends SettingsActivity implements PreferenceFragment.OnP
 
         ActionBar actionBar;
 
-        private ListPreference mHomescreenGestures;
+        private ListPreference mDoubleTapGestures;
 
         @Override
         public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
@@ -73,12 +78,12 @@ public class Gestures extends SettingsActivity implements PreferenceFragment.OnP
 
             mContext = getActivity();
 
-            actionBar=getActivity().getActionBar();
+            actionBar = getActivity().getActionBar();
             assert actionBar != null;
             actionBar.setDisplayHomeAsUpEnabled(true);
 
-            mHomescreenGestures = (ListPreference) findPreference(Utilities.KEY_HOMESCREEN_DT_GESTURES);
-            mHomescreenGestures.setValue(getDevicePrefs(mContext).getString(Utilities.KEY_HOMESCREEN_DT_GESTURES, "0"));
+            mDoubleTapGestures = (ListPreference) findPreference(Utilities.KEY_HOMESCREEN_DT_GESTURES);
+            mDoubleTapGestures.setValue(getDevicePrefs(mContext).getString(Utilities.KEY_HOMESCREEN_DT_GESTURES, "0"));
 
             PreferenceScreen screen = getPreferenceScreen();
             for (int i = screen.getPreferenceCount() - 1; i >= 0; i--) {
@@ -118,7 +123,8 @@ public class Gestures extends SettingsActivity implements PreferenceFragment.OnP
                 case Utilities.KEY_HOMESCREEN_DT_GESTURES:
                     String gestureValue = (String) newValue;
                     getDevicePrefs(mContext).edit().putString(Utilities.KEY_HOMESCREEN_DT_GESTURES, gestureValue).commit();
-                    mHomescreenGestures.setValue(gestureValue);
+                    mDoubleTapGestures.setValue(gestureValue);
+                    mDoubleTapGestures.setSummary(mDoubleTapGestures.getEntry());
                     break;
             }
             return false;

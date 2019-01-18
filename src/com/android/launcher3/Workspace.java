@@ -256,7 +256,7 @@ public class Workspace extends PagedView<WorkspacePageIndicator>
     private final WorkspaceStateTransitionAnimation mStateTransitionAnimation;
 
     private GestureDetector mGestureListener;
-    private int mGestureMode;
+    private int mDoubleGestureMode;
 
     /**
      * Used to inflate the Workspace from XML.
@@ -290,13 +290,14 @@ public class Workspace extends PagedView<WorkspacePageIndicator>
         // Disable multitouch across the workspace/all apps/customize tray
         setMotionEventSplittingEnabled(true);
 
-        mGestureMode = Integer.valueOf(
+        mDoubleGestureMode = Integer.valueOf(
                 getDevicePrefs(getContext()).getString(Utilities.KEY_HOMESCREEN_DT_GESTURES, "0"));
         mGestureListener =
                 new GestureDetector(context, new GestureDetector.SimpleOnGestureListener() {
             @Override
             public boolean onDoubleTap(MotionEvent event) {
-                triggerGesture(event);
+                // Double tap gestures
+                Gestures(event, mDoubleGestureMode);
                 return true;
             }
         });
@@ -304,22 +305,38 @@ public class Workspace extends PagedView<WorkspacePageIndicator>
         setOnTouchListener(new WorkspaceTouchListener(mLauncher, this));
     }
 
-    private void triggerGesture(MotionEvent event) {
-        switch(mGestureMode) {
-            case 0:  // Stock
+    // Gestures
+    private void Gestures(MotionEvent event, int gestureType) {
+        switch(gestureType) {
+            case 0: // Stock
                 break;
             // Sleep
             case 1:
-                BlissUtils.switchScreenOff(context);
+                BlissUtils.switchScreenOff(getContext());
                 break;
-            case 2: // Google search
+/*            case 2: // Flashlight
+                BlissUtils.toggleCameraFlash();
+                break;*/
+            case 3: // Google search
                 launchGoogleSearch(getContext());
                 break;
+            case 4: // Volume panel
+                BlissUtils.toggleVolumePanel(getContext());
+                break;
+            case 5: // Clear notifications
+                BlissUtils.clearAllNotifications();
+                break;
+            case 7: // Notifications
+                BlissUtils.toggleNotifications();
+                break;
+/*            case 8: // QS panel
+                BlissUtils.toggleQsPanel();
+                break;*/
         }
     }
 
-    public void setGestures(int mode) {
-        mGestureMode = mode;
+    public void setDoubleTapGestures(int mode) {
+        mDoubleGestureMode = mode;
     }
 
     public boolean checkCustomGestures(MotionEvent ev) {

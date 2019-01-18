@@ -192,10 +192,14 @@
     <string name="date_format_dayonly" translatable="false">EEEE</string>
 
     <!-- Gestures -->
-    <string name="pref_homescreen_dt_gestures_title">Double tap gesture</string>
-    <string name="pref_homescreen_dt_gestures_summary">Select the action of the double tap gesture on the home screen</string>
-    <string name="pref_homescreen_dt_gestures_none">None</string>
-    <string name="pref_homescreen_dt_gestures_sleep">Sleep</string>
-    <string name="pref_homescreen_dt_gestures_google">Google search</string>
+    <string name="pref_homescreen_dt_gestures_title">Double tap</string>
+    <string name="pref_homescreen_gestures_none">None</string>
+    <string name="pref_homescreen_gestures_sleep">Screen off</string>
+    <string name="pref_homescreen_gestures_torch">Flashlight</string>
+    <string name="pref_homescreen_gestures_google">Google search</string>
     <string name="pref_homescreen_dt_gestures_google_toast">Google search is not installed</string>
+    <string name="pref_homescreen_gestures_volume_panel">Volume panel</string>
+    <string name="pref_homescreen_gestures_clear_notifications">Clear notifications</string>
+    <string name="pref_homescreen_gestures_notifications">Notifications</string>
+    <string name="pref_homescreen_gestures_qs_panel">QS panel</string>
 </resources>
