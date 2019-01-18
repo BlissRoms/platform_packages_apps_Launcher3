@@ -28,7 +28,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     <string name="app_drawer_category_title">App drawer</string>
     <string name="app_drawer_category_summary">Customize your app drawer</string>
     <string name="gestures_category_title">Gestures</string>
-    <string name="gestures_category_summary">Enhance your experience</string>
+    <string name="gestures_category_summary">Double tap and clear-all gestures</string>
 
     <!-- Sub categories -->
     <string name="home_grid_title">Grid layout</string>
@@ -43,13 +43,17 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
     <!-- Gestures -->
     <string name="allow_swipe_down_clearall_title">Clear all on swipe down from recents view</string>
-    <string name="allow_swipe_down_clearall_desc">Swipe vertically downward in recents view to clear all apps.\n\nThis doesn\'t works if P navbar gestures are enable</string>
-    <string name="pref_homescreen_dt_gestures_title">Double tap gesture</string>
-    <string name="pref_homescreen_dt_gestures_summary">Select the action of the double tap gesture on the home screen</string>
-    <string name="pref_homescreen_dt_gestures_none">None</string>
-    <string name="pref_homescreen_dt_gestures_sleep">Screen off</string>
-    <string name="pref_homescreen_dt_gestures_google">Google search</string>
+    <string name="allow_swipe_down_clearall_desc">Swipe vertically downward in recents view to clear all apps</string>
+    <string name="pref_homescreen_dt_gestures_title">Double tap</string>
+    <string name="pref_homescreen_gestures_none">None</string>
+    <string name="pref_homescreen_gestures_sleep">Screen off</string>
+    <string name="pref_homescreen_gestures_torch">Flashlight</string>
+    <string name="pref_homescreen_gestures_google">Google search</string>
     <string name="pref_homescreen_dt_gestures_google_toast">Google search is not installed</string>
+    <string name="pref_homescreen_gestures_volume_panel">Volume panel</string>
+    <string name="pref_homescreen_gestures_clear_notifications">Clear notifications</string>
+    <string name="pref_homescreen_gestures_notifications">Notifications</string>
+    <string name="pref_homescreen_gestures_qs_panel">QS panel</string>
 
     <!-- Google Feed -->
     <string name="google_feed_title">Display Google app</string>
