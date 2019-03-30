@@ -8,6 +8,13 @@
         android:defaultValue="true"
         android:persistent="true" />
 
+    <SwitchPreference
+        android:key="pref_apps_always_show_label"
+        android:title="@string/apps_always_show_label_title"
+        android:summary="@string/apps_always_show_label_summary"
+        android:defaultValue="false"
+        android:persistent="true" />
+
     <ListPreference
         android:key="pref_icon_size"
         android:title="@string/icon_size_title"

@@ -34,6 +34,7 @@ import androidx.preference.ListPreference;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragment;
 import androidx.preference.PreferenceScreen;
+import androidx.preference.SwitchPreference;
 import android.provider.Settings;
 import android.view.MenuItem;
 
@@ -133,6 +134,7 @@ public class UserInterface extends SettingsActivity implements PreferenceFragmen
                     return Utilities.ATLEAST_OREO;
 
                 case Utilities.KEY_ICON_SIZE:
+                case Utilities.APPS_ALWAYS_SHOW_LABEL:
                     preference.setOnPreferenceChangeListener(this);
                     return true;
             }
@@ -158,8 +160,9 @@ public class UserInterface extends SettingsActivity implements PreferenceFragmen
         public boolean onPreferenceChange(Preference preference, final Object newValue) {
             switch (preference.getKey()) {
                 case Utilities.KEY_ICON_SIZE:
-                LauncherAppState.getInstanceNoCreate().setNeedsRestart();
-                return true;
+                case Utilities.APPS_ALWAYS_SHOW_LABEL:
+                    LauncherAppState.getInstanceNoCreate().setNeedsRestart();
+                    return true;
             }
             return false;
         }

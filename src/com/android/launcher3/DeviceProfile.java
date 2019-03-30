@@ -131,10 +131,13 @@ public class DeviceProfile {
     // Notification dots
     public DotRenderer mDotRenderer;
 
+    private Context mContext;
+
     public DeviceProfile(Context context, InvariantDeviceProfile inv,
             Point minSize, Point maxSize,
             int width, int height, boolean isLandscape, boolean isMultiWindowMode) {
 
+        mContext = context;
         this.inv = inv;
         this.isLandscape = isLandscape;
         this.isMultiWindowMode = isMultiWindowMode;
@@ -334,8 +337,9 @@ public class DeviceProfile {
         allAppsIconDrawablePaddingPx = iconDrawablePaddingPx;
         allAppsCellHeightPx = getCellSize().y;
 
-        if (isVerticalLayout) {
-            // Always hide the Workspace text with vertical bar layout.
+        if (isVerticalLayout && !Utilities.showAppLabelsAlways(mContext)) {
+            // Always hide the Workspace text with vertical bar layout
+            // unless user chooses to opt out with the ui preference switch
             adjustToHideWorkspaceLabels();
         }
 

@@ -169,6 +169,7 @@ public final class Utilities {
     public static final String DESKTOP_SHOW_QUICKSPACE = "pref_show_quickspace";
     public static final String KEY_SWIPE_DOWN_GESTURE = "pref_allowSwipeDownClearAll";
     public static final String KEY_ICON_SIZE = "pref_icon_size";
+    public static final String APPS_ALWAYS_SHOW_LABEL = "pref_apps_always_show_label";
 
     public static final String KEY_HOMESCREEN_DT_GESTURES = "pref_homescreen_dt_gestures";
 
@@ -255,6 +256,10 @@ public final class Utilities {
 
     public static boolean showAllAppsLabel(Context context) {
          return getPrefs(context).getBoolean(ALLAPPS_SHOW_LABEL, true);
+    }
+
+    public static boolean showAppLabelsAlways(Context context) {
+        return getPrefs(context).getBoolean(APPS_ALWAYS_SHOW_LABEL, false);
     }
 
     public static boolean hasFeedIntegration(Context context) {
