@@ -130,6 +130,7 @@ public final class Utilities {
     public static final String DESKTOP_SHOW_QUICKSPACE = "pref_show_quickspace";
     public static final String SHOW_WORKSPACE_GRADIENT = "pref_show_workspace_grad";
     public static final String SHOW_HOTSEAT_GRADIENT = "pref_show_hotseat_grad";
+    public static final String KEY_SHOW_ALT_QUICKSPACE = "pref_show_alt_quickspace";
 
     /**
      * Indicates if the device has a debug build. Should only be used to store additional info or
@@ -724,6 +725,10 @@ public final class Utilities {
 
     public static boolean showHotseatGradient(Context context) {
         return getPrefs(context).getBoolean(SHOW_HOTSEAT_GRADIENT, true);
+    }
+
+    public static boolean useAlternativeQuickspaceUI(Context context) {
+        return getPrefs(context).getBoolean(KEY_SHOW_ALT_QUICKSPACE, false);
     }
 
     public static void restart(final Context context) {
