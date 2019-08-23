@@ -60,7 +60,8 @@ public class Homescreen extends SettingsActivity
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         switch (key) {
-            case KEY_MINUS_ONE:
+            case Utilities.KEY_FEED_INTEGRATION:
+            case Utilities.KEY_SHOW_ALT_QUICKSPACE:
                 LauncherAppState.getInstanceNoCreate().setNeedsRestart();
                 break;
             default:
