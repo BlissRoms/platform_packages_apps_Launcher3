@@ -146,6 +146,7 @@ public final class Utilities {
     public static final String KEY_FEED_INTEGRATION = "pref_feed_integration";
     public static final String DESKTOP_SHOW_QUICKSPACE = "pref_show_quickspace";
     public static final String KEY_SHOW_ALT_QUICKSPACE = "pref_show_alt_quickspace";
+    public static final String KEY_SHOW_QUICKSPACE_NOWPLAYING = "pref_quickspace_np";
     public static final String KEY_SWIPE_DOWN_GESTURE = "pref_allowSwipeDownClearAll";
     public static final String KEY_ICON_SIZE = "pref_icon_size";
     public static final String APPS_ALWAYS_SHOW_LABEL = "pref_apps_always_show_label";
@@ -253,6 +254,10 @@ public final class Utilities {
 
     public static boolean useAlternativeQuickspaceUI(Context context) {
         return getPrefs(context).getBoolean(KEY_SHOW_ALT_QUICKSPACE, false);
+    }
+
+    public static boolean isQuickspaceNowPlaying(Context context) {
+        return getPrefs(context).getBoolean(KEY_SHOW_QUICKSPACE_NOWPLAYING, false);
     }
 
     /**

@@ -62,6 +62,7 @@ public class Homescreen extends SettingsActivity
         switch (key) {
             case Utilities.KEY_FEED_INTEGRATION:
             case Utilities.KEY_SHOW_ALT_QUICKSPACE:
+            case Utilities.KEY_SHOW_QUICKSPACE_NOWPLAYING:
                 LauncherAppState.getInstanceNoCreate().setNeedsRestart();
                 break;
             default:
