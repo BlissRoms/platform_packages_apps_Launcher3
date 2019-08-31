@@ -92,7 +92,7 @@ public class SettingsHomescreen extends Activity
                 c.getPackageManager().setComponentEnabledSetting(cn, newValue,
                         PackageManager.DONT_KILL_APP);
             }
-        } else if (Utilities.DESKTOP_SHOW_QUICKSPACE.equals(key) || KEY_FEED_INTEGRATION.equals(key) || Utilities.SHOW_WORKSPACE_GRADIENT.equals(key) || Utilities.KEY_SHOW_ALT_QUICKSPACE.equals(key) || Utilities.SHOW_HOTSEAT_GRADIENT.equals(key)) {
+        } else if (Utilities.DESKTOP_SHOW_QUICKSPACE.equals(key) || KEY_FEED_INTEGRATION.equals(key) || Utilities.SHOW_WORKSPACE_GRADIENT.equals(key) || Utilities.KEY_SHOW_ALT_QUICKSPACE.equals(key) || Utilities.KEY_SHOW_QUICKSPACE_NOWPLAYING.equals(key) || Utilities.SHOW_HOTSEAT_GRADIENT.equals(key)) {
             LauncherAppState.getInstanceNoCreate().setNeedsRestart();
         }
     }
