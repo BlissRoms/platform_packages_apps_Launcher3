@@ -186,7 +186,7 @@ public class SettingsActivity extends Activity
             SwitchPreference feedIntegration = (SwitchPreference)
                     findPreference(KEY_FEED_INTEGRATION);
 
-            if (!hasPackageInstalled(LauncherTab.SEARCH_PACKAGE)) {
+            if (!Utilities.isPackageInstalled(getActivity(), LauncherTab.SEARCH_PACKAGE)) {
                 getPreferenceScreen().removePreference(feedIntegration);
             }
         }
@@ -263,16 +263,6 @@ public class SettingsActivity extends Activity
                     getView().postDelayed(highlighter, DELAY_HIGHLIGHT_DURATION_MILLIS);
                     mPreferenceHighlighted = true;
                 }
-            }
-        }
-
-        private boolean hasPackageInstalled(String pkgName) {
-            try {
-                ApplicationInfo ai = getContext().getPackageManager()
-                        .getApplicationInfo(pkgName, 0);
-                return ai.enabled;
-            } catch (PackageManager.NameNotFoundException e) {
-                return false;
             }
         }
 
