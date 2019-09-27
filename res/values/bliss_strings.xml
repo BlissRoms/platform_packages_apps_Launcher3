@@ -61,4 +61,6 @@
     <!-- Preference default value -->
     <string name="pref_value_default">Default</string>
 
+    <string name="state_loading">Applying\u2026</string>
+
 </resources>
