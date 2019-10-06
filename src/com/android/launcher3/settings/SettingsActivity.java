@@ -51,6 +51,9 @@ import com.android.launcher3.graphics.GridOptionsProvider;
 import com.android.launcher3.uioverrides.plugins.PluginManagerWrapper;
 import com.android.launcher3.util.SecureSettingsObserver;
 
+import com.aosp.launcher.AospLauncherCallbacks;
+import com.aosp.launcher.AospUtils;
+
 /**
  * Settings activity for Launcher. Currently implements the following setting: Allow rotation
  */
@@ -68,6 +71,8 @@ public class SettingsActivity extends Activity
     public static final String EXTRA_SHOW_FRAGMENT_ARGS = ":settings:show_fragment_args";
     private static final int DELAY_HIGHLIGHT_DURATION_MILLIS = 600;
     public static final String SAVE_HIGHLIGHTED_KEY = "android:preference_highlighted";
+
+    public static final String MINUS_ONE_KEY = "pref_enable_minus_one"; 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -208,6 +213,10 @@ public class SettingsActivity extends Activity
                     // Show if plugins are enabled or flag UI is enabled.
                     return FeatureFlags.showFlagTogglerUi(getContext()) ||
                             PluginManagerWrapper.hasPlugins(getContext());
+
+                case MINUS_ONE_KEY:
+                    return AospUtils.hasPackageInstalled(getActivity(),
+                            AospLauncherCallbacks.SEARCH_PACKAGE);
             }
 
             return true;
