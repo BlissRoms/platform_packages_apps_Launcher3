@@ -64,6 +64,7 @@ import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.animation.Interpolator;
 
+import com.android.launcher3.LauncherModel;
 import com.android.launcher3.compat.LauncherAppsCompat;
 import com.android.launcher3.compat.ShortcutConfigActivityInfo;
 import com.android.launcher3.dragndrop.FolderAdaptiveIcon;
@@ -729,8 +730,7 @@ public final class Utilities {
     }
 
     public static void restart(final Context context) {
-        //ProgressDialog.show(context, null, context.getString(R.string.state_loading), true, false);
-        new LooperExecutor(MODEL_EXECUTOR.getLooper()).execute(() -> {
+        new LooperExecutor(LauncherModel.getWorkerLooper()).execute(() -> {
             try {
                 Thread.sleep(WAIT_BEFORE_RESTART);
             } catch (Exception ignored) {
@@ -738,4 +738,5 @@ public final class Utilities {
             android.os.Process.killProcess(android.os.Process.myPid());
         });
     }
+
 }

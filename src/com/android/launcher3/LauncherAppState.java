@@ -123,13 +123,6 @@ public class LauncherAppState {
             mNotificationDotsObserver.register();
             mNotificationDotsObserver.dispatchOnChange();
         }
-    }
-
-    protected void onNotificationSettingsChanged(boolean areNotificationDotsEnabled) {
-        if (areNotificationDotsEnabled) {
-            NotificationListener.requestRebind(new ComponentName(
-                    mContext, NotificationListener.class));
-        }
 
         mHomeKeyListener = new HomeKeyWatcher(mContext);
     }
@@ -154,6 +147,13 @@ public class LauncherAppState {
         if (mNeedsRestart) {
             mHomeKeyListener.stopWatch();
             Utilities.restart(mContext);
+        }
+    }
+
+    protected void onNotificationSettingsChanged(boolean areNotificationDotsEnabled) {
+        if (areNotificationDotsEnabled) {
+            NotificationListener.requestRebind(new ComponentName(
+                    mContext, NotificationListener.class));
         }
     }
 
