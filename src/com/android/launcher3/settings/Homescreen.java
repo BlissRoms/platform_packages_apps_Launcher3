@@ -62,6 +62,9 @@ public class Homescreen extends SettingsActivity implements PreferenceFragment.O
             implements Preference.OnPreferenceChangeListener, Preference.OnPreferenceClickListener {
 
         ActionBar actionBar;
+        ListPreference gridColumns;
+        ListPreference gridRows;
+        ListPreference hotseatColumns;
 
         @Override
         public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
@@ -76,13 +79,13 @@ public class Homescreen extends SettingsActivity implements PreferenceFragment.O
             Preference rotationPref = findPreference(ALLOW_ROTATION_PREFERENCE_KEY);
             rotationPref.setDefaultValue(getAllowRotationDefaultValue());
 
-            final ListPreference gridColumns = (ListPreference) findPreference(Utilities.GRID_COLUMNS);
+            gridColumns = (ListPreference) findPreference(Utilities.GRID_COLUMNS);
             gridColumns.setSummary(gridColumns.getEntry());
 
-            final ListPreference gridRows = (ListPreference) findPreference(Utilities.GRID_ROWS);
+            gridRows = (ListPreference) findPreference(Utilities.GRID_ROWS);
             gridRows.setSummary(gridRows.getEntry());
 
-            final ListPreference hotseatColumns = (ListPreference) findPreference(Utilities.HOTSEAT_ICONS);
+            hotseatColumns = (ListPreference) findPreference(Utilities.HOTSEAT_ICONS);
             hotseatColumns.setSummary(hotseatColumns.getEntry());
 
             PreferenceScreen screen = getPreferenceScreen();
@@ -129,6 +132,17 @@ public class Homescreen extends SettingsActivity implements PreferenceFragment.O
         @Override
         public boolean onPreferenceChange(Preference preference, final Object newValue) {
             SettingsActivity.restartNeeded = true;
+            String key = preference.getKey();
+            if (Utilities.GRID_COLUMNS.equals(key)) {
+                int index = gridColumns.findIndexOfValue((String) newValue);
+                gridColumns.setSummary(gridColumns.getEntries()[index]);
+            } else if (Utilities.GRID_ROWS.equals(key)) {
+                int index = gridRows.findIndexOfValue((String) newValue);
+                gridRows.setSummary(gridRows.getEntries()[index]);
+            } else if (Utilities.HOTSEAT_ICONS.equals(key)) {
+                int index = hotseatColumns.findIndexOfValue((String) newValue);
+                hotseatColumns.setSummary(hotseatColumns.getEntries()[index]);
+            }
             return true;
         }
 
