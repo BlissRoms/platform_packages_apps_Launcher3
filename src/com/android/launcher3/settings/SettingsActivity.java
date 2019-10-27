@@ -168,17 +168,11 @@ public class SettingsActivity extends Activity
         protected boolean initPreference(Preference preference) {
             switch (preference.getKey()) {
                 case FLAGS_PREFERENCE_KEY:
-                    // Only show flag toggler UI if this build variant implements that.
-                    return FeatureFlags.showFlagTogglerUi(getContext());
-
+                    return false;
                 case DEVELOPER_OPTIONS_KEY:
-                    // Show if plugins are enabled or flag UI is enabled.
-                    return FeatureFlags.showFlagTogglerUi(getContext()) ||
-                            PluginManagerWrapper.hasPlugins(getContext());
+                    return false;
                 case GRID_OPTIONS_PREFERENCE_KEY:
-                    return Utilities.isDevelopersOptionsEnabled(getContext()) &&
-                            Utilities.IS_DEBUG_DEVICE &&
-                            Utilities.existsStyleWallpapers(getContext());
+                    return false;
             }
 
             return true;
