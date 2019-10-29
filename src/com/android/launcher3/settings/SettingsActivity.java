@@ -45,20 +45,13 @@ import androidx.preference.PreferenceScreen;
 import androidx.recyclerview.widget.RecyclerView;
 
 /**
- * Settings activity for Launcher. Currently implements the following setting: Allow rotation
+ * Settings activity for Launcher. Currently implements only various categories
  */
 public class SettingsActivity extends Activity
         implements OnPreferenceStartFragmentCallback, OnPreferenceStartScreenCallback {
 
     private static final String DEVELOPER_OPTIONS_KEY = "pref_developer_options";
     private static final String FLAGS_PREFERENCE_KEY = "flag_toggler";
-    private static final String GRID_ROWS_KEY = "pref_grid_rows";
-    private static final String GRID_COLUMNS_KEY = "pref_grid_columns";
-    private static final String HOTSEAT_ICONS_KEY = "pref_hotseat_icons";
-
-    private static final String NOTIFICATION_DOTS_PREFERENCE_KEY = "pref_icon_badging";
-    /** Hidden field Settings.Secure.ENABLED_NOTIFICATION_LISTENERS */
-    private static final String NOTIFICATION_ENABLED_LISTENERS = "enabled_notification_listeners";
 
     public static final String EXTRA_FRAGMENT_ARG_KEY = ":settings:fragment_args_key";
     public static final String EXTRA_SHOW_FRAGMENT_ARGS = ":settings:show_fragment_args";
