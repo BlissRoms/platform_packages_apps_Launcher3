@@ -197,7 +197,7 @@ public class InvariantDeviceProfile {
         GridOption closestProfile = allOptions.get(0).grid;
         numRows = Utilities.getGridRows(context, closestProfile.numRows);
         numColumns = Utilities.getGridColumns(context, closestProfile.numColumns);
-        numAllAppColumns = closestProfile.numColumns;
+        numAllAppColumns = closestProfile.numAllAppColumns;
         numHotseatIcons = Utilities.getHotseatIcons(context, closestProfile.numHotseatIcons);
         defaultLayoutId = closestProfile.defaultLayoutId;
         demoModeLayoutId = closestProfile.demoModeLayoutId;
@@ -490,6 +490,7 @@ public class InvariantDeviceProfile {
         public final String name;
         public final int numRows;
         public final int numColumns;
+        public final int numAllAppColumns;
 
         private final int numFolderRows;
         private final int numFolderColumns;
@@ -507,6 +508,7 @@ public class InvariantDeviceProfile {
             name = a.getString(R.styleable.GridDisplayOption_name);
             numRows = a.getInt(R.styleable.GridDisplayOption_numRows, 0);
             numColumns = a.getInt(R.styleable.GridDisplayOption_numColumns, 0);
+            numAllAppColumns = a.getInt(R.styleable.GridDisplayOption_numAllAppColumns, 0);
 
             defaultLayoutId = a.getResourceId(
                     R.styleable.GridDisplayOption_defaultLayoutId, 0);
