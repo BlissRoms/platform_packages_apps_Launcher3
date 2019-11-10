@@ -117,6 +117,7 @@ android_library {
         "libGoogleFeed",
         "SettingsLib",
         "monet",
+        "VendorSupport-preference",
     ],
     manifest: "AndroidManifest-common.xml",
     sdk_version: "current",
