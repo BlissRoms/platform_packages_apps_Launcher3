@@ -348,10 +348,7 @@ public class InvariantDeviceProfile {
         InvariantDeviceProfile oldProfile = new InvariantDeviceProfile(this);
 
         // Re-init grid
-        String gridName = Utilities.getPrefs(context).getBoolean(GRID_OPTIONS_PREFERENCE_KEY, false)
-                ? Utilities.getPrefs(context).getString(KEY_IDP_GRID_NAME, null)
-                : null;
-        initGrid(context, gridName);
+		String gridName = Utilities.getPrefs(context).getString(KEY_IDP_GRID_NAME, null);
 
         int changeFlags = 0;
         if (numRows != oldProfile.numRows ||
