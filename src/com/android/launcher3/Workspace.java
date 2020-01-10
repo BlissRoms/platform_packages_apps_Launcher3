@@ -317,9 +317,9 @@ public class Workspace extends PagedView<WorkspacePageIndicator>
             case 1:  // Screen off
                 AicpUtils.goToSleep(getContext());
                 break;
-/*            case 2: // Flashlight
+            case 2: // Flashlight
                 AicpUtils.toggleCameraFlash();
-                break;*/
+                break;
             case 3: // Google search
                 launchGoogleSearch(getContext());
                 break;
@@ -329,12 +329,21 @@ public class Workspace extends PagedView<WorkspacePageIndicator>
             case 5: // Clear notifications
                 AicpUtils.clearAllNotifications();
                 break;
+            case 6: // Screenrecord
+                AicpUtils.takeScreenrecord(getContext(), UserHandle.CURRENT);
+                break;
             case 7: // Notifications
                 AicpUtils.toggleNotifications();
                 break;
-/*            case 8: // QS panel
+            case 8: // QS panel
                 AicpUtils.toggleQsPanel();
-                break;*/
+                break;
+            case 9: // Take screenshot - full screen
+                AicpUtils.takeScreenshot(true);
+                break;
+            case 10: // Take screenshot - partial
+                AicpUtils.takeScreenshot(false);
+                break;
         }
     }
 
