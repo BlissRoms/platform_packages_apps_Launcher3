@@ -314,9 +314,9 @@ public class Workspace extends PagedView<WorkspacePageIndicator>
             case 1:
                 BlissUtils.switchScreenOff(getContext());
                 break;
-/*            case 2: // Flashlight
+            case 2: // Flashlight
                 BlissUtils.toggleCameraFlash();
-                break;*/
+                break;
             case 3: // Google search
                 launchGoogleSearch(getContext());
                 break;
@@ -326,12 +326,18 @@ public class Workspace extends PagedView<WorkspacePageIndicator>
             case 5: // Clear notifications
                 BlissUtils.clearAllNotifications();
                 break;
-            case 7: // Notifications
+            case 6: // Notifications
                 BlissUtils.toggleNotifications();
                 break;
-/*            case 8: // QS panel
+            case 7: // QS panel
                 BlissUtils.toggleQsPanel();
-                break;*/
+                break;
+            case 8: // Take screenshot - full screen
+                BlissUtils.takeScreenshot(1);
+                break;
+            case 9: // Take screenshot - partial
+                BlissUtils.takeScreenshot(2);
+                break;
         }
     }
 

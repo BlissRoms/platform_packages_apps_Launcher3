@@ -200,6 +200,9 @@
     <string name="pref_homescreen_dt_gestures_google_toast">Google search is not installed</string>
     <string name="pref_homescreen_gestures_volume_panel">Volume panel</string>
     <string name="pref_homescreen_gestures_clear_notifications">Clear notifications</string>
-    <string name="pref_homescreen_gestures_notifications">Notifications</string>
+    <string name="pref_homescreen_gestures_notifications">Notifications panel</string>
     <string name="pref_homescreen_gestures_qs_panel">QS panel</string>
+    <string name="pref_homescreen_gestures_screenrecord">Screenrecord</string>
+    <string name="pref_homescreen_gestures_screenshot_full">Screenshot - full</string>
+    <string name="pref_homescreen_gestures_screenshot_partial">Screenshot - partial</string>
 </resources>
