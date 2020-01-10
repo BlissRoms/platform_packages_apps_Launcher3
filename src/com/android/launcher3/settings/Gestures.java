@@ -85,6 +85,7 @@ public class Gestures extends SettingsActivity
 
             mDoubleTapGestures = (ListPreference) findPreference(Utilities.KEY_HOMESCREEN_DT_GESTURES);
             mDoubleTapGestures.setValue(getDevicePrefs(mContext).getString(Utilities.KEY_HOMESCREEN_DT_GESTURES, "0"));
+            mDoubleTapGestures.setSummary(mDoubleTapGestures.getEntry());
 
             PreferenceScreen screen = getPreferenceScreen();
             for (int i = screen.getPreferenceCount() - 1; i >= 0; i--) {
