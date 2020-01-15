@@ -68,7 +68,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
     <!-- Show labels on icon -->
     <string name="app_show_label_title">App labels</string>
-    <string name="desktop_show_label_summary">Show the labels of apps on the homscreen</string>
+    <string name="desktop_show_label_summary">Show the labels of apps on the homescreen</string>
     <string name="allapps_show_label_summary">Show the labels of apps in the app drawer</string>
 
     <!-- Show QSB on homescreen -->
