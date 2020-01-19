@@ -155,9 +155,10 @@ public class BubbleTextView extends TextView implements ItemInfoUpdateReceiver, 
 
         display = a.getInteger(R.styleable.BubbleTextView_iconDisplay, DISPLAY_WORKSPACE);
         final int defaultIconSize;
+        final boolean showDesktopLabel = Utilities.showDesktopLabel(context);
         if (display == DISPLAY_WORKSPACE) {
             DeviceProfile grid = mActivity.getWallpaperDeviceProfile();
-            if(Utilities.showDesktopLabel(context)) {
+            if(showDesktopLabel) {
                 setTextSize(TypedValue.COMPLEX_UNIT_PX, grid.iconTextSizePx);
                 setCompoundDrawablePadding(grid.iconDrawablePaddingPx);
             } else {
@@ -177,8 +178,13 @@ public class BubbleTextView extends TextView implements ItemInfoUpdateReceiver, 
             defaultIconSize = grid.allAppsIconSizePx;
         } else if (display == DISPLAY_FOLDER) {
             DeviceProfile grid = mActivity.getDeviceProfile();
-            setTextSize(TypedValue.COMPLEX_UNIT_PX, grid.folderChildTextSizePx);
-            setCompoundDrawablePadding(grid.folderChildDrawablePaddingPx);
+            if(showDesktopLabel) {
+                setTextSize(TypedValue.COMPLEX_UNIT_PX, grid.folderChildTextSizePx);
+                setCompoundDrawablePadding(grid.folderChildDrawablePaddingPx);
+            } else {
+                setTextSize(TypedValue.COMPLEX_UNIT_PX, 0);
+                setCompoundDrawablePadding(0);
+            }
             defaultIconSize = grid.folderChildIconSizePx;
         } else {
             defaultIconSize = mActivity.getDeviceProfile().iconSizePx;
