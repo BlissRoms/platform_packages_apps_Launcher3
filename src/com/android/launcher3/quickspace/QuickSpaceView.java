@@ -20,7 +20,6 @@ import android.content.ComponentName;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.Icon;
 import android.net.Uri;
@@ -114,17 +113,6 @@ public class QuickSpaceView extends FrameLayout implements ValueAnimator.Animato
         mWeatherIcon = findViewById(R.id.weather_icon);
         mWeatherContent = findViewById(R.id.weather_content);
         mWeatherTemp = findViewById(R.id.weather_temp);
-
-        setTypeface(mClockView, mWeatherTemp);
-    }
-
-    private void setTypeface(TextView... views) {
-        Typeface tf = Typeface.createFromAsset(getContext().getAssets(), "fonts/GoogleSans-Regular.ttf");
-        for (TextView view : views) {
-            if (view != null) {
-                view.setTypeface(tf);
-            }
-        }
     }
 
     private void initListeners() {
