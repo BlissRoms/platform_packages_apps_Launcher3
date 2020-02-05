@@ -115,6 +115,8 @@ public final class Utilities {
      */
     public static final int EDGE_NAV_BAR = 1 << 8;
 
+    public static final String SLEEP_GESTURE = "pref_sleep_gesture";
+
     /**
      * Indicates if the device has a debug build. Should only be used to store additional info or
      * add extra logging and not for changing the app behavior.
@@ -612,6 +614,10 @@ public final class Utilities {
         public int getIntrinsicWidth() {
             return mSize;
         }
+    }
+
+    public static boolean useSleepGesture(Context context) {
+        return getPrefs(context).getBoolean(SLEEP_GESTURE, true);
     }
 
     public static void restart(final Context context) {
