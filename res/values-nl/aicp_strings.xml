@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--  Copyright (C) 2019 AICP
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <string name="settings_title">Instellingen</string>
+    <string name="home_category_title">Beginscherm</string>
+    <string name="home_category_summary">Instellen Google Now en meer</string>
+    <string name="ui_category_title">Gebruikersinterface</string>
+    <string name="ui_category_summary">Stel UI instellingen in</string>
+    <string name="app_drawer_category_title">App overzicht</string>
+    <string name="app_drawer_category_summary">Pas je app overzicht aan</string>
+    <string name="gestures_category_title">Gebaren</string>
+    <string name="gestures_category_summary">Dubbel tikken en alle gebaren wissen</string>
+    <string name="home_grid_title">Rooster layout</string>
+    <string name="icon_size_title">Icoon grootte</string>
+    <string name="icon_size_extra_small">Zeer klein</string>
+    <string name="icon_size_small">Klein</string>
+    <string name="icon_size_average">Standaard</string>
+    <string name="icon_size_large">Groot</string>
+    <string name="icon_size_extra_large">Extra groot</string>
+    <string name="allow_swipe_down_clearall_title">Wis alles door naar beneden te vegen vanuit recente apps</string>
+    <string name="allow_swipe_down_clearall_desc">Verticaal omlaag vegen in recente apps om alle apps te sluiten</string>
+    <string name="pref_homescreen_dt_gestures_title">Dubbel tikken</string>
+    <string name="pref_homescreen_gestures_none">Geen</string>
+    <string name="pref_homescreen_gestures_sleep">Scherm uit</string>
+    <string name="pref_homescreen_gestures_torch">Zaklamp</string>
+    <string name="pref_homescreen_gestures_google">Google zoeken</string>
+    <string name="pref_homescreen_dt_gestures_google_toast">Google zoeken is niet geïnstalleerd</string>
+    <string name="pref_homescreen_gestures_volume_panel">Volumepaneel</string>
+    <string name="pref_homescreen_gestures_clear_notifications">Meldingen wissen</string>
+    <string name="pref_homescreen_gestures_notifications">Notificatie paneel</string>
+    <string name="pref_homescreen_gestures_qs_panel">Snelle instellingen paneel</string>
+    <string name="pref_homescreen_gestures_screenrecord">Schermopname</string>
+    <string name="pref_homescreen_gestures_screenshot_full">Schermafbeelding - volledig</string>
+    <string name="pref_homescreen_gestures_screenshot_partial">Schermafbeelding - gedeeltelijk</string>
+    <string name="google_feed_title">Toon Google app</string>
+    <string name="google_feed_summary">Aan de linkerkant van het startscherm</string>
+    <string name="num_default">Standaard</string>
+    <string name="number_of_columns_title">Aantal kolommen</string>
+    <string name="number_of_rows_title">Aantal rijen</string>
+    <string name="number_of_hotseat_title">Aantal pictogrammen op dock</string>
+    <string name="state_loading">Toepassen\u2026</string>
+    <string name="app_show_label_title">App labels</string>
+    <string name="desktop_show_label_summary">Labels van apps op het startscherm weergeven</string>
+    <string name="allapps_show_label_summary">Toon de labels van apps in het app overzicht</string>
+    <string name="pref_qsb_show_title">Snelzoek balk</string>
+    <string name="pref_qsb_show_summary">Toon Snelzoek balk op startscherm</string>
+    <string name="show_quickspace_title">In een oogopslag</string>
+    <string name="show_quickspace_summary">Toon bovenaan uw beginscherm</string>
+    <string name="apps_always_show_label_title">Negeer oriëntatie voor labels</string>
+    <string name="apps_always_show_label_summary">Toon altijd app labels op het startscherm en de app drawer</string>
+</resources>

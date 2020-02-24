@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--  Copyright (C) 2019 AICP
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <string name="settings_title">Beállítások</string>
+    <string name="home_category_title">Kezdőképernyő</string>
+    <string name="home_category_summary">A \'Google Now\'-panel és egyebek beállítása</string>
+    <string name="ui_category_title">Felhasználói felület</string>
+    <string name="ui_category_summary">Kezelőfelületi beállítások</string>
+    <string name="app_drawer_category_title">Alkalmazásfiók</string>
+    <string name="app_drawer_category_summary">Az Alkalmazásfiók testreszabása</string>
+    <string name="gestures_category_title">Mozdulatvezérlés</string>
+    <string name="gestures_category_summary">A dupla érintés és \'az összes törlése\' vezérlői</string>
+    <string name="home_grid_title">Rácselrendezés</string>
+    <string name="icon_size_title">Ikonméret</string>
+    <string name="icon_size_extra_small">Apró</string>
+    <string name="icon_size_small">Kicsi</string>
+    <string name="icon_size_average">Alapértelmezett</string>
+    <string name="icon_size_large">Nagy</string>
+    <string name="icon_size_extra_large">Hatalmas</string>
+    <string name="allow_swipe_down_clearall_title">Az \'Összes törlése\' egy lefelé mozdulattal</string>
+    <string name="allow_swipe_down_clearall_desc">Csúsztasson függőlegesen lefelé, hogy törölje az összes alkalmazást az Előzményekből</string>
+    <string name="pref_homescreen_dt_gestures_title">Dupla érintés</string>
+    <string name="pref_homescreen_gestures_none">Egyik sem</string>
+    <string name="pref_homescreen_gestures_sleep">Képernyő-kikapcsolás</string>
+    <string name="pref_homescreen_gestures_torch">Zseblámpa</string>
+    <string name="pref_homescreen_gestures_google">Google-keresés</string>
+    <string name="pref_homescreen_dt_gestures_google_toast">Nincs telepítve a Google-keresés</string>
+    <string name="pref_homescreen_gestures_volume_panel">Hangerőszabályzás</string>
+    <string name="pref_homescreen_gestures_clear_notifications">Az értesítések törlése</string>
+    <string name="pref_homescreen_gestures_notifications">Értesítési panel</string>
+    <string name="pref_homescreen_gestures_qs_panel">Gyorsbeállítások-panel</string>
+    <string name="pref_homescreen_gestures_screenrecord">Képernyővideó</string>
+    <string name="pref_homescreen_gestures_screenshot_full">Teljes képernyőmentés</string>
+    <string name="pref_homescreen_gestures_screenshot_partial">Részleges képernyőmentés</string>
+    <string name="google_feed_title">A Google-alkalmazás megjelenítése</string>
+    <string name="google_feed_summary">A fő kezdőképernyőtől balra</string>
+    <string name="num_default">Alapértelmezett</string>
+    <string name="number_of_columns_title">Az oszlopok száma</string>
+    <string name="number_of_rows_title">A sorok száma</string>
+    <string name="number_of_hotseat_title">A Dokk-ikonok száma</string>
+    <string name="state_loading">Alkalmazás\u2026</string>
+    <string name="app_show_label_title">Alkalmazásnevek</string>
+    <string name="desktop_show_label_summary">Az alkalmazások nevének megjelenítése a Kezdőképernyőn</string>
+    <string name="allapps_show_label_summary">Az alkalmazások nevének megjelenítése az Alkalmazásfiókban</string>
+    <string name="pref_qsb_show_title">Gyorskeresés</string>
+    <string name="pref_qsb_show_summary">Gyorskereső a főképernyőn</string>
+    <string name="show_quickspace_title">Belepillantás</string>
+    <string name="show_quickspace_summary">Az Ön kezdőképernyőjének tetején jelenik meg</string>
+    <string name="abbrev_wday_month_day_no_year">MMM. d., EEEE</string>
+    <string name="apps_always_show_label_title">A feliratok tájolásának mellőzése</string>
+    <string name="apps_always_show_label_summary">Az alkalmazásnevek állandó megjelenítése a Kezdőképernyőn és az Alkalmazásfiókban</string>
+</resources>
