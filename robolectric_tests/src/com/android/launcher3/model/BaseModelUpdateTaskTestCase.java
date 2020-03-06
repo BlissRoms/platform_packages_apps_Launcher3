@@ -15,14 +15,13 @@ import android.graphics.Color;
 import android.os.Process;
 import android.os.UserHandle;
 
-import com.android.launcher3.AllAppsList;
 import com.android.launcher3.AppFilter;
 import com.android.launcher3.AppInfo;
 import com.android.launcher3.InvariantDeviceProfile;
 import com.android.launcher3.ItemInfo;
 import com.android.launcher3.LauncherAppState;
 import com.android.launcher3.LauncherModel;
-import com.android.launcher3.LauncherModel.Callbacks;
+import com.android.launcher3.model.BgDataModel.Callbacks;
 import com.android.launcher3.LauncherModel.ModelUpdateTask;
 import com.android.launcher3.LauncherProvider;
 import com.android.launcher3.icons.IconCache;
@@ -92,7 +91,7 @@ public class BaseModelUpdateTaskTestCase {
         idp = new InvariantDeviceProfile();
         iconCache = new MyIconCache(targetContext, idp);
 
-        allAppsList = new AllAppsList(iconCache, new AppFilter());
+        allAppsList = new AllAppsList(targetContext, iconCache, null);
 
         when(appState.getIconCache()).thenReturn(iconCache);
         when(appState.getInvariantDeviceProfile()).thenReturn(idp);

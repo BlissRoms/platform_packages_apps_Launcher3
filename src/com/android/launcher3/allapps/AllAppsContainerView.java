@@ -313,6 +313,7 @@ public class AllAppsContainerView extends SpringRelativeLayout implements DragSo
                 + grid.cellLayoutPaddingLeftRightPx;
 
         for (int i = 0; i < mAH.length; i++) {
+            mAH[i].adapter.setAppsPerRow(grid.inv.numAllAppColumns);
             mAH[i].padding.bottom = insets.bottom;
             mAH[i].padding.left = mAH[i].padding.right = leftRightPadding;
             mAH[i].applyPadding();
