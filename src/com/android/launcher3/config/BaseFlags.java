@@ -62,7 +62,7 @@ public abstract class BaseFlags {
 
     // When enabled a promise icon is added to the home screen when install session is active.
     public static final TogglableFlag PROMISE_APPS_NEW_INSTALLS =
-            new TogglableFlag("PROMISE_APPS_NEW_INSTALLS", true,
+            new TogglableFlag("PROMISE_APPS_NEW_INSTALLS", false,
                     "Adds a promise icon to the home screen for new install sessions.");
 
     // Feature flag to enable the Quickspace view.
