@@ -17,6 +17,7 @@
 package com.android.launcher3;
 
 import static com.android.launcher3.ItemInfoWithIcon.FLAG_ICON_BADGED;
+import static com.android.launcher3.states.RotationHelper.ALLOW_ROTATION_PREFERENCE_KEY;
 import static com.android.launcher3.util.Executors.MODEL_EXECUTOR;
 
 import android.animation.ValueAnimator;
@@ -225,6 +226,11 @@ public final class Utilities {
 
     public static boolean showDesktopLabel(Context context) {
         return getPrefs(context).getBoolean(DESKTOP_SHOW_LABEL, true);
+    }
+
+    public static boolean isRotationEnabled(Context context) {
+        boolean defaultValue = context.getResources().getBoolean(R.bool.allow_rotation);
+        return getPrefs(context).getBoolean(ALLOW_ROTATION_PREFERENCE_KEY, defaultValue);
     }
 
     public static boolean showAllAppsLabel(Context context) {

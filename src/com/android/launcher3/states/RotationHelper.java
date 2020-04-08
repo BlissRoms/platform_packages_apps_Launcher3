@@ -20,6 +20,7 @@ import static android.content.pm.ActivityInfo.SCREEN_ORIENTATION_NOSENSOR;
 import static android.content.pm.ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED;
 import static android.util.DisplayMetrics.DENSITY_DEVICE_STABLE;
 
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.content.res.Resources;
@@ -55,7 +56,7 @@ public class RotationHelper implements OnSharedPreferenceChangeListener {
     private final Launcher mLauncher;
     private final SharedPreferences mPrefs;
 
-    private boolean mIgnoreAutoRotateSettings;
+    private boolean mAllowRotationByDefault;
     private boolean mAutoRotateEnabled;
 
     /**
@@ -82,15 +83,10 @@ public class RotationHelper implements OnSharedPreferenceChangeListener {
         mLauncher = launcher;
 
         // On large devices we do not handle auto-rotate differently.
-        mIgnoreAutoRotateSettings = mLauncher.getResources().getBoolean(R.bool.allow_rotation);
-        if (!mIgnoreAutoRotateSettings) {
-            mPrefs = Utilities.getPrefs(mLauncher);
-            mPrefs.registerOnSharedPreferenceChangeListener(this);
-            mAutoRotateEnabled = mPrefs.getBoolean(ALLOW_ROTATION_PREFERENCE_KEY,
-                    getAllowRotationDefaultValue());
-        } else {
-            mPrefs = null;
-        }
+        mPrefs = Utilities.getPrefs(mLauncher);
+        mPrefs.registerOnSharedPreferenceChangeListener(this);
+        mAutoRotateEnabled = Utilities.isRotationEnabled((Context) launcher);
+        mAllowRotationByDefault = mLauncher.getResources().getBoolean(R.bool.allow_rotation);
     }
 
     public void setRotationHadDifferentUI(boolean rotationHasDifferentUI) {
@@ -98,7 +94,7 @@ public class RotationHelper implements OnSharedPreferenceChangeListener {
     }
 
     public boolean homeScreenCanRotate() {
-        return mRotationHasDifferentUI || mIgnoreAutoRotateSettings || mAutoRotateEnabled
+        return mRotationHasDifferentUI || mAutoRotateEnabled
                 || mStateHandlerRequest != REQUEST_NONE
                 || mLauncher.getDeviceProfile().isMultiWindowMode;
     }
@@ -153,8 +149,7 @@ public class RotationHelper implements OnSharedPreferenceChangeListener {
 
     // Used by tests only.
     public void forceAllowRotationForTesting(boolean allowRotation) {
-        mIgnoreAutoRotateSettings =
-                allowRotation || mLauncher.getResources().getBoolean(R.bool.allow_rotation);
+        mAllowRotationByDefault = allowRotation;
         notifyChange();
     }
 
@@ -189,8 +184,10 @@ public class RotationHelper implements OnSharedPreferenceChangeListener {
                     SCREEN_ORIENTATION_LOCKED : SCREEN_ORIENTATION_UNSPECIFIED;
         } else if (mCurrentStateRequest == REQUEST_LOCK) {
             activityFlags = SCREEN_ORIENTATION_LOCKED;
-        } else if (mIgnoreAutoRotateSettings || mCurrentStateRequest == REQUEST_ROTATE
-                || mAutoRotateEnabled) {
+        } else if (mCurrentStateRequest == REQUEST_ROTATE || !mAutoRotateEnabled) {
+            activityFlags = SCREEN_ORIENTATION_NOSENSOR;
+        } else if (mCurrentStateRequest == REQUEST_ROTATE || mAutoRotateEnabled
+                      || mAllowRotationByDefault) {
             activityFlags = SCREEN_ORIENTATION_UNSPECIFIED;
         } else {
             // If auto rotation is off, allow rotation on the activity, in case the user is using
@@ -206,8 +203,8 @@ public class RotationHelper implements OnSharedPreferenceChangeListener {
     @Override
     public String toString() {
         return String.format("[mStateHandlerRequest=%d, mCurrentStateRequest=%d,"
-                + " mLastActivityFlags=%d, mIgnoreAutoRotateSettings=%b, mAutoRotateEnabled=%b]",
+                + " mLastActivityFlags=%d, mAllowRotationByDefault=%b, mAutoRotateEnabled=%b]",
                 mStateHandlerRequest, mCurrentStateRequest, mLastActivityFlags,
-                mIgnoreAutoRotateSettings, mAutoRotateEnabled);
+                mAllowRotationByDefault, mAutoRotateEnabled);
     }
 }
