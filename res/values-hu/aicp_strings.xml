@@ -63,4 +63,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     <string name="abbrev_wday_month_day_no_year">MMM. d., EEEE</string>
     <string name="apps_always_show_label_title">A feliratok tájolásának mellőzése</string>
     <string name="apps_always_show_label_summary">Az alkalmazásnevek állandó megjelenítése a Kezdőképernyőn és az Alkalmazásfiókban</string>
+    <string name="customize">Testreszabás</string>
+    <string name="hide_app">Alkalmazások elrejtése</string>
+    <string name="hide_app_sum">Alkalmazások elrejtése az alkalmazásfiókból</string>
+    <string name="hide_app_selected">  kiválasztva</string>
+    <string name="hidden_app">Az összes alkalmazás</string>
+    <string name="hide_selected">A kiválasztott alkalmazás(ok) elrejtése</string>
+    <string name="more">Továbbiak</string>
+    <string name="reset_hidden_apps">Az összes visszaállítása</string>
+    <string name="reset_hidden_apps_done">A rejtett alkalmazások újra elérhetőek</string>
 </resources>
