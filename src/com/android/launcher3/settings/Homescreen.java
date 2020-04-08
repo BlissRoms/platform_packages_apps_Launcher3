@@ -108,7 +108,7 @@ public class Homescreen extends SettingsActivity implements PreferenceFragment.O
                     preference.setOnPreferenceChangeListener(this);
                     return hasPackageInstalled(Utilities.PACKAGE_NAME);
                 case ALLOW_ROTATION_PREFERENCE_KEY:
-                    return false;
+                    return getResources().getBoolean(R.bool.allow_rotation);
                 case Utilities.DESKTOP_SHOW_LABEL:
                 case Utilities.DESKTOP_SHOW_QUICKSPACE:
                 case Utilities.GRID_COLUMNS:
