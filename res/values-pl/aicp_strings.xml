@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--  Copyright (C) 2019 AICP
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <string name="settings_title">Ustawienia</string>
+    <string name="home_category_title">Ekran główny</string>
+    <string name="home_category_summary">Ustaw panel Google now</string>
+    <string name="ui_category_title">Interfejs użytkownika</string>
+    <string name="ui_category_summary">Ustaw ustawienia interfejsu</string>
+    <string name="app_drawer_category_title">Lista aplikacji</string>
+    <string name="pref_homescreen_gestures_notifications">Panel powiadomień</string>
+    <string name="pref_homescreen_gestures_screenrecord">Nagrywanie ekranu</string>
+    <string name="pref_homescreen_gestures_screenshot_full">Zrzut ekranu - pełny</string>
+    <string name="pref_homescreen_gestures_screenshot_partial">Zrzut ekranu - częściowy</string>
+    <string name="desktop_show_label_summary">Wyświetlanie etykiet aplikacji na ekranie głównym</string>
+    <string name="apps_always_show_label_title">Ignoruj orientację dla etykiet</string>
+    <string name="apps_always_show_label_summary">Zawsze pokazuj nazwy aplikacji na pulpicie oraz w szufladce aplikacji</string>
+    <string name="reset_hidden_apps">Zresetuj wszystko</string>
+    <string name="reset_hidden_apps_done">Ukryte aplikacje są teraz widoczne</string>
+</resources>

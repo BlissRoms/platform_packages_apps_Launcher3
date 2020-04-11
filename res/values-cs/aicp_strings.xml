@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--  Copyright (C) 2019 AICP
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <string name="settings_title">Nastavení</string>
+    <string name="home_category_title">Domovská obrazovka</string>
+    <string name="home_category_summary">Nastavení panelu Google Now a dalších funkcí</string>
+    <string name="ui_category_title">Uživatelské rozhraní</string>
+    <string name="ui_category_summary">Nastavení UI</string>
+    <string name="app_drawer_category_title">Seznam aplikací</string>
+    <string name="app_drawer_category_summary">Přizpůsobit seznam aplikací</string>
+    <string name="gestures_category_title">Gesta</string>
+    <string name="gestures_category_summary">Dvojí poklepání a gesta „vymazat vše“</string>
+    <string name="home_grid_title">Rozložení mřížky</string>
+    <string name="icon_size_title">Velikost ikony</string>
+    <string name="icon_size_extra_small">Nejmenší</string>
+    <string name="icon_size_small">Malá</string>
+    <string name="icon_size_average">Výchozí</string>
+    <string name="icon_size_large">Velká</string>
+    <string name="icon_size_extra_large">Extra velká</string>
+    <string name="allow_swipe_down_clearall_title">Vymazat vše přejetím dolů z nabídky nedávných</string>
+    <string name="allow_swipe_down_clearall_desc">Přejetím prstu svisle dolů v náhledu nedávných aplikací vymažete všechny aplikace</string>
+    <string name="pref_homescreen_dt_gestures_title">Dvojí poklepání</string>
+    <string name="pref_homescreen_gestures_none">Nic</string>
+    <string name="pref_homescreen_gestures_sleep">Vypnout obrazovku</string>
+    <string name="pref_homescreen_gestures_torch">Svítilna</string>
+    <string name="pref_homescreen_gestures_google">Vyhledávání Google</string>
+    <string name="pref_homescreen_dt_gestures_google_toast">Vyhledávání Google není nainstalováno</string>
+    <string name="pref_homescreen_gestures_volume_panel">Panel hlasitosti</string>
+    <string name="pref_homescreen_gestures_clear_notifications">Vymazat oznámení</string>
+    <string name="pref_homescreen_gestures_notifications">Panel oznámení</string>
+    <string name="pref_homescreen_gestures_qs_panel">Panel QS</string>
+    <string name="pref_homescreen_gestures_screenrecord">Záznam obrazovky</string>
+    <string name="pref_homescreen_gestures_screenshot_full">Snímek obrazovky - úplný</string>
+    <string name="pref_homescreen_gestures_screenshot_partial">Snímek obrazovky - částečný</string>
+    <string name="google_feed_title">Zobrazit kanál Objevit</string>
+    <string name="google_feed_summary">Nalevo od hlavní domovské obrazovky</string>
+    <string name="num_default">Výchozí</string>
+    <string name="number_of_columns_title">Počet sloupců</string>
+    <string name="number_of_rows_title">Počet řádků</string>
+    <string name="number_of_hotseat_title">Počet ikon doku</string>
+    <string name="state_loading">Aktivuje se\u2026</string>
+    <string name="app_show_label_title">Popisky aplikací</string>
+    <string name="desktop_show_label_summary">Zobrazit popisky aplikací na domovské obrazovce</string>
+    <string name="allapps_show_label_summary">Zobrazit popisky aplikací v seznamu</string>
+    <string name="pref_qsb_show_title">Lišta rychlého vyhledávání</string>
+    <string name="pref_qsb_show_summary">Zobrazit lištu rychlého vyhledávání na domovské obrazovce</string>
+    <string name="show_quickspace_title">Přehled událostí</string>
+    <string name="show_quickspace_summary">Zobrazit v horní části Domovské obrazovky</string>
+    <string name="apps_always_show_label_title">Ignorovat orientaci pro popisky</string>
+    <string name="apps_always_show_label_summary">Vždy zobrazit popisky aplikací na domovské obrazovce a v seznamu</string>
+    <string name="customize">Přizpůsobit</string>
+    <string name="hide_app">Skrýt aplikace</string>
+    <string name="hide_app_sum">Skrýt aplikace v seznamu aplikací</string>
+    <string name="hide_app_selected"> vybráno</string>
+    <string name="hidden_app">Všechny aplikace</string>
+    <string name="hide_selected">Skrýt vybranou aplikaci/aplikace</string>
+    <string name="more">Další</string>
+    <string name="reset_hidden_apps">Resetovat vše</string>
+    <string name="reset_hidden_apps_done">Skryté aplikace jsou nyní k dispozici</string>
+</resources>

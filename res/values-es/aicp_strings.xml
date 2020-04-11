@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--  Copyright (C) 2019 AICP
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <string name="settings_title">Ajustes</string>
+    <string name="home_category_title">Pantalla de inicio</string>
+    <string name="home_category_summary">Configura el panel de Google Now y más</string>
+    <string name="ui_category_title">Interfaz de Usuario</string>
+    <string name="ui_category_summary">Configurar Interfaz de Usuario</string>
+    <string name="app_drawer_category_title">Cajón de aplicaciones</string>
+    <string name="app_drawer_category_summary">Personalizar el cajón de aplicaciones</string>
+    <string name="gestures_category_title">Gestos</string>
+    <string name="gestures_category_summary">Gestos de doble toque y limpiar todo</string>
+    <string name="home_grid_title">Diseño de la cuadrícula</string>
+    <string name="icon_size_title">Tamaño de los iconos</string>
+    <string name="icon_size_extra_small">Muy pequeño</string>
+    <string name="icon_size_small">Pequeño</string>
+    <string name="icon_size_average">Predeterminado</string>
+    <string name="icon_size_large">Grande</string>
+    <string name="icon_size_extra_large">Muy grande</string>
+    <string name="allow_swipe_down_clearall_title">Borrar todo al deslizar hacia abajo desde la pantalla de aps. recientes</string>
+    <string name="allow_swipe_down_clearall_desc">Desliza verticalmente hacia abajo en la pantalla de aps. recientes para cerra todas las aplicaciones</string>
+    <string name="pref_homescreen_dt_gestures_title">Doble toque</string>
+    <string name="pref_homescreen_gestures_none">Ninguna</string>
+    <string name="pref_homescreen_gestures_sleep">Apagar la pantalla</string>
+    <string name="pref_homescreen_gestures_torch">Linterna</string>
+    <string name="pref_homescreen_gestures_google">Búsqueda de Google</string>
+    <string name="pref_homescreen_dt_gestures_google_toast">Búsqueda de Google no está instalada</string>
+    <string name="pref_homescreen_gestures_volume_panel">Panel de volumen</string>
+    <string name="pref_homescreen_gestures_clear_notifications">Descartar notificaciones</string>
+    <string name="pref_homescreen_gestures_notifications">Panel de notificaciones</string>
+    <string name="pref_homescreen_gestures_qs_panel">Panel de ajustes rápidos</string>
+    <string name="pref_homescreen_gestures_screenrecord">Grabar pantalla</string>
+    <string name="pref_homescreen_gestures_screenshot_full">Captura de pantalla - completa</string>
+    <string name="pref_homescreen_gestures_screenshot_partial">Captura de pantalla - parcial</string>
+    <string name="google_feed_title">Mostrar aplicación de Google</string>
+    <string name="google_feed_summary">A la izquierda de la Pantalla de inicio principal</string>
+    <string name="num_default">Predeterminado</string>
+    <string name="number_of_columns_title">Número de columnas</string>
+    <string name="number_of_rows_title">Número de filas</string>
+    <string name="number_of_hotseat_title">Número de iconos en el dock</string>
+    <string name="state_loading">Aplicando\u2026</string>
+    <string name="app_show_label_title">Etiquetas de las aplicaciones</string>
+    <string name="desktop_show_label_summary">Mostrar etiquetas de las aplicaciones en la pantalla de inicio</string>
+    <string name="allapps_show_label_summary">Mostrar las etiquetas de los iconos de las aplicaciones en el cajón de aplicaciones</string>
+    <string name="pref_qsb_show_title">Barra de búsqueda rápida</string>
+    <string name="pref_qsb_show_summary">Mostrar barra de búsqueda rápida en la pantalla de inicio</string>
+    <string name="show_quickspace_title">De un vistazo</string>
+    <string name="show_quickspace_summary">Mostrar en la parte superior de la pantalla de inicio</string>
+    <string name="apps_always_show_label_title">Ignorar orientación para etiquetas</string>
+    <string name="apps_always_show_label_summary">Mostrar siempre etiquetas de aplicaciones en la pantalla de inicio y en el cajón de aplicaciones</string>
+    <string name="customize">Personalizar</string>
+    <string name="hide_app">Ocultar aplicaciones</string>
+    <string name="hide_app_sum">Ocultar aplicaciones del cajón de aplicaciones</string>
+    <string name="hide_app_selected"> seleccionado</string>
+    <string name="hidden_app">Todas las aplicaciones</string>
+    <string name="hide_selected">Ocultar aplicación(es) seleccionada(s)</string>
+    <string name="more">Más</string>
+    <string name="reset_hidden_apps">Restablecer todo</string>
+    <string name="reset_hidden_apps_done">Las aplicaciones ocultas ahora están disponibles</string>
+</resources>

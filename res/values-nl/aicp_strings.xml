@@ -62,4 +62,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     <string name="show_quickspace_summary">Toon bovenaan uw beginscherm</string>
     <string name="apps_always_show_label_title">Negeer oriëntatie voor labels</string>
     <string name="apps_always_show_label_summary">Toon altijd app labels op het startscherm en de app drawer</string>
+    <string name="customize">Aanpassen</string>
+    <string name="hide_app">Verberg apps</string>
+    <string name="hide_app_sum">Apps verbergen in het app-overzicht</string>
+    <string name="hide_app_selected"> geselecteerd</string>
+    <string name="hidden_app">Alle apps</string>
+    <string name="hide_selected">Verberg geselecteerde app(s)</string>
+    <string name="more">Meer</string>
+    <string name="reset_hidden_apps">Alles herstellen</string>
+    <string name="reset_hidden_apps_done">Verborgen apps zijn nu beschikbaar</string>
 </resources>

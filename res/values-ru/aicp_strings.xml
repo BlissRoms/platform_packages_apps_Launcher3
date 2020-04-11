@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--  Copyright (C) 2019 AICP
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <string name="settings_title">Настройки</string>
+    <string name="home_category_title">Домашний экран</string>
+    <string name="home_category_summary">Установить панель Google now и др.</string>
+    <string name="ui_category_title">Интерфейс</string>
+    <string name="ui_category_summary">Настройки интерфейса</string>
+    <string name="app_drawer_category_title">Меню приложений</string>
+    <string name="app_drawer_category_summary">Настроить меню приложений</string>
+    <string name="gestures_category_title">Жесты</string>
+    <string name="gestures_category_summary">Жесты двойного нажатия и очистки</string>
+    <string name="home_grid_title">Макет сетки</string>
+    <string name="icon_size_title">Размер иконок</string>
+    <string name="icon_size_extra_small">Мелкий</string>
+    <string name="icon_size_small">Маленький</string>
+    <string name="icon_size_average">По умолчанию</string>
+    <string name="icon_size_large">Большой</string>
+    <string name="icon_size_extra_large">Очень большой</string>
+    <string name="allow_swipe_down_clearall_title">Очистить все при свайпе вниз из недавних приложений</string>
+    <string name="allow_swipe_down_clearall_desc">Свайп вниз в режиме просмотра недавних приложений, чтобы очистить все</string>
+    <string name="pref_homescreen_dt_gestures_title">Двойное нажатие</string>
+    <string name="pref_homescreen_gestures_none">Нет</string>
+    <string name="pref_homescreen_gestures_sleep">Отключение экрана</string>
+    <string name="pref_homescreen_gestures_torch">Фонарик</string>
+    <string name="pref_homescreen_gestures_google">Поиск Google</string>
+    <string name="pref_homescreen_dt_gestures_google_toast">Google поиск не установлен</string>
+    <string name="pref_homescreen_gestures_volume_panel">Панель громкости</string>
+    <string name="pref_homescreen_gestures_clear_notifications">Очистить уведомления</string>
+    <string name="pref_homescreen_gestures_notifications">Панель уведомлений</string>
+    <string name="pref_homescreen_gestures_qs_panel">Панель быстрых настроек</string>
+    <string name="pref_homescreen_gestures_screenrecord">Запись экрана</string>
+    <string name="pref_homescreen_gestures_screenshot_full">Скриншот - полный</string>
+    <string name="pref_homescreen_gestures_screenshot_partial">Скриншот - частичный</string>
+    <string name="google_feed_title">Отображать приложение Google</string>
+    <string name="google_feed_summary">Слева от главного экрана</string>
+    <string name="num_default">По умолчанию</string>
+    <string name="number_of_columns_title">Количество столбцов</string>
+    <string name="number_of_rows_title">Количество строк</string>
+    <string name="number_of_hotseat_title">Количество значков на панели</string>
+    <string name="state_loading">Применение\u2026</string>
+    <string name="app_show_label_title">Названия приложений</string>
+    <string name="desktop_show_label_summary">Показать названия приложений на домашнем экране</string>
+    <string name="allapps_show_label_summary">Показать названия приложений в меню приложений</string>
+    <string name="pref_qsb_show_title">Панель быстрого поиска</string>
+    <string name="pref_qsb_show_summary">Показывать панель быстрого поиска на домашнем экране</string>
+    <string name="show_quickspace_title">С первого взгляда</string>
+    <string name="show_quickspace_summary">Показывать в верхней части домашнего экрана</string>
+    <string name="apps_always_show_label_title">Игнорировать ориентацию для подписей</string>
+    <string name="apps_always_show_label_summary">Всегда показывать названия приложений на главном экране и в меню приложений</string>
+    <string name="customize">Настройки</string>
+    <string name="hide_app">Скрыть приложения</string>
+    <string name="hide_app_sum">Скрыть приложения из меню приложений</string>
+    <string name="hide_app_selected"> выбрано</string>
+    <string name="hidden_app">Все приложения</string>
+    <string name="hide_selected">Скрыть выбранное(ые) приложение(я)</string>
+    <string name="more">Больше</string>
+    <string name="reset_hidden_apps">Сбросить всё</string>
+    <string name="reset_hidden_apps_done">Скрытые приложения теперь доступны</string>
+</resources>
