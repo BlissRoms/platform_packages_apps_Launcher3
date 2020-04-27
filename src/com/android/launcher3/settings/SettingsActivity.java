@@ -120,7 +120,9 @@ public class SettingsActivity extends Activity
             }
         } else if (Utilities.SHOW_WORKSPACE_GRADIENT.equals(key) || Utilities.SHOW_HOTSEAT_GRADIENT.equals(key)) {
             LauncherAppState.getInstanceNoCreate().setNeedsRestart();
-        }
+        } else if (Utilities.AT_A_GLANCE.equals(key)) {
+	    LauncherAppState.getInstanceNoCreate().setNeedsRestart();
+	}
     }
 
     private boolean startFragment(String fragment, Bundle args, String key) {
@@ -246,6 +248,8 @@ public class SettingsActivity extends Activity
                             AospLauncherCallbacks.SEARCH_PACKAGE);
                 case GRID_OPTIONS_PREFERENCE_KEY:
                     return true;
+		case Utilities.AT_A_GLANCE:
+		    return Utilities.showAtAGlance(getContext());
             }
 
             return true;
