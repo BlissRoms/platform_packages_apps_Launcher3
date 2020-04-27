@@ -120,6 +120,7 @@ public final class Utilities {
     public static final String SHOW_WORKSPACE_GRADIENT = "pref_show_workspace_grad";
     public static final String SHOW_HOTSEAT_GRADIENT = "pref_show_hotseat_grad";
     public static final String SLEEP_GESTURE = "pref_sleep_gesture";
+    public static final String AT_A_GLANCE = "pref_at_a_glance";
 
     /**
      * Indicates if the device has a debug build. Should only be used to store additional info or
@@ -641,6 +642,10 @@ public final class Utilities {
 
     public static boolean useSleepGesture(Context context) {
         return getPrefs(context).getBoolean(SLEEP_GESTURE, true);
+    }
+
+    public static boolean showAtAGlance(Context context) {
+	return getPrefs(context).getBoolean(AT_A_GLANCE, true);
     }
 
     public static void restart(final Context context) {

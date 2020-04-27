@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 
 import com.android.launcher3.Launcher;
 import com.android.launcher3.R;
+import com.android.launcher3.Utilities;
 import com.android.launcher3.qsb.QsbContainerView;
 
 import static android.appwidget.AppWidgetManager.ACTION_APPWIDGET_BIND;
@@ -72,6 +73,11 @@ public class SmartspaceQsbWidget extends QsbContainerView {
         @Override
         protected View getDefaultView(ViewGroup container, boolean showSetupIcon) {
             View v = SmartspaceQsbWidget.getDateView(container);
+
+	    if (! Utilities.showAtAGlance(getContext())) {
+		v.setVisibility(View.GONE);
+		return v;
+	    }
 
             if (showSetupIcon) {
                 Intent intent = new Intent(ACTION_APPWIDGET_BIND)

@@ -60,6 +60,13 @@
         android:defaultValue="true"
         android:persistent="true"/>
 
+    <SwitchPreference
+        android:key="pref_at_a_glance"
+        android:title="@string/pref_at_a_glance_title"
+        android:summary="@string/pref_at_a_glance_summary"
+        android:defaultValue="true"
+        android:persistent="true"/>
+
     </PreferenceCategory>
 
     <PreferenceCategory android:key="category_customization"

@@ -23,4 +23,8 @@
     <string name="recent_task_option_kill_app">Kill</string>
     <string name="recents_app_killed">App killed</string>
 
+    <!-- Settings -->
+    <string name="pref_at_a_glance_title">At A Glance</string>
+    <string name="pref_at_a_glance_summary">Show / Hide the "At A Glance" widget</string>
+
 </resources>
