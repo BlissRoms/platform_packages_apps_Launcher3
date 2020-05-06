@@ -109,6 +109,7 @@ LOCAL_PRIVILEGED_MODULE := true
 LOCAL_PRODUCT_MODULE := true
 LOCAL_OVERRIDES_PACKAGES := Home Launcher2
 LOCAL_REQUIRED_MODULES := privapp_whitelist_com.android.launcher3
+LOCAL_REQUIRED_MODULES += privapp_whitelist_com.android.launcher3-ext.xml
 
 LOCAL_FULL_LIBS_MANIFEST_FILES := $(LOCAL_PATH)/AndroidManifest-common.xml
 
@@ -146,6 +147,7 @@ LOCAL_PRIVILEGED_MODULE := true
 LOCAL_PRODUCT_MODULE := true
 LOCAL_OVERRIDES_PACKAGES := Home Launcher2 Launcher3 Launcher3QuickStep
 LOCAL_REQUIRED_MODULES := privapp_whitelist_com.android.launcher3
+LOCAL_REQUIRED_MODULES += privapp_whitelist_com.android.launcher3-ext.xml
 
 LOCAL_FULL_LIBS_MANIFEST_FILES := \
     $(LOCAL_PATH)/AndroidManifest.xml \
@@ -218,6 +220,7 @@ LOCAL_CERTIFICATE := platform
 LOCAL_PRODUCT_MODULE := true
 LOCAL_OVERRIDES_PACKAGES := Home Launcher2 Launcher3
 LOCAL_REQUIRED_MODULES := privapp_whitelist_com.android.launcher3
+LOCAL_REQUIRED_MODULES += privapp_whitelist_com.android.launcher3-ext.xml
 
 LOCAL_RESOURCE_DIR := \
     $(LOCAL_PATH)/quickstep/res \
@@ -267,6 +270,7 @@ LOCAL_CERTIFICATE := platform
 LOCAL_PRODUCT_MODULE := true
 LOCAL_OVERRIDES_PACKAGES := Home Launcher2 Launcher3 Launcher3QuickStep Launcher3GoIconRecents
 LOCAL_REQUIRED_MODULES := privapp_whitelist_com.android.launcher3
+LOCAL_REQUIRED_MODULES += privapp_whitelist_com.android.launcher3-ext.xml
 
 LOCAL_FULL_LIBS_MANIFEST_FILES := \
     $(LOCAL_PATH)/go/AndroidManifest.xml \
@@ -319,6 +323,7 @@ LOCAL_CERTIFICATE := platform
 LOCAL_PRODUCT_MODULE := true
 LOCAL_OVERRIDES_PACKAGES := Home Launcher2 Launcher3 Launcher3Go Launcher3QuickStep
 LOCAL_REQUIRED_MODULES := privapp_whitelist_com.android.launcher3
+LOCAL_REQUIRED_MODULES += privapp_whitelist_com.android.launcher3-ext.xml
 
 LOCAL_FULL_LIBS_MANIFEST_FILES := \
     $(LOCAL_PATH)/go/AndroidManifest.xml \
@@ -336,6 +341,14 @@ LOCAL_SRC_FILES += \
 
 include $(BUILD_PACKAGE)
 
+include $(CLEAR_VARS)
+LOCAL_MODULE := privapp_whitelist_com.android.launcher3-ext.xml
+LOCAL_MODULE_CLASS := ETC
+LOCAL_MODULE_TAGS := optional
+LOCAL_MODULE_PATH := $(TARGET_OUT_PRODUCT_ETC)/permissions
+LOCAL_PRODUCT_MODULE := true
+LOCAL_SRC_FILES := $(LOCAL_MODULE)
+include $(BUILD_PREBUILT)
 
 # ==================================================
 include $(call all-makefiles-under,$(LOCAL_PATH))
