@@ -257,7 +257,7 @@ public final class Utilities {
     }
 
     public static boolean isQuickspaceNowPlaying(Context context) {
-        return getPrefs(context).getBoolean(KEY_SHOW_QUICKSPACE_NOWPLAYING, false);
+        return getPrefs(context).getBoolean(KEY_SHOW_QUICKSPACE_NOWPLAYING, true);
     }
 
     /**
