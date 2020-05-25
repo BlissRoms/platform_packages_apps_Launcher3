@@ -921,6 +921,10 @@ public class Launcher extends BaseDraggingActivity implements LauncherExterns,
     protected void onStop() {
         super.onStop();
 
+        if (mQuickSpace != null) {
+            mQuickSpace.onPause();
+        }
+
         if (mLauncherCallbacks != null) {
             mLauncherCallbacks.onStop();
         }
