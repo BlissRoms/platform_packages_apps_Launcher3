@@ -137,6 +137,7 @@ public class Homescreen extends SettingsActivity implements PreferenceFragment.O
                 case Utilities.HOTSEAT_ICONS:
                 case Utilities.KEY_SHOW_ALT_QUICKSPACE:
                 case Utilities.KEY_SHOW_QUICKSPACE_NOWPLAYING:
+                case Utilities.KEY_SHOW_QUICKSPACE_NOWPLAYING_SHOWDATE:
                 case Utilities.KEY_SHOW_QUICKSPACE_PSONALITY:
                 case Utilities.DATE_FORMAT_ATAGLANCE:
                 case Utilities.DATE_STYLE_FONT:
@@ -180,6 +181,8 @@ public class Homescreen extends SettingsActivity implements PreferenceFragment.O
             } else if (Utilities.DATE_STYLE_SPACING.equals(key)) {
                 int index = dateSpacing.findIndexOfValue((String) newValue);
                 dateSpacing.setSummary(dateSpacing.getEntries()[index]);
+            } else if (Utilities.KEY_SHOW_QUICKSPACE_NOWPLAYING_SHOWDATE.equals(key)) {
+                return true;
             }
             LauncherAppState.getInstanceNoCreate().setNeedsRestart();
             return true;
