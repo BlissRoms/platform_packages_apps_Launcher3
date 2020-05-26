@@ -26,7 +26,6 @@ import android.app.Fragment;
 import android.content.pm.ApplicationInfo;
 import android.content.ComponentName;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.provider.Settings;
@@ -36,9 +35,6 @@ import android.view.MenuItem;
 import androidx.preference.ListPreference;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragment;
-import androidx.preference.PreferenceFragment.OnPreferenceStartFragmentCallback;
-import androidx.preference.PreferenceFragment.OnPreferenceStartScreenCallback;
-import androidx.preference.PreferenceGroup.PreferencePositionCallback;
 import androidx.preference.PreferenceScreen;
 import androidx.preference.Preference.OnPreferenceChangeListener;
 import androidx.preference.SwitchPreference;
@@ -52,31 +48,13 @@ import com.android.launcher3.config.FeatureFlags;
 import com.android.launcher3.uioverrides.plugins.PluginManagerWrapper;
 import com.android.launcher3.util.SecureSettingsObserver;
 
-public class Homescreen extends SettingsActivity
-        implements OnPreferenceStartFragmentCallback, OnPreferenceStartScreenCallback,
-        SharedPreferences.OnSharedPreferenceChangeListener {
+public class Homescreen extends SettingsActivity implements PreferenceFragment.OnPreferenceStartFragmentCallback {
 
     @Override
     protected void onCreate(final Bundle bundle) {
         super.onCreate(bundle);
         if (bundle == null) {
             getFragmentManager().beginTransaction().replace(android.R.id.content, new HomescreenSettingsFragment()).commit();
-        }
-
-        Utilities.getPrefs(getApplicationContext()).registerOnSharedPreferenceChangeListener(this);
-    }
-
-    @Override
-    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        switch (key) {
-            case Utilities.KEY_FEED_INTEGRATION:
-            case Utilities.KEY_SHOW_ALT_QUICKSPACE:
-            case Utilities.KEY_SHOW_QUICKSPACE_NOWPLAYING:
-            case Utilities.KEY_SHOW_QUICKSPACE_PSONALITY:
-                LauncherAppState.getInstanceNoCreate().setNeedsRestart();
-                break;
-            default:
-                break;
         }
     }
 
@@ -149,6 +127,9 @@ public class Homescreen extends SettingsActivity
                 case Utilities.GRID_COLUMNS:
                 case Utilities.GRID_ROWS:
                 case Utilities.HOTSEAT_ICONS:
+                case Utilities.KEY_SHOW_ALT_QUICKSPACE:
+                case Utilities.KEY_SHOW_QUICKSPACE_NOWPLAYING:
+                case Utilities.KEY_SHOW_QUICKSPACE_PSONALITY:
                 case Utilities.DATE_FORMAT_ATAGLANCE:
                     preference.setOnPreferenceChangeListener(this);
                     return true;
