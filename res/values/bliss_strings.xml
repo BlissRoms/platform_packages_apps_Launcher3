@@ -98,6 +98,8 @@
     <!-- Quickspace Now Playing -->
     <string name="quickspace_now_playing_title">Show now playing</string>
     <string name="quickspace_now_playing_summary">Shows the song you\'re playing on At a Glance. WARNING: It\'s not fully compatible with all media players!</string>
+    <string name="quickspace_now_playing_showdate_title">...show date instead</string>
+    <string name="quickspace_now_playing_showdate_summary">Shows date in the first line instead of \"Now Playing\"</string>
 
     <!-- Quickspace PSA - Custom messages for the glance -->
     <string name="quickspace_psa_title">Show a random message</string>

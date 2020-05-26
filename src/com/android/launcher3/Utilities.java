@@ -156,6 +156,7 @@ public final class Utilities {
 
     public static final String SEARCH_PACKAGE = "com.google.android.googlequicksearchbox";
     public static final String KEY_SCROLL_POSITION = "pref_keepScrollState";
+    public static final String KEY_SHOW_QUICKSPACE_NOWPLAYING_SHOWDATE = "pref_quickspace_np_showdate";
     public static final String DATE_STYLE_FONT = "pref_date_font";
     public static final String DATE_FORMAT_KEY = "pref_date_format";
     public static final String DATE_STYLE_TRANSFORM = "pref_date_transform";
@@ -172,6 +173,10 @@ public final class Utilities {
 
     public static boolean isPropertyEnabled(String propertyName) {
         return Log.isLoggable(propertyName, Log.VERBOSE);
+    }
+
+    public static boolean showDateInPlaceOfNowPlaying(Context context) {
+        return getPrefs(context).getBoolean(KEY_SHOW_QUICKSPACE_NOWPLAYING_SHOWDATE, true);
     }
 
     public static String getDateFormat(Context context) {

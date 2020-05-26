@@ -177,8 +177,10 @@ public class QuickEventsController {
         if (!mPlayingActive) return;
 
         if (mNowPlayingTitle == null) return;
-        
-        mEventTitle = mContext.getResources().getString(R.string.quick_event_ambient_now_playing);
+
+        mEventTitle = Utilities.showDateInPlaceOfNowPlaying(mContext) ?
+                          Utilities.formatDateTime(mContext, System.currentTimeMillis()) :
+                          mContext.getResources().getString(R.string.quick_event_ambient_now_playing);
         if (mNowPlayingArtist == null ) {
             mEventTitleSub = mNowPlayingTitle;
         } else {

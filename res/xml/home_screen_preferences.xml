@@ -76,6 +76,14 @@
         android:persistent="true" />
 
     <SwitchPreference
+        android:dependency="pref_quickspace_np"
+        android:key="pref_quickspace_np_showdate"
+        android:summary="@string/quickspace_now_playing_showdate_summary"
+        android:title="@string/quickspace_now_playing_showdate_title"
+        android:defaultValue="true"
+        android:persistent="true" />
+
+    <SwitchPreference
         android:dependency="pref_show_quickspace"
         android:key="pref_quickspace_psonality"
         android:summary="@string/quickspace_psa_summary"
