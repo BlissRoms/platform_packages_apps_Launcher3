@@ -9,6 +9,7 @@ import android.graphics.drawable.Icon;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 import android.view.View;
 import android.view.accessibility.AccessibilityNodeInfo;
 import android.widget.ImageView;
@@ -246,19 +247,18 @@ public abstract class SystemShortcut<T extends BaseDraggingActivity>
                 return null;
             }
             // Create uninstall action.
-            return createOnClickListener(activity, packageName);
+            return createOnClickListener(activity, itemInfo);
         }
 
         private View.OnClickListener createOnClickListener(
-                BaseDraggingActivity activity, String packageName) {
+                BaseDraggingActivity activity, ItemInfo itemInfo) {
             return view -> {
                 // Dismiss drop down.
                 dismissTaskMenuView(activity);
-                // Send intent to uninstall package.
-                Intent intent = new Intent(Intent.ACTION_UNINSTALL_PACKAGE);
-                intent.setData(Uri.parse("package:" + packageName));
-                intent.putExtra(Intent.EXTRA_RETURN_RESULT, true);
-                activity.startActivity(intent);
+                Intent intent = new PackageManagerHelper(view.getContext()).getUninstallIntent(
+                        itemInfo.getTargetComponent().getPackageName());
+                activity.startActivitySafely(view, intent, itemInfo, null);
+                AbstractFloatingView.closeAllOpenViews(activity);
             };
         }
     }
