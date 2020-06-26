@@ -30,4 +30,8 @@
     <!-- Show QSB on homescreen -->
     <string name="pref_qsb_show_title">Quick Search Bar</string>
     <string name="pref_qsb_show_summary">Show quick searchbar on homescreen</string>
+
+    <!-- AppPrediction Row -->
+    <string name="app_show_predictions_title">App predictions row</string>
+    <string name="app_show_predictions_summary">Toggle to show app predictions row in recents and app drawer</string>
 </resources>

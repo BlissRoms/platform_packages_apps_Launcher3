@@ -68,8 +68,6 @@ import java.util.stream.IntStream;
 public class PredictionUiStateManager implements StateListener, ItemInfoUpdateReceiver,
         OnIDPChangeListener, OnUpdateListener {
 
-    public static final String LAST_PREDICTION_ENABLED_STATE = "last_prediction_enabled_state";
-
     // TODO (b/129421797): Update the client constants
     public enum Client {
         HOME("home"),
@@ -108,7 +106,7 @@ public class PredictionUiStateManager implements StateListener, ItemInfoUpdateRe
         mActiveClient = Client.HOME;
 
         InvariantDeviceProfile idp = LauncherAppState.getIDP(context);
-        mMaxIconsPerRow = idp.numColumns;
+        mMaxIconsPerRow = idp.numAllAppColumns;
 
         idp.addOnChangeListener(this);
         mPredictionServicePredictions = new List[Client.values().length];
@@ -116,7 +114,7 @@ public class PredictionUiStateManager implements StateListener, ItemInfoUpdateRe
             mPredictionServicePredictions[i] = Collections.emptyList();
         }
         mGettingValidPredictionResults = Utilities.getDevicePrefs(context)
-                .getBoolean(LAST_PREDICTION_ENABLED_STATE, true);
+                .getBoolean(Utilities.KEY_ALLAPPS_SHOW_PREDICTIONS, false);
 
         // Call this last
         mCurrentState = parseLastState();
@@ -201,9 +199,9 @@ public class PredictionUiStateManager implements StateListener, ItemInfoUpdateRe
         }
         if (validResults != mGettingValidPredictionResults) {
             mGettingValidPredictionResults = validResults;
-            Utilities.getDevicePrefs(mContext).edit()
-                    .putBoolean(LAST_PREDICTION_ENABLED_STATE, true)
-                    .apply();
+            /*Utilities.getDevicePrefs(mContext).edit()
+                    .putBoolean(LAST_PREDICTION_ENABLED_STATE, false)
+                    .apply();*/
         }
         dispatchOnChange(true);
     }
@@ -228,7 +226,7 @@ public class PredictionUiStateManager implements StateListener, ItemInfoUpdateRe
     private PredictionState parseLastState() {
         PredictionState state = new PredictionState();
         state.isEnabled = mGettingValidPredictionResults;
-        if (!state.isEnabled) {
+        if (!state.isEnabled || !Utilities.showAllAppsPredictions(mContext)) {
             state.apps = Collections.EMPTY_LIST;
             return state;
         }

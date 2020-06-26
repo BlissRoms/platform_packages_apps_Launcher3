@@ -41,6 +41,13 @@
         android:persistent="true" />
 
     <SwitchPreference
+        android:key="last_prediction_enabled_state"
+        android:title="@string/app_show_predictions_title"
+        android:summary="@string/app_show_predictions_summary"
+        android:defaultValue="false"
+        android:persistent="true"/>
+
+    <SwitchPreference
         android:key="pref_allowRotation"
         android:title="@string/allow_rotation_title"
         android:summary="@string/allow_rotation_desc"

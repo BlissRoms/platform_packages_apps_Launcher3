@@ -62,6 +62,7 @@ import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.animation.Interpolator;
 
+import com.android.launcher3.appprediction.PredictionUiStateManager;
 import com.android.launcher3.compat.LauncherAppsCompat;
 import com.android.launcher3.compat.ShortcutConfigActivityInfo;
 import com.android.launcher3.dragndrop.FolderAdaptiveIcon;
@@ -140,6 +141,7 @@ public final class Utilities {
     public static final String EXTRA_WALLPAPER_FLAVOR = "com.android.launcher3.WALLPAPER_FLAVOR";
 
     public static final String DESKTOP_SHOW_QSB = "pref_qsb_show";
+    public static final String KEY_ALLAPPS_SHOW_PREDICTIONS = "last_prediction_enabled_state";
 
     public static boolean IS_RUNNING_IN_TEST_HARNESS =
                     ActivityManager.isRunningInTestHarness();
@@ -160,6 +162,10 @@ public final class Utilities {
 
     public static boolean showQsbWidget(Context context) {
          return getPrefs(context).getBoolean(DESKTOP_SHOW_QSB, FeatureFlags.QSB_ON_FIRST_SCREEN);
+    }
+
+    public static boolean showAllAppsPredictions(Context context) {
+         return getPrefs(context).getBoolean(KEY_ALLAPPS_SHOW_PREDICTIONS, false);
     }
 
     /**
