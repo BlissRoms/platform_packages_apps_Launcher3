@@ -8,10 +8,16 @@
         android:defaultValue="true"
         android:persistent="true"/>
 
+    <SwitchPreference
+        android:key="last_prediction_enabled_state"
+        android:title="@string/app_show_predictions_title"
+        android:summary="@string/app_show_predictions_summary"
+        android:defaultValue="false"
+        android:persistent="true"/>
+
     <Preference
         android:key="hidden_app"
         android:title="@string/hide_app"
         android:summary="@string/hide_app_sum"/>
 
 </PreferenceScreen>
-
