@@ -15,5 +15,35 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <!-- General -->
+    <!-- Categories -->
+    <!-- Sub categories -->
+    <!-- Icon size -->
+    <!-- Gestures -->
+    <!-- Google Feed -->
+    <!-- Grid -->
+    <!-- Show labels on icon -->
+    <!-- Show QSB on homescreen -->
+    <!-- QuickSpace -->
+    <!-- Always how labels irrespective of orientation -->
     <string name="apps_always_show_label_title">ラベルの向きを無視</string>
+    <!-- Hidden apps -->
+    <!-- QuickSpace: QuickEvent: Device Intro Event -->
+    <!-- QuickSpace: QuickEvent: Ambient Play -->
+    <!-- Quickspace alternative view -->
+    <!-- Quickspace Now Playing -->
+    <!-- Quickspace PSA - Custom messages for the glance -->
+    <!-- QuickSpace Date format -->
+    <string name="date_format_title">日付の形式</string>
+    <string name="date_format_long_name">長い</string>
+    <string name="date_format_normal_name">標準</string>
+    <string name="date_format_short_name">短い</string>
+    <!-- At a glance style -->
+    <!-- At a glance uppercase -->
+    <!-- At a glance font spacing -->
+    <string name="date_style_spacing_normal">標準</string>
+    <!-- AppInfo -->
+    <!-- Used for preference height loading. -->
+    <!-- Edit workspace -->
+    <!-- AppPrediction Row -->
 </resources>

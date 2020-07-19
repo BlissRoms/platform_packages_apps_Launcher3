@@ -15,37 +15,67 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <!-- General -->
     <string name="settings_title">Ustawienia</string>
+    <!-- Categories -->
     <string name="home_category_title">Ekran główny</string>
     <string name="home_category_summary">Ustaw panel Google now</string>
     <string name="ui_category_title">Interfejs użytkownika</string>
     <string name="ui_category_summary">Ustaw ustawienia interfejsu</string>
     <string name="app_drawer_category_title">Lista aplikacji</string>
+    <!-- Sub categories -->
+    <!-- Icon size -->
+    <!-- Gestures -->
     <string name="pref_homescreen_gestures_notifications">Panel powiadomień</string>
     <string name="pref_homescreen_gestures_screenrecord">Nagrywanie ekranu</string>
     <string name="pref_homescreen_gestures_screenshot_full">Zrzut ekranu - pełny</string>
     <string name="pref_homescreen_gestures_screenshot_partial">Zrzut ekranu - częściowy</string>
+    <!-- Google Feed -->
+    <!-- Grid -->
     <string name="num_default">Domyślne</string>
     <string name="number_of_columns_title">Ilość kolumn</string>
     <string name="number_of_rows_title">Liczba wierszy</string>
     <string name="number_of_hotseat_title">Liczba ikon doku</string>
     <string name="state_loading">Ustawianie\u2026</string>
+    <!-- Show labels on icon -->
     <string name="app_show_label_title">Etykiety aplikacji</string>
     <string name="desktop_show_label_summary">Wyświetlanie etykiet aplikacji na ekranie głównym</string>
     <string name="allapps_show_label_summary">Wyświetlanie etykiet aplikacji w szufladzie aplikacji</string>
+    <!-- Show QSB on homescreen -->
     <string name="pref_qsb_show_title">Szybkie wyszukiwanie</string>
     <string name="pref_qsb_show_summary">Pokaż pasek wyszukiwania na ekranie głównym</string>
+    <!-- QuickSpace -->
     <string name="show_quickspace_title">Na pierwszy rzut oka</string>
     <string name="show_quickspace_summary">Pokaż u góry ekranu głównego</string>
+    <!-- Always how labels irrespective of orientation -->
     <string name="apps_always_show_label_title">Ignoruj orientację dla etykiet</string>
     <string name="apps_always_show_label_summary">Zawsze pokazuj nazwy aplikacji na pulpicie oraz w szufladce aplikacji</string>
+    <!-- Hidden apps -->
     <string name="customize">Dostosuj</string>
     <string name="hide_app">Ukryj aplikacje</string>
     <string name="hide_app_sum">Ukrywanie aplikacji z szuflady</string>
-    <string name="hide_app_selected"> wybrane</string>
+    <string name="hide_app_selected">&#160;wybrane</string>
     <string name="hidden_app">Wszystkie aplikacje</string>
     <string name="hide_selected">Ukryj wybrane aplikacje</string>
     <string name="more">Więcej</string>
     <string name="reset_hidden_apps">Zresetuj wszystko</string>
     <string name="reset_hidden_apps_done">Ukryte aplikacje są teraz widoczne</string>
+    <!-- QuickSpace: QuickEvent: Device Intro Event -->
+    <!-- QuickSpace: QuickEvent: Ambient Play -->
+    <!-- Quickspace alternative view -->
+    <!-- Quickspace Now Playing -->
+    <!-- Quickspace PSA - Custom messages for the glance -->
+    <!-- QuickSpace Date format -->
+    <string name="date_format_title">Format daty</string>
+    <string name="date_format_long_name">Długo</string>
+    <string name="date_format_normal_name">Normalnie</string>
+    <string name="date_format_short_name">Krótko</string>
+    <!-- At a glance style -->
+    <!-- At a glance uppercase -->
+    <!-- At a glance font spacing -->
+    <string name="date_style_spacing_normal">Normalnie</string>
+    <!-- AppInfo -->
+    <!-- Used for preference height loading. -->
+    <!-- Edit workspace -->
+    <!-- AppPrediction Row -->
 </resources>

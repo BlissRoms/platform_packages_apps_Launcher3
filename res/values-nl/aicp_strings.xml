@@ -15,7 +15,9 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <!-- General -->
     <string name="settings_title">Instellingen</string>
+    <!-- Categories -->
     <string name="home_category_title">Beginscherm</string>
     <string name="home_category_summary">Instellen Google Now en meer</string>
     <string name="ui_category_title">Gebruikersinterface</string>
@@ -24,13 +26,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     <string name="app_drawer_category_summary">Pas je app overzicht aan</string>
     <string name="gestures_category_title">Gebaren</string>
     <string name="gestures_category_summary">Dubbel tikken en alle gebaren wissen</string>
+    <!-- Sub categories -->
     <string name="home_grid_title">Rooster layout</string>
+    <!-- Icon size -->
     <string name="icon_size_title">Icoon grootte</string>
     <string name="icon_size_extra_small">Zeer klein</string>
     <string name="icon_size_small">Klein</string>
     <string name="icon_size_average">Standaard</string>
     <string name="icon_size_large">Groot</string>
     <string name="icon_size_extra_large">Extra groot</string>
+    <!-- Gestures -->
     <string name="allow_swipe_down_clearall_title">Wis alles door naar beneden te vegen vanuit recente apps</string>
     <string name="allow_swipe_down_clearall_desc">Verticaal omlaag vegen in recente apps om alle apps te sluiten</string>
     <string name="pref_homescreen_dt_gestures_title">Dubbel tikken</string>
@@ -46,29 +51,128 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     <string name="pref_homescreen_gestures_screenrecord">Schermopname</string>
     <string name="pref_homescreen_gestures_screenshot_full">Schermafbeelding - volledig</string>
     <string name="pref_homescreen_gestures_screenshot_partial">Schermafbeelding - gedeeltelijk</string>
+    <!-- Google Feed -->
     <string name="google_feed_title">Toon Google app</string>
     <string name="google_feed_summary">Aan de linkerkant van het startscherm</string>
+    <!-- Grid -->
     <string name="num_default">Standaard</string>
     <string name="number_of_columns_title">Aantal kolommen</string>
     <string name="number_of_rows_title">Aantal rijen</string>
     <string name="number_of_hotseat_title">Aantal pictogrammen op dock</string>
     <string name="state_loading">Toepassen\u2026</string>
+    <!-- Show labels on icon -->
     <string name="app_show_label_title">App labels</string>
     <string name="desktop_show_label_summary">Labels van apps op het startscherm weergeven</string>
     <string name="allapps_show_label_summary">Toon de labels van apps in het app overzicht</string>
+    <!-- Show QSB on homescreen -->
     <string name="pref_qsb_show_title">Snelzoek balk</string>
     <string name="pref_qsb_show_summary">Toon Snelzoek balk op startscherm</string>
+    <!-- QuickSpace -->
     <string name="show_quickspace_title">In een oogopslag</string>
     <string name="show_quickspace_summary">Toon bovenaan uw beginscherm</string>
+    <!-- Always how labels irrespective of orientation -->
     <string name="apps_always_show_label_title">Negeer oriëntatie voor labels</string>
     <string name="apps_always_show_label_summary">Toon altijd app labels op het startscherm en de app drawer</string>
+    <!-- Hidden apps -->
     <string name="customize">Aanpassen</string>
     <string name="hide_app">Verberg apps</string>
     <string name="hide_app_sum">Apps verbergen in het app-overzicht</string>
-    <string name="hide_app_selected"> geselecteerd</string>
+    <string name="hide_app_selected">&#160;geselecteerd</string>
     <string name="hidden_app">Alle apps</string>
     <string name="hide_selected">Verberg geselecteerde app(s)</string>
     <string name="more">Meer</string>
     <string name="reset_hidden_apps">Alles herstellen</string>
     <string name="reset_hidden_apps_done">Verborgen apps zijn nu beschikbaar</string>
+    <!-- QuickSpace: QuickEvent: Device Intro Event -->
+    <string name="quick_event_rom_intro_welcome">Welkom bij AICP!</string>
+    <string name="quick_event_rom_intro_title1">Geniet van je dag!</string>
+    <string name="quick_event_rom_intro_title6">Tik hier om te beginnen</string>
+    <!-- QuickSpace: QuickEvent: Ambient Play -->
+    <!-- Quickspace alternative view -->
+    <!-- Quickspace Now Playing -->
+    <!-- Quickspace PSA - Custom messages for the glance -->
+    <string-array name="quickspace_psa_morning">
+        <item>Goedemorgen!</item>
+        <item>Good morning, time to rock!</item>
+        <item>Wat een mooie dag!</item>
+        <item>Fijne dag!</item>
+        <item>What about a small 5 minutes nap?</item>
+        <item>That\'s one way to wake up.</item>
+        <item>You should change your alarm sounds.</item>
+        <item>Looks like it\'s a beautiful day, isn\'t it?</item>
+        <item>Let\'s get this bread.</item>
+        <item>Check the weather just in case</item>
+        <item>Feeling a bit sleepy yet</item>
+        <item>Have you looked outside yet?</item>
+        <item>Let\'s get this done.</item>
+    </string-array>
+    <string-array name="quickspace_psa_evening">
+        <item>Goedenacht!</item>
+        <item>Slaap lekker!</item>
+        <item>Tot morgen!</item>
+        <item>Droom zacht!</item>
+        <item>Niet te lang opblijven</item>
+        <item>Have a good sleep</item>
+        <item>Get some sleep</item>
+        <item>Time to relax</item>
+        <item>Enjoy the night!</item>
+        <item>Time to charge the batteries!</item>
+        <item>Tomorrow might be a great day</item>
+        <item>Get your bones ready for tomorrow</item>
+    </string-array>
+    <string-array name="quickspace_psa_random">
+        <item>Our ROM is as cold as your Ex\'s heart</item>
+        <item>Is it time to flash an update again?</item>
+        <item>Hyped about Android R?</item>
+        <item>Oh hey, hoe gaat het?</item>
+        <item>Focus on your tasks</item>
+        <item>Hoeveel screenshots maak je?</item>
+        <item>May the sync be with you...</item>
+        <item>Have fun!</item>
+        <item>Time for some good music</item>
+        <item>What\'s cooler than being cool?</item>
+        <item>Ice Cold!</item>
+        <item>\u003C\u003C\u003C\u003C\u003C\u003C\u003C HEAD</item>
+        <item>Thou art all ice!</item>
+        <item>I had the best ice pun but it slipped my mind. Get it?</item>
+        <item>We love you 3000</item>
+        <item>Say \'Hi\' to us on Discord</item>
+        <item>Do something nice today</item>
+        <item>This is as good as it gets, right?</item>
+        <item>How is everything going?</item>
+        <item>All you need is ice cream!</item>
+        <item>Thank you for your support</item>
+        <item>Root Beer never breaks your heart, right?</item>
+        <item>One of the buildbot\'s best picks</item>
+        <item>It is what it is</item>
+        <item>Try Ice Cold desserts</item>
+        <item>What a lovely experience, isn\'t it?</item>
+        <item>Keep on flashing!</item>
+        <item>You are in a relationship with ice</item>
+        <item>What\'s on your mind?</item>
+        <item>Winner Winner ....?</item>
+        <item>rm -rf \/</item>
+    </string-array>
+    <!-- QuickSpace Date format -->
+    <string name="date_format_title">Datumformaat</string>
+    <string name="date_format_long_name">Lang</string>
+    <string name="date_format_normal_name">Normaal</string>
+    <string name="date_format_short_name">Kort</string>
+    <string name="date_format_dayonly_name">Alleen vandaag</string>
+    <!-- At a glance style -->
+    <!-- At a glance uppercase -->
+    <!-- At a glance font spacing -->
+    <string name="date_style_spacing_normal">Normaal</string>
+    <!-- AppInfo -->
+    <string name="placeholder_string">Laden...</string>
+    <!-- Used for preference height loading. -->
+    <string name="app_info_icon_pack">Pictogrampakket</string>
+    <string name="app_info_icon_pack_none">Geen</string>
+    <string name="app_info_source">Bron</string>
+    <string name="app_info_source_unknown">Onbekend</string>
+    <string name="app_info_last_update">Laatste update</string>
+    <string name="app_info_version">Versie</string>
+    <string name="app_info_more">Meer</string>
+    <!-- Edit workspace -->
+    <!-- AppPrediction Row -->
 </resources>

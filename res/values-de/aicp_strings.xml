@@ -15,7 +15,9 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <!-- General -->
     <string name="settings_title">Einstellungen</string>
+    <!-- Categories -->
     <string name="home_category_title">Startbildschirm</string>
     <string name="home_category_summary">Anpassungen von Google Now und mehr</string>
     <string name="ui_category_title">Benutzeroberfläche</string>
@@ -24,13 +26,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     <string name="app_drawer_category_summary">App-Übersicht anpassen</string>
     <string name="gestures_category_title">Gesten</string>
     <string name="gestures_category_summary">Gesten für doppeltes Tippen und zum Beenden aller Apps</string>
+    <!-- Sub categories -->
     <string name="home_grid_title">Rasteransicht</string>
+    <!-- Icon size -->
     <string name="icon_size_title">Symbolgröße</string>
     <string name="icon_size_extra_small">Sehr klein</string>
     <string name="icon_size_small">Klein</string>
     <string name="icon_size_average">Standard</string>
     <string name="icon_size_large">Groß</string>
     <string name="icon_size_extra_large">Sehr groß</string>
+    <!-- Gestures -->
     <string name="allow_swipe_down_clearall_title">Alle beenden beim Wischen nach unten aus dem Anwendungsverlauf</string>
     <string name="allow_swipe_down_clearall_desc">Wische im Anwendungsverlauf herunter, um alle Apps zu beenden</string>
     <string name="pref_homescreen_dt_gestures_title">Doppelt Tippen</string>
@@ -46,29 +51,167 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     <string name="pref_homescreen_gestures_screenrecord">Bildschirmaufnahme</string>
     <string name="pref_homescreen_gestures_screenshot_full">Screenshot - komplett</string>
     <string name="pref_homescreen_gestures_screenshot_partial">Bildschirmfoto - Ausschnitt</string>
+    <!-- Google Feed -->
     <string name="google_feed_title">Google-App anzeigen</string>
     <string name="google_feed_summary">Links vom Startbildschirm</string>
+    <!-- Grid -->
     <string name="num_default">Standard</string>
     <string name="number_of_columns_title">Anzahl der Spalten</string>
     <string name="number_of_rows_title">Anzahl der Zeilen</string>
     <string name="number_of_hotseat_title">Anzahl der Dock-Symbole</string>
     <string name="state_loading">Wird angewendet\u2026</string>
+    <!-- Show labels on icon -->
     <string name="app_show_label_title">App-Beschriftungen</string>
     <string name="desktop_show_label_summary">App-Beschriftungen auf dem Startbildschirm anzeigen</string>
     <string name="allapps_show_label_summary">App-Beschriftungen in der App-Übersicht anzeigen</string>
+    <!-- Show QSB on homescreen -->
     <string name="pref_qsb_show_title">Schnellsuchleiste</string>
     <string name="pref_qsb_show_summary">Schnellsuchleiste auf dem Startbildschirm anzeigen</string>
+    <!-- QuickSpace -->
     <string name="show_quickspace_title">Auf einen Blick</string>
     <string name="show_quickspace_summary">Oben auf deinem Startbildschirm anzeigen</string>
+    <!-- Always how labels irrespective of orientation -->
     <string name="apps_always_show_label_title">Displayausrichtung für Beschriftungen ignorieren</string>
     <string name="apps_always_show_label_summary">Immer die App-Beschriftung auf dem Startbildschirm und im App-Ordner zeigen</string>
+    <!-- Hidden apps -->
     <string name="customize">Anpassen</string>
     <string name="hide_app">Apps ausblenden</string>
     <string name="hide_app_sum">Apps in der App-Übersicht ausblenden</string>
-    <string name="hide_app_selected"> ausgewählt</string>
+    <string name="hide_app_selected">&#160;ausgewählt</string>
     <string name="hidden_app">Alle Apps</string>
     <string name="hide_selected">Ausgewählte App(s) ausblenden</string>
     <string name="more">Mehr</string>
     <string name="reset_hidden_apps">Alle zurücksetzen</string>
     <string name="reset_hidden_apps_done">Versteckte Apps sind jetzt verfügbar</string>
+    <!-- QuickSpace: QuickEvent: Device Intro Event -->
+    <string name="quick_event_rom_intro_welcome">Willkommen beim AICP!</string>
+    <string name="quick_event_rom_intro_title1">Habe einen schönen Tag</string>
+    <string name="quick_event_rom_intro_title2">Danke, dass Du Dich für uns entschieden hast</string>
+    <string name="quick_event_rom_intro_title3">Magst Du uns? Schicke uns ein Bier</string>
+    <string name="quick_event_rom_intro_title4">AICP FTW!</string>
+    <string name="quick_event_rom_intro_title5">Glück ist eine Flasche eiskaltes Bier</string>
+    <string name="quick_event_rom_intro_title6">Hier tippen, um zu beginnen</string>
+    <string name="quick_event_rom_intro_title7">Wir lieben dich 3000</string>
+    <!-- QuickSpace: QuickEvent: Ambient Play -->
+    <string name="quick_event_ambient_now_playing">Sie hören</string>
+    <string name="quick_event_ambient_song_artist">%1$s von %2$s</string>
+    <!-- Quickspace alternative view -->
+    <string name="quickspace_alternate_style_title">Alternativen Stil verwenden</string>
+    <string name="quickspace_alternate_style_summary">Einen minimalistischen Stil für \'Auf einen Blick\' verwenden</string>
+    <!-- Quickspace Now Playing -->
+    <string name="quickspace_now_playing_title">\"Sie hören\" anzeigen</string>
+    <string name="quickspace_now_playing_summary">Zeigt den laufenden Titel in \'Auf einen Blick\' an. WARNUNG: Dies ist nicht mit allen Audio-Apps kompatibel!</string>
+    <string name="quickspace_now_playing_showdate_title">Datum anzeigen</string>
+    <string name="quickspace_now_playing_showdate_summary">Zeigt das Datum in der ersten Zeile an Stelle von \"Sie hören\"</string>
+    <!-- Quickspace PSA - Custom messages for the glance -->
+    <string name="quickspace_psa_title">Zufällige Nachricht anzeigen</string>
+    <string name="quickspace_psa_summary">Manchmal einige nette Botschaften in \'Auf einen Blick\' anzeigen.</string>
+    <string-array name="quickspace_psa_morning">
+        <item>Guten Morgen!</item>
+        <item>Guten Morgen, Zeit zu Rocken!</item>
+        <item>Was für ein schöner Tag!</item>
+        <item>Hab einen schönen Tag!</item>
+        <item>Wie wäre es mit einem kleinen Nickerchen?</item>
+        <item>Das ist eine Möglichkeit, um aufzuwachen.</item>
+        <item>Du solltest deinen Weckton ändern.</item>
+        <item>Es sieht so aus, als ob es ein schöner Tag ist, oder?</item>
+        <item>Lass uns dieses Brot essen.</item>
+        <item>Überprüfe das Wetter, nur für den Fall.</item>
+        <item>Noch etwas schläfrig?</item>
+        <item>Hast du schon mal rausgeschaut?</item>
+        <item>Lass uns das erledigen.</item>
+    </string-array>
+    <string-array name="quickspace_psa_evening">
+        <item>Gute Nacht!</item>
+        <item>Schlaf gut!</item>
+        <item>Bis morgen!</item>
+        <item>Süße Träume!</item>
+        <item>Bleib nicht zulange auf</item>
+        <item>Hab einen erholsamen Schlaf</item>
+        <item>Gönn dir etwas Schlaf</item>
+        <item>Zeit zum Entspannen</item>
+        <item>Genieße die Nacht!</item>
+        <item>Zeit, den Akku wieder aufzuladen!</item>
+        <item>Morgen könnte ein toller Tag werden</item>
+        <item>Bereite dich auf morgen vor</item>
+    </string-array>
+    <string-array name="quickspace_psa_midnight">
+        <item>Äh… gute Nacht?</item>
+        <item>Es ist schon etwas spät</item>
+        <item>Du solltest deine Schlafenszeit überdenken</item>
+        <item>Bist du zu dieser Zeit produktiver?</item>
+    </string-array>
+    <string-array name="quickspace_psa_random">
+        <item>Unser ROM ist so kalt wie das Herz deiner Ex</item>
+        <item>Ist es an der Zeit, ein neues Update zu flashen?</item>
+        <item>Schon begeistert von Android R?</item>
+        <item>Oh hey, was ist los?</item>
+        <item>Konzentriere Dich auf Deine Aufgaben</item>
+        <item>Wie viele Bildschirmfotos machst Du so?</item>
+        <item>Möge der Sync mit dir sein...</item>
+        <item>Hab Spaß!</item>
+        <item>Zeit für etwas gute Musik</item>
+        <item>Was ist cooler als cool zu sein?</item>
+        <item>Ice Cold!</item>
+        <item>\u003C\u003C\u003C\u003C\u003C\u003C\u003C HEAD</item>
+        <item>Du bist ein Eisklotz!</item>
+        <item>Ich hatte das beste Eis, aber es ist mir entglitten. Verstanden?</item>
+        <item>Wir lieben dich 3000</item>
+        <item>Sag uns \"Hallo\" auf Discord</item>
+        <item>Tue heute etwas Nettes</item>
+        <item>Besser wird es nicht, oder?</item>
+        <item>Wie läuft es bei Dir so?</item>
+        <item>Alles was du brauchst ist Eiscreme!</item>
+        <item>Vielen Dank für deine Unterstützung</item>
+        <item>Root Beer bricht dir nie das Herz, oder?</item>
+        <item>Eine der besten Entscheidungen des Buildbots</item>
+        <item>Es ist das, was es ist</item>
+        <item>Probiere IceCold Nachspeisen</item>
+        <item>Was für ein schönes Erlebnis, oder?</item>
+        <item>Flashe immer weiter!</item>
+        <item>Du bist in einer Beziehung mit Eis</item>
+        <item>Was geht dir durch den Kopf?</item>
+        <item>Winner Winner ...?</item>
+        <item>rm -rf \/</item>
+    </string-array>
+    <!-- QuickSpace Date format -->
+    <string name="date_format_title">Datumsformat</string>
+    <string name="date_format_long_name">Lang</string>
+    <string name="date_format_normal_name">Normal</string>
+    <string name="date_format_short_name">Kurz</string>
+    <string name="date_format_daydate_long_name">Wochentag (mit Zahl)</string>
+    <string name="date_format_daydate_short_name">Wochentag (kurz, mit Zahl)</string>
+    <string name="date_format_dayonly_name">Nur Tag</string>
+    <!-- At a glance style -->
+    <string name="date_style_font">Schriftart für Datum</string>
+    <string name="date_style_font_system_header">Überschrift Systemschriftart</string>
+    <string name="date_style_font_system_body">Textkörper Systemschriftart</string>
+    <!-- At a glance uppercase -->
+    <string name="date_style_transform_title">Großbuchstaben für Datum anzeigen</string>
+    <string name="date_style_transform_summary">Datum / \'Auf einen Blick\' in Großbuchstaben umwandeln</string>
+    <!-- At a glance font spacing -->
+    <string name="date_style_spacing">Abstand zum Datum</string>
+    <string name="date_style_spacing_normal">Normal</string>
+    <string name="date_style_spacing_barely">Kaum sichtbar</string>
+    <string name="date_style_spacing_ott">Übertrieben</string>
+    <!-- AppInfo -->
+    <string name="app_info_subtext">Nach unten wischen, um die App-Informationen zu schließen.</string>
+    <string name="app_info_version_value">%1$s (%2$d)</string>
+    <string name="placeholder_string">Ladevorgang...</string>
+    <!-- Used for preference height loading. -->
+    <string name="app_info_icon_pack">Symbolpaket</string>
+    <string name="app_info_icon_pack_none">Keins</string>
+    <string name="app_info_source">Quelle</string>
+    <string name="app_info_source_unknown">Unbekannt</string>
+    <string name="app_info_last_update">Letzte Aktualisierung</string>
+    <string name="app_info_version">Version</string>
+    <string name="app_info_more">Mehr</string>
+    <!-- Edit workspace -->
+    <string name="settings_edit_allow_title">Bearbeitung zulassen</string>
+    <string name="settings_edit_allow_summary_on">Symbole und Widgets können dem Startbildschirm hinzugefügt, von ihm entfernt und auf ihm verschoben werden</string>
+    <string name="settings_edit_allow_summary_off">Symbole und Widgets können dem Startbildschirm nicht hinzugefügt, von ihm entfernt und auf ihm verschoben werden</string>
+    <string name="settings_edit_widgets_error">Es ist nicht möglich, Widgets zum Startbildschirm hinzuzufügen</string>
+    <!-- AppPrediction Row -->
+    <string name="app_show_predictions_title">Zeile mit App-Vorschlägen</string>
+    <string name="app_show_predictions_summary">Zeige App-Vorschläge im Anwendungsverlauf und der App-Übersicht an</string>
 </resources>

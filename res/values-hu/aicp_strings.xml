@@ -15,7 +15,9 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <!-- General -->
     <string name="settings_title">Beállítások</string>
+    <!-- Categories -->
     <string name="home_category_title">Kezdőképernyő</string>
     <string name="home_category_summary">A \'Google Now\'-panel és egyebek beállítása</string>
     <string name="ui_category_title">Felhasználói felület</string>
@@ -24,13 +26,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     <string name="app_drawer_category_summary">Az Alkalmazásfiók testreszabása</string>
     <string name="gestures_category_title">Mozdulatvezérlés</string>
     <string name="gestures_category_summary">A dupla érintés és \'az összes törlése\' vezérlői</string>
+    <!-- Sub categories -->
     <string name="home_grid_title">Rácselrendezés</string>
+    <!-- Icon size -->
     <string name="icon_size_title">Ikonméret</string>
     <string name="icon_size_extra_small">Apró</string>
     <string name="icon_size_small">Kicsi</string>
     <string name="icon_size_average">Alapértelmezett</string>
     <string name="icon_size_large">Nagy</string>
     <string name="icon_size_extra_large">Hatalmas</string>
+    <!-- Gestures -->
     <string name="allow_swipe_down_clearall_title">Az \'Összes törlése\' egy lefelé mozdulattal</string>
     <string name="allow_swipe_down_clearall_desc">Csúsztasson függőlegesen lefelé, hogy törölje az összes alkalmazást az Előzményekből</string>
     <string name="pref_homescreen_dt_gestures_title">Dupla érintés</string>
@@ -46,30 +51,55 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     <string name="pref_homescreen_gestures_screenrecord">Képernyővideó</string>
     <string name="pref_homescreen_gestures_screenshot_full">Teljes képernyőmentés</string>
     <string name="pref_homescreen_gestures_screenshot_partial">Részleges képernyőmentés</string>
+    <!-- Google Feed -->
     <string name="google_feed_title">A Google-alkalmazás megjelenítése</string>
     <string name="google_feed_summary">A fő kezdőképernyőtől balra</string>
+    <!-- Grid -->
     <string name="num_default">Alapértelmezett</string>
     <string name="number_of_columns_title">Az oszlopok száma</string>
     <string name="number_of_rows_title">A sorok száma</string>
     <string name="number_of_hotseat_title">A Dokk-ikonok száma</string>
     <string name="state_loading">Alkalmazás\u2026</string>
+    <!-- Show labels on icon -->
     <string name="app_show_label_title">Alkalmazásnevek</string>
     <string name="desktop_show_label_summary">Az alkalmazások nevének megjelenítése a Kezdőképernyőn</string>
     <string name="allapps_show_label_summary">Az alkalmazások nevének megjelenítése az Alkalmazásfiókban</string>
+    <!-- Show QSB on homescreen -->
     <string name="pref_qsb_show_title">Gyorskeresés</string>
     <string name="pref_qsb_show_summary">Gyorskereső a főképernyőn</string>
+    <!-- QuickSpace -->
     <string name="show_quickspace_title">Belepillantás</string>
     <string name="show_quickspace_summary">Az Ön kezdőképernyőjének tetején jelenik meg</string>
     <string name="abbrev_wday_month_day_no_year">MMM. d., EEEE</string>
+    <!-- Always how labels irrespective of orientation -->
     <string name="apps_always_show_label_title">A feliratok tájolásának mellőzése</string>
     <string name="apps_always_show_label_summary">Az alkalmazásnevek állandó megjelenítése a Kezdőképernyőn és az Alkalmazásfiókban</string>
+    <!-- Hidden apps -->
     <string name="customize">Testreszabás</string>
     <string name="hide_app">Alkalmazások elrejtése</string>
     <string name="hide_app_sum">Alkalmazások elrejtése az alkalmazásfiókból</string>
-    <string name="hide_app_selected">  kiválasztva</string>
+    <string name="hide_app_selected">&#160; kiválasztva</string>
     <string name="hidden_app">Az összes alkalmazás</string>
     <string name="hide_selected">A kiválasztott alkalmazás(ok) elrejtése</string>
     <string name="more">Továbbiak</string>
     <string name="reset_hidden_apps">Az összes visszaállítása</string>
     <string name="reset_hidden_apps_done">A rejtett alkalmazások újra elérhetőek</string>
+    <!-- QuickSpace: QuickEvent: Device Intro Event -->
+    <!-- QuickSpace: QuickEvent: Ambient Play -->
+    <!-- Quickspace alternative view -->
+    <!-- Quickspace Now Playing -->
+    <!-- Quickspace PSA - Custom messages for the glance -->
+    <!-- QuickSpace Date format -->
+    <string name="date_format_title">Dátumformátum</string>
+    <string name="date_format_long_name">Hosszú</string>
+    <string name="date_format_normal_name">Szokásos</string>
+    <string name="date_format_short_name">Rövid</string>
+    <!-- At a glance style -->
+    <!-- At a glance uppercase -->
+    <!-- At a glance font spacing -->
+    <string name="date_style_spacing_normal">Szokásos</string>
+    <!-- AppInfo -->
+    <!-- Used for preference height loading. -->
+    <!-- Edit workspace -->
+    <!-- AppPrediction Row -->
 </resources>
