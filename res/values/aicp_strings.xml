@@ -99,11 +99,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     <string name="reset_hidden_apps_done">Hidden apps are now available</string>
 
     <!-- QuickSpace: QuickEvent: Device Intro Event -->
-    <string name="quick_event_rom_intro_welcome">Welcome to AICP!</string>
+    <string name="quick_event_rom_intro_welcome">Welcome to BlissRoms!</string>
     <string name="quick_event_rom_intro_title1">Have a great day</string>
     <string name="quick_event_rom_intro_title2">Thank you for choosing us</string>
     <string name="quick_event_rom_intro_title3">Loving us? Send us a beer</string>
-    <string name="quick_event_rom_intro_title4">AICP FTW!</string>
+    <string name="quick_event_rom_intro_title4">BlissRoms FTW!</string>
     <string name="quick_event_rom_intro_title5">Happiness is a bottle of ice cold beer</string>
     <string name="quick_event_rom_intro_title6">Tap here to begin</string>
     <string name="quick_event_rom_intro_title7">We love you 3000</string>
