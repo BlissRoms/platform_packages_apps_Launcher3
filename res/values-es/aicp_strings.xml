@@ -84,11 +84,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     <string name="reset_hidden_apps">Restablecer todo</string>
     <string name="reset_hidden_apps_done">Las aplicaciones ocultas ahora están disponibles</string>
     <!-- QuickSpace: QuickEvent: Device Intro Event -->
-    <string name="quick_event_rom_intro_welcome">¡Bienvenido a AICP!</string>
+    <string name="quick_event_rom_intro_welcome">¡Bienvenido a BlissRoms!</string>
     <string name="quick_event_rom_intro_title1">Que tengas un buen día</string>
     <string name="quick_event_rom_intro_title2">Gracias por elegirnos</string>
     <string name="quick_event_rom_intro_title3">¿Te gustamos? Envíanos una cerveza</string>
-    <string name="quick_event_rom_intro_title4">AICP FTW!</string>
+    <string name="quick_event_rom_intro_title4">BlissRoms FTW!</string>
     <string name="quick_event_rom_intro_title6">Pulsa aquí para empezar</string>
     <string name="quick_event_rom_intro_title7">Te queremos 3000</string>
     <!-- QuickSpace: QuickEvent: Ambient Play -->

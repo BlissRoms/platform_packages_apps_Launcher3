@@ -84,7 +84,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     <string name="reset_hidden_apps">Alles herstellen</string>
     <string name="reset_hidden_apps_done">Verborgen apps zijn nu beschikbaar</string>
     <!-- QuickSpace: QuickEvent: Device Intro Event -->
-    <string name="quick_event_rom_intro_welcome">Welkom bij AICP!</string>
+    <string name="quick_event_rom_intro_welcome">Welkom bij BlissRoms!</string>
     <string name="quick_event_rom_intro_title1">Geniet van je dag!</string>
     <string name="quick_event_rom_intro_title6">Tik hier om te beginnen</string>
     <!-- QuickSpace: QuickEvent: Ambient Play -->
