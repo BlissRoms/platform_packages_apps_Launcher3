@@ -62,8 +62,7 @@ import android.view.ViewTreeObserver;
 import android.view.accessibility.AccessibilityNodeInfo;
 import android.widget.Toast;
 
-import com.android.internal.util.aicp.AicpUtils;
-import com.android.internal.util.aicp.PackageUtils;
+import com.android.internal.util.bliss.BlissUtils;
 
 import com.android.launcher3.Launcher.LauncherOverlay;
 import com.android.launcher3.LauncherAppWidgetHost.ProviderChangedListener;
@@ -312,34 +311,31 @@ public class Workspace extends PagedView<WorkspacePageIndicator>
             case 0: // Stock
                 break;
             case 1:  // Screen off
-                AicpUtils.goToSleep(getContext());
+                BlissUtils.switchScreenOff(getContext());
                 break;
             case 2: // Flashlight
-                AicpUtils.toggleCameraFlash();
+                BlissUtils.toggleCameraFlash();
                 break;
             case 3: // Google search
                 launchGoogleSearch(getContext());
                 break;
             case 4: // Volume panel
-                AicpUtils.toggleVolumePanel(getContext());
+                BlissUtils.toggleVolumePanel(getContext());
                 break;
             case 5: // Clear notifications
-                AicpUtils.clearAllNotifications();
+                BlissUtils.clearAllNotifications();
                 break;
-            case 6: // Screenrecord
-                AicpUtils.takeScreenrecord(getContext(), UserHandle.CURRENT);
+            case 6: // Notifications
+                BlissUtils.toggleNotifications();
                 break;
-            case 7: // Notifications
-                AicpUtils.toggleNotifications();
+            case 7: // QS panel
+                BlissUtils.toggleQsPanel();
                 break;
-            case 8: // QS panel
-                AicpUtils.toggleQsPanel();
+            case 8: // Take screenshot - full screen
+                BlissUtils.takeScreenshot(3);
                 break;
-            case 9: // Take screenshot - full screen
-                AicpUtils.takeScreenshot(true);
-                break;
-            case 10: // Take screenshot - partial
-                AicpUtils.takeScreenshot(false);
+            case 9: // Take screenshot - partial
+                BlissUtils.takeScreenshot(2);
                 break;
         }
     }
@@ -3491,7 +3487,7 @@ public class Workspace extends PagedView<WorkspacePageIndicator>
         launchIntent.setPackage("com.google.android.googlequicksearchbox");
         launchIntent.setClassName("com.google.android.googlequicksearchbox",
                 "com.google.android.googlequicksearchbox.SearchActivity");
-        if (PackageUtils.isPackageInstalled(context,
+        if (BlissUtils.isPackageInstalled(context,
                 "com.google.android.googlequicksearchbox")) {
             context.startActivity(launchIntent);
         } else {

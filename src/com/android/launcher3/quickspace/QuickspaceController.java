@@ -31,7 +31,7 @@ import android.provider.Settings;
 import android.service.notification.StatusBarNotification;
 import android.util.Log;
 
-import com.android.internal.util.aicp.OmniJawsClient;
+import org.omnirom.omni.OmniJawsClient;
 
 import com.android.launcher3.LauncherNotifications;
 import com.android.launcher3.notification.NotificationInfo;
