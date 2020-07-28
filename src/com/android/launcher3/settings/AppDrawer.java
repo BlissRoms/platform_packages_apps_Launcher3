@@ -124,9 +124,7 @@ public class AppDrawer extends SettingsActivity implements PreferenceFragment.On
         protected boolean initPreference(Preference preference) {
             switch (preference.getKey()) {
                 case Utilities.ALLAPPS_SHOW_LABEL:
-                    preference.setOnPreferenceChangeListener(this);
                     return true;
-                case Utilities.KEY_ALLAPPS_SHOW_PREDICTIONS:
                 case Utilities.KEY_HIDDEN_APPS:
                     return true;
             }
@@ -158,7 +156,7 @@ public class AppDrawer extends SettingsActivity implements PreferenceFragment.On
             switch (preference.getKey()) {
                 case Utilities.KEY_HIDDEN_APPS:
                     startActivity(new Intent(getActivity(), HiddenAppsActivity.class));
-                    return true;
+                    return false;
             }
             return false;
         }
