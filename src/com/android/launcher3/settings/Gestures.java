@@ -31,6 +31,7 @@ import androidx.preference.Preference.OnPreferenceChangeListener;
 import androidx.preference.SwitchPreference;
 import android.view.MenuItem;
 
+import com.android.launcher3.LauncherAppState;
 import com.android.launcher3.LauncherFiles;
 import com.android.launcher3.R;
 import com.android.launcher3.Utilities;
@@ -125,6 +126,7 @@ public class Gestures extends SettingsActivity
                     getDevicePrefs(mContext).edit().putString(Utilities.KEY_HOMESCREEN_DT_GESTURES, gestureValue).commit();
                     mDoubleTapGestures.setValue(gestureValue);
                     mDoubleTapGestures.setSummary(mDoubleTapGestures.getEntry());
+                    LauncherAppState.getInstanceNoCreate().setNeedsRestart();
                     break;
             }
             return false;
