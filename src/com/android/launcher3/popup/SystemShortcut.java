@@ -139,9 +139,13 @@ public abstract class SystemShortcut<T extends BaseDraggingActivity>
         public View.OnClickListener getOnClickListener(final Launcher launcher,
                 final ItemInfo itemInfo) {
             if (itemInfo.getTargetComponent() == null) return null;
+            String packageName = itemInfo.getTargetComponent().getPackageName();
+            if (TextUtils.isEmpty(packageName)) {
+                return null;
+            }
             final List<WidgetItem> widgets =
                     launcher.getPopupDataProvider().getWidgetsForPackageUser(new PackageUserKey(
-                            itemInfo.getTargetComponent().getPackageName(), itemInfo.user));
+                            packageName, itemInfo.user));
             if (widgets == null) {
                 return null;
             }
