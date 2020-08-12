@@ -88,7 +88,7 @@
         android:key="pref_quickspace_psonality"
         android:summary="@string/quickspace_psa_summary"
         android:title="@string/quickspace_psa_title"
-        android:defaultValue="true"
+        android:defaultValue="false"
         android:persistent="true" />
 
     <SwitchPreference
