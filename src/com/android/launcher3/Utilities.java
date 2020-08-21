@@ -825,7 +825,7 @@ public final class Utilities {
     }
 
     public static boolean isQuickspacePersonalityEnabled(Context context) {
-        return getPrefs(context).getBoolean(KEY_SHOW_QUICKSPACE_PSONALITY, true);
+        return getPrefs(context).getBoolean(KEY_SHOW_QUICKSPACE_PSONALITY, false);
     }
 
     public static void restart(final Context context) {
