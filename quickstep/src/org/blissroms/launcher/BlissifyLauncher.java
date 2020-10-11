@@ -17,7 +17,13 @@
 package org.blissroms.launcher;
 
 import com.android.launcher3.uioverrides.QuickstepLauncher;
+import com.android.systemui.plugins.shared.LauncherOverlayManager;
 
 public class BlissifyLauncher extends QuickstepLauncher {
+
+    @Override
+    protected LauncherOverlayManager getDefaultOverlay() {
+        return new OverlayCallbackImpl(this);
+    }
 
 }
