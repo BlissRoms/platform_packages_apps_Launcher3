@@ -56,6 +56,9 @@ import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.annotation.TargetApi;
 import android.app.ActivityManager.RunningTaskInfo;
+import android.app.ActivityManager;
+import android.app.IActivityManager;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.graphics.Canvas;
@@ -85,6 +88,7 @@ import android.view.ViewGroup;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
 import android.view.animation.Interpolator;
+import android.widget.Button;
 import android.widget.ListView;
 
 import androidx.annotation.Nullable;
@@ -269,6 +273,7 @@ public abstract class RecentsView<T extends StatefulActivity> extends PagedView 
     private final RecentsModel mModel;
     private final int mTaskTopMargin;
     private final ClearAllButton mClearAllButton;
+    private Button mKillAppButton;
     private final Rect mClearAllButtonDeadZoneRect = new Rect();
     private final Rect mTaskViewDeadZoneRect = new Rect();
 
@@ -445,6 +450,7 @@ public abstract class RecentsView<T extends StatefulActivity> extends PagedView 
         mClearAllButton = (ClearAllButton) LayoutInflater.from(context)
                 .inflate(R.layout.overview_clear_all_button, this, false);
         mClearAllButton.setOnClickListener(this::dismissAllTasks);
+
         mTaskViewPool = new ViewPool<>(context, this, R.layout.task, 20 /* max size */,
                 10 /* initial size */);
 
@@ -550,6 +556,8 @@ public abstract class RecentsView<T extends StatefulActivity> extends PagedView 
     public void init(OverviewActionsView actionsView) {
         mActionsView = actionsView;
         mActionsView.updateHiddenFlags(HIDDEN_NO_TASKS, getTaskViewCount() == 0);
+        mKillAppButton = (Button) mActionsView.findViewById(R.id.kill_app);
+        mKillAppButton.setOnClickListener(this::killTask);
     }
 
     @Override
@@ -1608,6 +1616,22 @@ public abstract class RecentsView<T extends StatefulActivity> extends PagedView 
     private void dismissAllTasks(View view) {
         runDismissAnimation(createAllTasksDismissAnimation(DISMISS_TASK_DURATION));
         mActivity.getUserEventDispatcher().logActionOnControl(TAP, CLEAR_ALL_BUTTON);
+    }
+
+    @SuppressWarnings("unused")
+    private void killTask(View view) {
+        IActivityManager am = ActivityManager.getService();
+        TaskView tv = getNextPageTaskView();
+        Task task = tv.getTask();
+        String pkgname = task.key.getPackageName();
+        if (task != null) {
+            try {
+                am.killBackgroundProcesses(pkgname, UserHandle.USER_CURRENT);
+            } catch (Throwable t) {
+                //TODO: handle exception
+            }
+            dismissTask(tv, true, true);
+        }
     }
 
     private void dismissCurrentTask() {
