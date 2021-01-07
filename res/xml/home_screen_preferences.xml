@@ -8,6 +8,12 @@
         android:persistent="true" />
 
     <com.android.launcher3.widget.SwitchPreference
+        android:key="pref_show_labels_landscape"
+        android:title="@string/show_labels_landscape"
+        android:defaultValue="false"
+        android:persistent="true" />
+
+    <com.android.launcher3.widget.SwitchPreference
         android:key="pref_show_workspace_grad"
         android:title="@string/workspace_gradient_title"
         android:summary="@string/workspace_gradient_summary"
