@@ -8,6 +8,16 @@
         android:defaultValue="true"
         android:persistent="true" />
 
+
+    <DropDownPreference
+        android:key="pref_icon_size"
+        android:title="@string/icon_size_title"
+        android:summary="%s"
+        android:entries="@array/icon_size_names"
+        android:entryValues="@array/icon_size_values"
+        android:defaultValue="average"
+        android:persistent="true" />
+
     <com.android.launcher3.settings.preference.ReloadingListPreference
         android:key="pref_icon_pack"
         android:title="@string/app_info_icon_pack"
