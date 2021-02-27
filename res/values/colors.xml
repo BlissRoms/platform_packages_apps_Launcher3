@@ -45,4 +45,5 @@
 
     <color name="settings_accent_color">@*android:color/accent_device_default_light</color>
 
+    <color name="disabled_text_color">#66000000</color>
 </resources>
