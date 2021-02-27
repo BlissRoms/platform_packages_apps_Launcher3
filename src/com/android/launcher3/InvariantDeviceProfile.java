@@ -21,7 +21,9 @@ import static com.android.launcher3.LauncherPrefs.DB_FILE;
 import static com.android.launcher3.LauncherPrefs.DRAWER_OPEN_KEYBOARD;
 import static com.android.launcher3.LauncherPrefs.ENABLE_TWOLINE_ALLAPPS_TOGGLE;
 import static com.android.launcher3.LauncherPrefs.FIXED_LANDSCAPE_MODE;
+import static com.android.launcher3.LauncherPrefs.FONT_SIZE;
 import static com.android.launcher3.LauncherPrefs.GRID_NAME;
+import static com.android.launcher3.LauncherPrefs.ICON_SIZE;
 import static com.android.launcher3.LauncherPrefs.NON_FIXED_LANDSCAPE_GRID_NAME;
 import static com.android.launcher3.LauncherPrefs.NOTIFICATION_BADGE_COUNTS;
 import static com.android.launcher3.LauncherPrefs.SHOW_DESKTOP_LABELS;
@@ -312,7 +314,9 @@ public class InvariantDeviceProfile {
                     SHOW_DESKTOP_LABELS.getSharedPrefKey().equals(key) ||
                     SHOW_DRAWER_LABELS.getSharedPrefKey().equals(key) ||
                     SHOW_HOTSEAT_QSB.getSharedPrefKey().equals(key) ||
-                    NOTIFICATION_BADGE_COUNTS.getSharedPrefKey().equals(key)) {
+                    NOTIFICATION_BADGE_COUNTS.getSharedPrefKey().equals(key) ||
+                    ICON_SIZE.getSharedPrefKey().equals(key) ||
+                    FONT_SIZE.getSharedPrefKey().equals(key)) {
                 onConfigChanged();
             }
         };
@@ -431,7 +435,12 @@ public class InvariantDeviceProfile {
 
         inlineNavButtonsEndSpacing = closestProfile.inlineNavButtonsEndSpacing;
 
-        iconSize = displayOption.iconSizes;
+        float iconSizeModifier =
+                (float) mPrefs.get(ICON_SIZE) / 100F;
+        float fontSizeModifier =
+                (float) mPrefs.get(FONT_SIZE) / 100F;
+
+        iconSize = multiplyDimensions(displayOption.iconSizes, iconSizeModifier);
         float maxIconSize = iconSize[0];
         for (int i = 1; i < iconSize.length; i++) {
             maxIconSize = Math.max(maxIconSize, iconSize[i]);
@@ -440,7 +449,7 @@ public class InvariantDeviceProfile {
 
         fillResIconDpi = getLauncherIconDensity(iconBitmapSize);
 
-        iconTextSize = displayOption.textSizes;
+        iconTextSize = multiplyDimensions(displayOption.textSizes, fontSizeModifier);
 
         minCellSize = displayOption.minCellSize;
 
@@ -464,8 +473,9 @@ public class InvariantDeviceProfile {
 
         allAppsCellSize = displayOption.allAppsCellSize;
         allAppsBorderSpaces = displayOption.allAppsBorderSpaces;
-        allAppsIconSize = displayOption.allAppsIconSizes;
-        allAppsIconTextSize = displayOption.allAppsIconTextSizes;
+        allAppsIconSize = multiplyDimensions(displayOption.allAppsIconSizes, iconSizeModifier);
+        allAppsIconTextSize =
+                multiplyDimensions(displayOption.allAppsIconTextSizes, fontSizeModifier);
 
         inlineQsb = closestProfile.inlineQsb;
 
@@ -729,6 +739,14 @@ public class InvariantDeviceProfile {
             out.iconSizes[i] = Math.min(out.iconSizes[i], closestPoint.iconSizes[i]);
         }
 
+        return out;
+    }
+
+    private static float[] multiplyDimensions(float[] dimensions, float scale) {
+        float[] out = new float[dimensions.length];
+        for (int i = 0; i < dimensions.length; i++) {
+            out[i] = dimensions[i] * scale;
+        }
         return out;
     }
 
