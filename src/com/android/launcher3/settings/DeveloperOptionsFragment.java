@@ -47,7 +47,7 @@ import androidx.preference.PreferenceDataStore;
 import androidx.preference.PreferenceFragment;
 import androidx.preference.PreferenceScreen;
 import androidx.preference.PreferenceViewHolder;
-import androidx.preference.SwitchPreference;
+import com.android.launcher3.widget.SwitchPreference;
 
 import com.android.launcher3.R;
 import com.android.launcher3.config.FeatureFlags;

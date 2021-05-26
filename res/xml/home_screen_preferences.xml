@@ -1,27 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <SwitchPreference
+    <com.android.launcher3.widget.SwitchPreference
         android:key="pref_desktop_show_labels"
         android:title="@string/desktop_show_labels"
         android:defaultValue="true"
         android:persistent="true" />
 
-    <SwitchPreference
+    <com.android.launcher3.widget.SwitchPreference
         android:key="pref_show_workspace_grad"
         android:title="@string/workspace_gradient_title"
         android:summary="@string/workspace_gradient_summary"
         android:defaultValue="true"
         android:persistent="true"/>
 
-    <SwitchPreference
+    <com.android.launcher3.widget.SwitchPreference
         android:key="pref_show_hotseat_grad"
         android:title="@string/hotseat_gradient_title"
         android:summary="@string/hotseat_gradient_summary"
         android:defaultValue="true"
         android:persistent="true"/>
 
-    <SwitchPreference
+    <com.android.launcher3.widget.SwitchPreference
         android:defaultValue="true"
         android:key="pref_workspace_edit"
         android:persistent="true"
@@ -29,7 +29,7 @@
         android:summaryOn="@string/settings_edit_allow_summary_on"
         android:summaryOff="@string/settings_edit_allow_summary_off" />
 
-    <SwitchPreference
+    <com.android.launcher3.widget.SwitchPreference
         android:defaultValue="true"
         android:key="pref_enable_minus_one"
         android:summary="@string/pref_show_google_now_summary"
