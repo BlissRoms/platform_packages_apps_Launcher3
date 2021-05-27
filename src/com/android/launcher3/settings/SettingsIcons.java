@@ -35,6 +35,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.text.TextUtils;
+import android.view.MenuItem;
 
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragment;
@@ -81,6 +82,8 @@ public class SettingsIcons extends Activity
         super.onCreate(savedInstanceState);
         mContext = getApplicationContext();
 
+        getActionBar().setDisplayHomeAsUpEnabled(true);
+
         if (savedInstanceState == null) {
             Bundle args = new Bundle();
             String prefKey = getIntent().getStringExtra(EXTRA_FRAGMENT_ARG_KEY);
@@ -96,6 +99,15 @@ public class SettingsIcons extends Activity
                     .commit();
         }
         Utilities.getPrefs(getApplicationContext()).registerOnSharedPreferenceChangeListener(this);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            finish();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override

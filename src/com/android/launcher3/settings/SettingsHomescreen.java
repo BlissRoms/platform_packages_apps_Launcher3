@@ -33,6 +33,7 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.text.TextUtils;
+import android.view.MenuItem;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
@@ -82,6 +83,8 @@ public class SettingsHomescreen extends FragmentActivity
         super.onCreate(savedInstanceState);
         mContext = getApplicationContext();
 
+        getActionBar().setDisplayHomeAsUpEnabled(true);
+
         if (savedInstanceState == null) {
             Bundle args = new Bundle();
             String prefKey = getIntent().getStringExtra(EXTRA_FRAGMENT_ARG_KEY);
@@ -97,6 +100,15 @@ public class SettingsHomescreen extends FragmentActivity
             fm.beginTransaction().replace(android.R.id.content, f).commit();
         }
         Utilities.getPrefs(getApplicationContext()).registerOnSharedPreferenceChangeListener(this);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            finish();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
