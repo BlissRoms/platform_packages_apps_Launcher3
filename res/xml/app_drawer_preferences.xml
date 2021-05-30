@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <SwitchPreference
+        android:key="pref_drawer_show_labels"
+        android:title="@string/drawer_show_labels"
+        android:defaultValue="true"
+        android:persistent="true" />
+
+    <SwitchPreference
+        android:key="pref_show_labels_landscape"
+        android:title="@string/show_labels_landscape"
+        android:defaultValue="false"
+        android:persistent="true" />
+
+    <Preference
+        android:key="pref_trust_apps"
+        android:title="@string/trust_apps_manager_name" />
+
+</androidx.preference.PreferenceScreen> 

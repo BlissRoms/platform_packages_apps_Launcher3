@@ -6,6 +6,8 @@ import android.util.AttributeSet;
 import androidx.preference.ListPreference;
 
 import com.android.launcher3.settings.SettingsActivity;
+import com.android.launcher3.settings.SettingsIcons;
+
 import java.util.function.Function;
 
 import static com.android.launcher3.util.Executors.MAIN_EXECUTOR;
@@ -13,7 +15,7 @@ import static com.android.launcher3.util.Executors.THREAD_POOL_EXECUTOR;
 
 @SuppressWarnings("unused")
 public class ReloadingListPreference extends ListPreference
-        implements SettingsActivity.OnResumePreferenceCallback {
+        implements SettingsIcons.OnResumePreferenceCallback {
     public interface OnReloadListener {
         Runnable listUpdater(ReloadingListPreference pref);
     }

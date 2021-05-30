@@ -42,4 +42,7 @@
     <color name="gesture_tutorial_fake_task_view_color">#6DA1FF</color> <!-- Light Blue -->
     <color name="gesture_tutorial_action_button_label_color">#FFFFFFFF</color>
     <color name="gesture_tutorial_primary_color">#1A73E8</color> <!-- Blue -->
+
+    <color name="settings_accent_color">@*android:color/accent_device_default_light</color>
+
 </resources>

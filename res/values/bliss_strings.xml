@@ -77,4 +77,17 @@
     <string name="trust_apps_help">Help</string>
     <string name="trust_apps_info_hidden">Hidden apps and their widgets are hidden from the drawer</string>
 
+    <!-- General -->
+    <string name="settings_title">Settings</string>
+
+    <!-- Categories -->
+    <string name="home_category_title">Home screen</string>
+    <string name="home_category_summary">Set Google now panel and more</string>
+    <string name="icons_category_title">Icons</string>
+    <string name="icons_category_summary">Set icon style and more</string>
+    <string name="app_drawer_category_title">App drawer</string>
+    <string name="app_drawer_category_summary">Customize your app drawer</string>
+    <string name="misc_category_title">Miscellaneous</string>
+    <string name="misc_category_summary">Other options</string>
+
 </resources>

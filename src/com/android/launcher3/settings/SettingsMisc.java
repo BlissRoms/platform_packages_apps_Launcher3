@@ -16,26 +16,20 @@
 
 package com.android.launcher3.settings;
 
-import android.app.Activity;
-import android.app.DialogFragment;
-import android.app.Fragment;
-import android.content.ComponentName;
-import android.content.Context;
+import static com.android.launcher3.SessionCommitReceiver.ADD_ICON_PREFERENCE_KEY;
+import static com.android.launcher3.states.RotationHelper.ALLOW_ROTATION_PREFERENCE_KEY;
+import static com.android.launcher3.states.RotationHelper.getAllowRotationDefaultValue;
+import static com.android.launcher3.util.SecureSettingsObserver.newNotificationSettingsObserver;
+
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
-import android.content.Intent;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.text.TextUtils;
 
-import com.android.launcher3.LauncherAppState;
-import com.android.launcher3.LauncherFiles;
-import com.android.launcher3.R;
-import com.android.launcher3.Utilities;
-import com.android.launcher3.config.FeatureFlags;
-import com.android.launcher3.trust.TrustAppsActivity;
-import com.android.launcher3.uioverrides.plugins.PluginManagerWrapper;
-import com.android.launcher3.util.SecureSettingsObserver;
+import android.app.Activity;
+import android.app.DialogFragment;
+import android.app.Fragment;
+import android.content.ComponentName;
 
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragment;
@@ -45,26 +39,34 @@ import androidx.preference.PreferenceGroup.PreferencePositionCallback;
 import androidx.preference.PreferenceScreen;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.android.launcher3.LauncherAppState;
+import com.android.launcher3.LauncherFiles;
+import com.android.launcher3.R;
+import com.android.launcher3.Utilities;
+import com.android.launcher3.config.FeatureFlags;
+import com.android.launcher3.uioverrides.plugins.PluginManagerWrapper;
+import com.android.launcher3.util.SecureSettingsObserver;
+
 /**
- * Settings activity for Launcher. Currently implements the following setting: Allow rotation
+ * Miscellaneous settings activity for Launcher.
  */
-public class SettingsActivity extends Activity
+public class SettingsMisc extends Activity
         implements OnPreferenceStartFragmentCallback, OnPreferenceStartScreenCallback,
         SharedPreferences.OnSharedPreferenceChangeListener{
+
+    private static final String DEVELOPER_OPTIONS_KEY = "pref_developer_options";
+    private static final String FLAGS_PREFERENCE_KEY = "flag_toggler";
 
     public static final String EXTRA_FRAGMENT_ARG_KEY = ":settings:fragment_args_key";
     public static final String EXTRA_SHOW_FRAGMENT_ARGS = ":settings:show_fragment_args";
     private static final int DELAY_HIGHLIGHT_DURATION_MILLIS = 600;
     public static final String SAVE_HIGHLIGHTED_KEY = "android:preference_highlighted";
 
-    private static Context mContext;
-
     public static boolean restartNeeded = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mContext = getApplicationContext();
 
         if (savedInstanceState == null) {
             Bundle args = new Bundle();
@@ -74,7 +76,7 @@ public class SettingsActivity extends Activity
             }
 
             Fragment f = Fragment.instantiate(
-                    this, getString(R.string.settings_fragment_name), args);
+                    this, getString(R.string.misc_settings_fragment_name), args);
             // Display the fragment as the main content.
             getFragmentManager().beginTransaction()
                     .replace(android.R.id.content, f)
@@ -84,7 +86,10 @@ public class SettingsActivity extends Activity
     }
 
     @Override
-    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) { 
+        if (Utilities.KEY_DT_GESTURE.equals(key)) {
+                LauncherAppState.getInstanceNoCreate().setNeedsRestart();
+        }
     }
 
     private boolean startFragment(String fragment, Bundle args, String key) {
@@ -116,13 +121,13 @@ public class SettingsActivity extends Activity
     public boolean onPreferenceStartScreen(PreferenceFragment caller, PreferenceScreen pref) {
         Bundle args = new Bundle();
         args.putString(PreferenceFragment.ARG_PREFERENCE_ROOT, pref.getKey());
-        return startFragment(getString(R.string.settings_fragment_name), args, pref.getKey());
+        return startFragment(getString(R.string.misc_category_title), args, pref.getKey());
     }
 
     /**
      * This fragment shows the launcher preferences.
      */
-    public static class LauncherSettingsFragment extends PreferenceFragment {
+    public static class MiscSettingsFragment extends PreferenceFragment {
 
         private String mHighLightKey;
         private boolean mPreferenceHighlighted = false;
@@ -140,7 +145,7 @@ public class SettingsActivity extends Activity
             }
 
             getPreferenceManager().setSharedPreferencesName(LauncherFiles.SHARED_PREFERENCES_KEY);
-            setPreferencesFromResource(R.xml.launcher_preferences, rootKey);
+            setPreferencesFromResource(R.xml.misc_preferences, rootKey);
 
             PreferenceScreen screen = getPreferenceScreen();
             for (int i = screen.getPreferenceCount() - 1; i >= 0; i--) {
@@ -166,8 +171,26 @@ public class SettingsActivity extends Activity
          * will remove that preference from the list.
          */
         protected boolean initPreference(Preference preference) {
-            //switch (preference.getKey()) {
-            //}
+            switch (preference.getKey()) {
+                case ALLOW_ROTATION_PREFERENCE_KEY:
+                    if (getResources().getBoolean(R.bool.allow_rotation)) {
+                        // Launcher supports rotation by default. No need to show this setting.
+                        return false;
+                    }
+                    // Initialize the UI once
+                    preference.setDefaultValue(getAllowRotationDefaultValue());
+                    return true;
+
+                case FLAGS_PREFERENCE_KEY:
+                    // Only show flag toggler UI if this build variant implements that.
+                    return FeatureFlags.showFlagTogglerUi(getContext());
+
+
+                case DEVELOPER_OPTIONS_KEY:
+                    // Show if plugins are enabled or flag UI is enabled.
+                    return FeatureFlags.showFlagTogglerUi(getContext()) ||
+                            PluginManagerWrapper.hasPlugins(getContext());
+            }
             return true;
         }
 

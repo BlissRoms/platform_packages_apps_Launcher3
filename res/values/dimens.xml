@@ -253,4 +253,13 @@
     <!-- Onboarding bottomsheet related -->
     <dimen name="bottom_sheet_edu_padding">24dp</dimen>
 
+    <!-- Dashboard image tile size -->
+    <dimen name="bliss_dashboard_tile_image_size">36dp</dimen>
+
+    <!-- Dashboard foreground image size -->
+    <dimen name="bliss_dashboard_tile_foreground_image_size">24dp</dimen>
+
+    <!-- Dashboard foreground image inset (from background edge to foreground edge) -->
+    <dimen name="bliss_dashboard_tile_foreground_image_inset">6dp</dimen>
+
 </resources>

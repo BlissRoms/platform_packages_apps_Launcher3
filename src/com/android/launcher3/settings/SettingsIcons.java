@@ -16,26 +16,25 @@
 
 package com.android.launcher3.settings;
 
+import static com.android.launcher3.SessionCommitReceiver.ADD_ICON_PREFERENCE_KEY;
+import static com.android.launcher3.states.RotationHelper.ALLOW_ROTATION_PREFERENCE_KEY;
+import static com.android.launcher3.states.RotationHelper.getAllowRotationDefaultValue;
+import static com.android.launcher3.util.SecureSettingsObserver.newNotificationSettingsObserver;
+
+import static com.bliss.launcher.OverlayCallbackImpl.KEY_ENABLE_MINUS_ONE;
+
+import com.android.launcher3.customization.IconDatabase;
 import android.app.Activity;
 import android.app.DialogFragment;
 import android.app.Fragment;
 import android.content.ComponentName;
+
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
-import android.content.Intent;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.text.TextUtils;
-
-import com.android.launcher3.LauncherAppState;
-import com.android.launcher3.LauncherFiles;
-import com.android.launcher3.R;
-import com.android.launcher3.Utilities;
-import com.android.launcher3.config.FeatureFlags;
-import com.android.launcher3.trust.TrustAppsActivity;
-import com.android.launcher3.uioverrides.plugins.PluginManagerWrapper;
-import com.android.launcher3.util.SecureSettingsObserver;
 
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragment;
@@ -45,10 +44,22 @@ import androidx.preference.PreferenceGroup.PreferencePositionCallback;
 import androidx.preference.PreferenceScreen;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.android.launcher3.LauncherAppState;
+import com.android.launcher3.LauncherFiles;
+import com.android.launcher3.R;
+import com.android.launcher3.Utilities;
+import com.android.launcher3.config.FeatureFlags;
+import com.android.launcher3.uioverrides.plugins.PluginManagerWrapper;
+import com.android.launcher3.util.SecureSettingsObserver;
+
+import com.android.launcher3.settings.preference.IconPackPrefSetter;
+import com.android.launcher3.settings.preference.ReloadingListPreference;
+import com.android.launcher3.util.AppReloader;
+
 /**
- * Settings activity for Launcher. Currently implements the following setting: Allow rotation
+ * Icons settings activity for Launcher.
  */
-public class SettingsActivity extends Activity
+public class SettingsIcons extends Activity
         implements OnPreferenceStartFragmentCallback, OnPreferenceStartScreenCallback,
         SharedPreferences.OnSharedPreferenceChangeListener{
 
@@ -59,7 +70,11 @@ public class SettingsActivity extends Activity
 
     private static Context mContext;
 
-    public static boolean restartNeeded = false;
+    private static final String KEY_ICON_PACK = "pref_icon_pack";
+
+    private static final String NOTIFICATION_DOTS_PREFERENCE_KEY = "pref_icon_badging";
+    /** Hidden field Settings.Secure.ENABLED_NOTIFICATION_LISTENERS */
+    private static final String NOTIFICATION_ENABLED_LISTENERS = "enabled_notification_listeners";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,7 +89,7 @@ public class SettingsActivity extends Activity
             }
 
             Fragment f = Fragment.instantiate(
-                    this, getString(R.string.settings_fragment_name), args);
+                    this, getString(R.string.icons_settings_fragment_name), args);
             // Display the fragment as the main content.
             getFragmentManager().beginTransaction()
                     .replace(android.R.id.content, f)
@@ -84,7 +99,10 @@ public class SettingsActivity extends Activity
     }
 
     @Override
-    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) { }
+
+    public interface OnResumePreferenceCallback {
+        void onResume();
     }
 
     private boolean startFragment(String fragment, Bundle args, String key) {
@@ -116,16 +134,18 @@ public class SettingsActivity extends Activity
     public boolean onPreferenceStartScreen(PreferenceFragment caller, PreferenceScreen pref) {
         Bundle args = new Bundle();
         args.putString(PreferenceFragment.ARG_PREFERENCE_ROOT, pref.getKey());
-        return startFragment(getString(R.string.settings_fragment_name), args, pref.getKey());
+        return startFragment(getString(R.string.icons_category_title), args, pref.getKey());
     }
 
     /**
      * This fragment shows the launcher preferences.
      */
-    public static class LauncherSettingsFragment extends PreferenceFragment {
+    public static class IconsSettingsFragment extends PreferenceFragment {
 
         private String mHighLightKey;
         private boolean mPreferenceHighlighted = false;
+
+        private SecureSettingsObserver mNotificationDotsObserver;
 
         @Override
         public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
@@ -140,7 +160,7 @@ public class SettingsActivity extends Activity
             }
 
             getPreferenceManager().setSharedPreferencesName(LauncherFiles.SHARED_PREFERENCES_KEY);
-            setPreferencesFromResource(R.xml.launcher_preferences, rootKey);
+            setPreferencesFromResource(R.xml.icons_preferences, rootKey);
 
             PreferenceScreen screen = getPreferenceScreen();
             for (int i = screen.getPreferenceCount() - 1; i >= 0; i--) {
@@ -166,8 +186,38 @@ public class SettingsActivity extends Activity
          * will remove that preference from the list.
          */
         protected boolean initPreference(Preference preference) {
-            //switch (preference.getKey()) {
-            //}
+            switch (preference.getKey()) {
+                case NOTIFICATION_DOTS_PREFERENCE_KEY:
+                    if (!Utilities.ATLEAST_OREO ||
+                            !getResources().getBoolean(R.bool.notification_dots_enabled)) {
+                        return false;
+                    }
+
+                    // Listen to system notification dot settings while this UI is active.
+                    mNotificationDotsObserver = newNotificationSettingsObserver(
+                            getActivity(), (NotificationDotsPreference) preference);
+                    mNotificationDotsObserver.register();
+                    // Also listen if notification permission changes
+                    mNotificationDotsObserver.getResolver().registerContentObserver(
+                            Settings.Secure.getUriFor(NOTIFICATION_ENABLED_LISTENERS), false,
+                            mNotificationDotsObserver);
+                    mNotificationDotsObserver.dispatchOnChange();
+                    return true;
+
+                case ADD_ICON_PREFERENCE_KEY:
+                    return Utilities.ATLEAST_OREO;
+
+                case KEY_ICON_PACK:
+                    ReloadingListPreference icons = (ReloadingListPreference) findPreference(KEY_ICON_PACK);
+                    icons.setValue(IconDatabase.getGlobal(mContext));
+                    icons.setOnReloadListener(IconPackPrefSetter::new);
+                    icons.setOnPreferenceChangeListener((pref, val) -> {
+                        IconDatabase.clearAll(mContext);
+                        IconDatabase.setGlobal(mContext, (String) val);
+                        AppReloader.get(mContext).reload();
+                        return true;
+                    });
+            }
             return true;
         }
 
@@ -202,9 +252,10 @@ public class SettingsActivity extends Activity
 
         @Override
         public void onDestroy() {
-            // if we don't press the home button but the back button to close Settings,
-            // then we must force a restart because the home button watcher wouldn't trigger it
-            LauncherAppState.getInstanceNoCreate().checkIfRestartNeeded();
+            if (mNotificationDotsObserver != null) {
+                mNotificationDotsObserver.unregister();
+                mNotificationDotsObserver = null;
+            }
             super.onDestroy();
         }
     }
