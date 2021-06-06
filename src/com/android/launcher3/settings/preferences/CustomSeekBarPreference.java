@@ -19,6 +19,9 @@ package com.android.launcher3.settings.preferences;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.PorterDuff;
+import android.os.VibrationEffect;
+import android.os.Vibrator;
+import android.provider.Settings;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
@@ -33,6 +36,7 @@ import androidx.preference.*;
 import androidx.core.content.res.TypedArrayUtils;
 
 import com.android.launcher3.R;
+import com.android.launcher3.util.VibrationUtils;
 
 public class CustomSeekBarPreference extends Preference implements SeekBar.OnSeekBarChangeListener,
         View.OnClickListener, View.OnLongClickListener {
@@ -60,6 +64,8 @@ public class CustomSeekBarPreference extends Preference implements SeekBar.OnSee
 
     protected boolean mTrackingTouch = false;
     protected int mTrackingValue;
+
+    private final Context mContext;
 
     public CustomSeekBarPreference(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
@@ -97,6 +103,8 @@ public class CustomSeekBarPreference extends Preference implements SeekBar.OnSee
 
         mSeekBar = new SeekBar(context, attrs);
         setLayoutResource(R.layout.preference_custom_seekbar);
+
+        mContext = context;
     }
 
     public CustomSeekBarPreference(Context context, AttributeSet attrs, int defStyleAttr) {
@@ -212,6 +220,7 @@ public class CustomSeekBarPreference extends Preference implements SeekBar.OnSee
         if (mTrackingTouch && !mContinuousUpdates) {
             mTrackingValue = newValue;
             updateValueViews();
+            VibrationUtils.doHapticFeedback(mContext, VibrationEffect.EFFECT_TEXTURE_TICK);
         } else if (mValue != newValue) {
             // change rejected, revert to the previous value
             if (!callChangeListener(newValue)) {
@@ -252,6 +261,7 @@ public class CustomSeekBarPreference extends Preference implements SeekBar.OnSee
         } else if (id == R.id.plus) {
             setValue(mValue + mInterval, true);
         }
+        VibrationUtils.doHapticFeedback(mContext, VibrationEffect.EFFECT_CLICK);
     }
 
     @Override
