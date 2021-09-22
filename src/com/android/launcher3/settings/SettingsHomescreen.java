@@ -20,6 +20,7 @@ import static android.os.Process.myUserHandle;
 
 import android.content.Intent;
 import android.content.pm.LauncherApps;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.preference.Preference;
@@ -27,6 +28,7 @@ import androidx.preference.PreferenceCategory;
 import androidx.preference.PreferenceGroup;
 import androidx.preference.PreferenceScreen;
 
+import com.android.launcher3.LauncherAppState;
 import com.android.launcher3.LauncherPrefs;
 import com.android.launcher3.R;
 import com.android.launcher3.lineage.LineageUtils;
@@ -39,7 +41,8 @@ import com.android.settingslib.widget.SettingsBasePreferenceFragment;
 /**
  * Home screen settings activity for Launcher.
  */
-public class SettingsHomescreen extends CollapsingToolbarBaseActivity {
+public class SettingsHomescreen extends CollapsingToolbarBaseActivity
+        implements SharedPreferences.OnSharedPreferenceChangeListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +53,20 @@ public class SettingsHomescreen extends CollapsingToolbarBaseActivity {
                     .beginTransaction()
                     .replace(com.android.settingslib.collapsingtoolbar.R.id.content_frame, new HomescreenSettingsFragment())
                     .commit();
+        }
+        LauncherPrefs.getPrefs(this).registerOnSharedPreferenceChangeListener(this);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        LauncherPrefs.getPrefs(this).unregisterOnSharedPreferenceChangeListener(this);
+    }
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        if (LauncherPrefs.SHOW_HOTSEAT_BG.getSharedPrefKey().equals(key)) {
+            LauncherAppState.INSTANCE.executeIfCreated(app -> app.setNeedsRestart());
         }
     }
 

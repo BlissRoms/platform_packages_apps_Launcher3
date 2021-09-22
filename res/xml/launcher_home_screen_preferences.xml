@@ -80,6 +80,13 @@
             <intent android:action="android.settings.ACTION_CONTENT_SUGGESTIONS_SETTINGS" />
         </androidx.preference.PreferenceScreen>
 
+        <SwitchPreferenceCompat
+            android:key="pref_show_hotseat_bg"
+            android:title="@string/hotseat_bg_title"
+            android:summary="@string/hotseat_bg_summary"
+            android:defaultValue="false"
+            launcher:iconSpaceReserved="false" />
+
     </PreferenceCategory>
 
 </androidx.preference.PreferenceScreen>
