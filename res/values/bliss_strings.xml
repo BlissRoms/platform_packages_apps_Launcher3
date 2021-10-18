@@ -120,4 +120,7 @@
     <!-- Recents style -->
     <string name="recents_scroll_vibrate_title">Scroll vibration</string>
 
+    <!-- Recents icons -->
+    <string name="recents_lens_title">Lens</string>
+
 </resources>
