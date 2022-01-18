@@ -282,6 +282,7 @@
     <icon drawable="@drawable/themed_icon_chrome_canary_s" package="com.chrome.canary"/>
     <icon drawable="@drawable/themed_icon_chrome_dev_s" package="com.chrome.dev"/>
     <icon drawable="@drawable/themed_icon_chrome_s" package="com.android.chrome"/>
+    <icon drawable="@drawable/themed_icon_chrome_s" package="org.lineageos.jelly"/>
     <icon drawable="@drawable/themed_icon_cifra_club_academy" package="com.studiosol.cifraclub.academy"/>
     <icon drawable="@drawable/themed_icon_cifra_club_metronome" package="com.studiosol.metronomo"/>
     <icon drawable="@drawable/themed_icon_cifra_club_tuner" package="com.studiosol.afinadorlite"/>
