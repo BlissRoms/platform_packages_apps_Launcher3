@@ -38,6 +38,7 @@ import android.widget.FrameLayout;
 import androidx.annotation.IntDef;
 import androidx.annotation.Nullable;
 
+import com.android.launcher3.Flags;
 import com.android.launcher3.ShortcutAndWidgetContainer.TranslationProvider;
 import com.android.launcher3.celllayout.CellLayoutLayoutParams;
 import com.android.launcher3.model.data.ItemInfo;
@@ -106,8 +107,11 @@ public class Hotseat extends CellLayout implements Insettable {
     public Hotseat(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         if (Flags.enableQsbOnHotseat()) {
-            mQsb = LayoutInflater.from(context).inflate(R.layout.qsb_container_hotseat, this,
-                    false);
+            mQsb = LayoutInflater.from(context).inflate(
+                    Utilities.showQSB(context)
+                            ? R.layout.search_container_hotseat
+                            : R.layout.empty_view,
+                    this, false);
         } else {
             mQsb = LayoutInflater.from(context).inflate(R.layout.search_container_hotseat, this,
                     false);

@@ -1065,4 +1065,12 @@ public final class Utilities {
     public static boolean isWorkspaceEditAllowed(Context context) {
         return !LauncherPrefs.WORKSPACE_LOCK.get(context);
     }
+
+    public static boolean showQSB(Context context) {
+        return isGSAEnabled(context) && isQSBEnabled(context);
+    }
+
+    private static boolean isQSBEnabled(Context context) {
+        return LauncherPrefs.DOCK_SEARCH.get(context);
+    }
 }

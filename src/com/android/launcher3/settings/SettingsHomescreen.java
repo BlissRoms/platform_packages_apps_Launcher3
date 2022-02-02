@@ -28,8 +28,8 @@ import androidx.preference.PreferenceCategory;
 import androidx.preference.PreferenceGroup;
 import androidx.preference.PreferenceScreen;
 
-import com.android.launcher3.LauncherAppState;
 import com.android.launcher3.LauncherPrefs;
+import com.android.launcher3.Utilities;
 import com.android.launcher3.R;
 import com.android.launcher3.lineage.LineageUtils;
 import com.android.launcher3.lineage.trust.TrustAppsActivity;
@@ -66,8 +66,15 @@ public class SettingsHomescreen extends CollapsingToolbarBaseActivity
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         if (LauncherPrefs.SHOW_HOTSEAT_BG.getSharedPrefKey().equals(key) ||
-                LauncherPrefs.HOTSEAT_OPACITY.getSharedPrefKey().equals(key)) {
-            LauncherAppState.INSTANCE.executeIfCreated(app -> app.setNeedsRestart());
+                LauncherPrefs.HOTSEAT_OPACITY.getSharedPrefKey().equals(key) ||
+                LauncherPrefs.DOCK_SEARCH.getSharedPrefKey().equals(key) ||
+                LauncherPrefs.DOCK_THEME.getSharedPrefKey().equals(key) ||
+                LauncherPrefs.SEARCH_RADIUS_SIZE.getSharedPrefKey().equals(key) ||
+                LauncherPrefs.DOCK_MUSIC_SEARCH.getSharedPrefKey().equals(key) ||
+                LauncherPrefs.HOTSEAT_QSB_OPACITY.getSharedPrefKey().equals(key) ||
+                LauncherPrefs.HOTSEAT_QSB_STROKE_WIDTH.getSharedPrefKey().equals(key) ||
+                LauncherPrefs.SHOW_STATUS_BAR.getSharedPrefKey().equals(key)) {
+            recreate();
         }
     }
 
@@ -83,12 +90,16 @@ public class SettingsHomescreen extends CollapsingToolbarBaseActivity
         private static final String SUGGESTIONS_PACKAGE = "com.google.android.as";
         private static final String KEY_GENERAL_CATEGORY = "general_category";
 
+        private Preference mShowGoogleBarPref;
+
         @Override
         public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
             setPreferencesFromResource(R.xml.launcher_home_screen_preferences, rootKey);
 
             PreferenceScreen screen = getPreferenceScreen();
             filterPreferenceGroup(screen);
+
+            mShowGoogleBarPref = screen.findPreference(LauncherPrefs.DOCK_SEARCH.getSharedPrefKey());
 
             if (!VibratorWrapper.INSTANCE.get(getContext()).hasVibrator()) {
                 PreferenceCategory generalCategory = (PreferenceCategory) findPreference(KEY_GENERAL_CATEGORY);
@@ -142,6 +153,12 @@ public class SettingsHomescreen extends CollapsingToolbarBaseActivity
                     return true;
             }
             return true;
+        }
+
+        private void updateIsGoogleAppEnabled() {
+            if (mShowGoogleBarPref != null) {
+                mShowGoogleBarPref.setEnabled(Utilities.isGSAEnabled(getContext()));
+            }
         }
     }
 }
