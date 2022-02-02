@@ -67,6 +67,13 @@
             android:persistent="true"
             launcher:iconSpaceReserved="false" />
 
+        <SwitchPreference
+            android:key="pref_dock_search"
+            android:title="@string/dock_search_title"
+            android:summary="@string/dock_search_summary"
+            android:defaultValue="true"
+            launcher:iconSpaceReserved="false" />
+
     </PreferenceCategory>
 
 </androidx.preference.PreferenceScreen>
