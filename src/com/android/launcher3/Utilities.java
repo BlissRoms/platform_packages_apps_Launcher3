@@ -161,6 +161,9 @@ public final class Utilities {
     @IntDef({TRANSLATE_UP, TRANSLATE_DOWN, TRANSLATE_LEFT, TRANSLATE_RIGHT})
     public @interface AdjustmentDirection{}
 
+    public static final String LENS_ACTIVITY = "com.google.android.apps.search.lens.LensExportedActivity";
+    public static final String LENS_URI = "google://lens";
+
     /**
      * Returns true if theme is dark.
      */
