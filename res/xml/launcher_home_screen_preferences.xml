@@ -80,6 +80,11 @@
             <intent android:action="android.settings.ACTION_CONTENT_SUGGESTIONS_SETTINGS" />
         </androidx.preference.PreferenceScreen>
 
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="@string/search_bar_category_title">
+
         <SwitchPreferenceCompat
             android:key="pref_dock_search"
             android:title="@string/dock_search_title"
