@@ -298,6 +298,8 @@ constructor(@ApplicationContext private val encryptedContext: Context) {
         val HOTSEAT_COUNT =
             backedUpItem(DeviceGridState.KEY_HOTSEAT_COUNT, -1, EncryptionType.ENCRYPTED)
         @JvmField val ALLOW_WALLPAPER_ZOOMING = backedUpItem("pref_allow_wallpaper_zooming", true)
+        @JvmField val RECENTS_MEMINFO = backedUpItem("pref_recents_meminfo", false)
+        @JvmField val RECENTS_MEMINFO_ZRAM = backedUpItem("pref_recents_meminfo_zram", false)
         @JvmField val SHOW_STATUS_BAR = backedUpItem("pref_show_statusbar", true)
         @JvmField val SHOW_TOP_SHADOW = backedUpItem("pref_show_top_shadow", true)
         @JvmField
