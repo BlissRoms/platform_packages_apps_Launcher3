@@ -63,7 +63,10 @@ constructor(
         @JvmField var needsRestart: Boolean = false
 
         /** Preferences that are only applied when the launcher process starts. */
-        private val RESTART_PREFS: Array<Item> = arrayOf(LauncherPrefs.SHOW_STATUS_BAR)
+        private val RESTART_PREFS: Array<Item> = arrayOf(
+            LauncherPrefs.SHOW_STATUS_BAR,
+            LauncherPrefs.RECENTS_MEMINFO,
+        )
 
         @JvmField var INSTANCE = DaggerSingletonObject { it.launcherAppState }
 
