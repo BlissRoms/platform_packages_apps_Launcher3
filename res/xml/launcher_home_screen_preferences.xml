@@ -97,6 +97,12 @@
             android:summary="@string/allow_wallpaper_zooming_summary"
             android:defaultValue="true" />
 
+        <SwitchPreferenceCompat
+            android:key="pref_show_statusbar"
+            android:title="@string/show_statusbar_title"
+            android:defaultValue="true"
+            android:persistent="true" />
+
     </PreferenceCategory>
 
 </androidx.preference.PreferenceScreen>
