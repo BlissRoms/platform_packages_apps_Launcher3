@@ -37,6 +37,15 @@ constructor(
     @Named("SAFE_MODE") val isSafeModeEnabled: Boolean,
 ) {
 
+    // Held strongly: SharedPreferences only keeps weak references to its listeners.
+    private val restartPrefListener = LauncherPrefChangeListener { key ->
+        if (RESTART_PREFS.any { it.sharedPrefKey == key }) setNeedsRestart()
+    }
+
+    init {
+        LauncherPrefs.get(context).addListener(restartPrefListener, *RESTART_PREFS)
+    }
+
     fun setNeedsRestart() {
         needsRestart = true
     }
@@ -52,6 +61,9 @@ constructor(
 
     companion object {
         @JvmField var needsRestart: Boolean = false
+
+        /** Preferences that are only applied when the launcher process starts. */
+        private val RESTART_PREFS: Array<Item> = arrayOf(LauncherPrefs.SHOW_STATUS_BAR)
 
         @JvmField var INSTANCE = DaggerSingletonObject { it.launcherAppState }
 
