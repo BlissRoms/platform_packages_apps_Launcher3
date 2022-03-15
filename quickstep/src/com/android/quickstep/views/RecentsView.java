@@ -3553,6 +3553,10 @@ public abstract class RecentsView<
         mContainer.getStatsLogManager().logger().log(LAUNCHER_TASK_CLEAR_ALL);
     }
 
+    public void dismissAllTasks() {
+        dismissAllTasks(null);
+    }
+
     private void createDesk() {
         SystemUiProxy.INSTANCE
                 .get(getContext())
