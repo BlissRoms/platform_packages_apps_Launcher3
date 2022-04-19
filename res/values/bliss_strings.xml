@@ -51,4 +51,8 @@
     <string name="dev_options_title">Developer options</string>
     <string name="dev_options_summary">Enable some hidden features at your own risk</string>
 
+    <!-- Restart launcher -->
+    <string name="pref_restart_title">Restart</string>
+    <string name="pref_restart_summary">Restart the launcher manually to apply any pending settings</string>
+
 </resources>
