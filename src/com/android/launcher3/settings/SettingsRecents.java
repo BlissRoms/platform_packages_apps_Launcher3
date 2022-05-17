@@ -18,10 +18,13 @@ package com.android.launcher3.settings;
 
 import android.os.Bundle;
 
+import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
+import androidx.preference.PreferenceGroup;
 
 import com.android.launcher3.LauncherFiles;
 import com.android.launcher3.R;
+import com.android.launcher3.util.VibratorWrapper;
 
 import com.android.settingslib.collapsingtoolbar.CollapsingToolbarBaseActivity;
 import com.android.settingslib.widget.SettingsBasePreferenceFragment;
@@ -48,10 +51,31 @@ public class SettingsRecents extends CollapsingToolbarBaseActivity {
      */
     public static class RecentsSettingsFragment extends SettingsBasePreferenceFragment {
 
+        private static final String RECENTS_SCROLL_VIBRATE_PREF = "pref_recents_scroll_vibrate";
+
         @Override
         public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
             getPreferenceManager().setSharedPreferencesName(LauncherFiles.SHARED_PREFERENCES_KEY);
             setPreferencesFromResource(R.xml.launcher_recents_preferences, rootKey);
+            removeUnsupportedPreferences(getPreferenceScreen());
+        }
+
+        private void removeUnsupportedPreferences(PreferenceGroup group) {
+            for (int i = group.getPreferenceCount() - 1; i >= 0; i--) {
+                Preference preference = group.getPreference(i);
+                if (!initPreference(preference)) {
+                    group.removePreference(preference);
+                } else if (preference instanceof PreferenceGroup) {
+                    removeUnsupportedPreferences((PreferenceGroup) preference);
+                }
+            }
+        }
+
+        private boolean initPreference(Preference preference) {
+            if (RECENTS_SCROLL_VIBRATE_PREF.equals(preference.getKey())) {
+                return VibratorWrapper.INSTANCE.get(getContext()).hasVibrator();
+            }
+            return true;
         }
     }
 }
