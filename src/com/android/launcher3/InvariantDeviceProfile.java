@@ -26,6 +26,7 @@ import static com.android.launcher3.LauncherPrefs.GRID_NAME;
 import static com.android.launcher3.LauncherPrefs.ICON_SIZE;
 import static com.android.launcher3.LauncherPrefs.NON_FIXED_LANDSCAPE_GRID_NAME;
 import static com.android.launcher3.LauncherPrefs.NOTIFICATION_BADGE_COUNTS;
+import static com.android.launcher3.LauncherPrefs.ROW_HEIGHT;
 import static com.android.launcher3.LauncherPrefs.SHOW_DESKTOP_LABELS;
 import static com.android.launcher3.LauncherPrefs.SHOW_DRAWER_LABELS;
 import static com.android.launcher3.LauncherPrefs.SHOW_HOTSEAT_QSB;
@@ -313,7 +314,8 @@ public class InvariantDeviceProfile {
                     NOTIFICATION_BADGE_COUNTS.getSharedPrefKey().equals(key) ||
                     ICON_SIZE.getSharedPrefKey().equals(key) ||
                     FONT_SIZE.getSharedPrefKey().equals(key) ||
-                    ENABLE_TWOLINE_ALLAPPS_TOGGLE.getSharedPrefKey().equals(key)) {
+                    ENABLE_TWOLINE_ALLAPPS_TOGGLE.getSharedPrefKey().equals(key) ||
+                    ROW_HEIGHT.getSharedPrefKey().equals(key)) {
                 onConfigChanged();
             }
         };
