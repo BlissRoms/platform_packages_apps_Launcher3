@@ -35,6 +35,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.hardware.display.DisplayManager;
@@ -75,7 +76,7 @@ import java.util.StringJoiner;
 /**
  * Class to manage taskbar lifecycle
  */
-public class TaskbarManager {
+public class TaskbarManager implements OnSharedPreferenceChangeListener {
     private static final String TAG = "TaskbarManager";
     private static final boolean DEBUG = false;
 
@@ -88,15 +89,11 @@ public class TaskbarManager {
     private static final Uri NAV_BAR_KIDS_MODE = Settings.Secure.getUriFor(
             Settings.Secure.NAV_BAR_KIDS_MODE);
 
-    private static final Uri ENABLE_TASKBAR_URI = Settings.System.getUriFor(
-            Settings.System.ENABLE_TASKBAR);
-
     private final Context mContext;
     private final DisplayController mDisplayController;
     private final TaskbarNavButtonController mNavButtonController;
     private final SettingsCache.OnChangeListener mUserSetupCompleteListener;
     private final SettingsCache.OnChangeListener mNavBarKidsModeListener;
-    private final SettingsCache.OnChangeListener mEnableTaskBarListener;
     private final ComponentCallbacks mComponentCallbacks;
     private final SimpleBroadcastReceiver mShutdownReceiver;
 
@@ -160,16 +157,10 @@ public class TaskbarManager {
                 SystemUiProxy.INSTANCE.get(mContext), new Handler());
         mUserSetupCompleteListener = isUserSetupComplete -> recreateTaskbar();
         mNavBarKidsModeListener = isNavBarKidsMode -> recreateTaskbar();
-        mEnableTaskBarListener = isTaskbarEnabled -> {
-            // Create the illusion of this taking effect immediately
-            // Also needed because TaskbarManager inits before SystemUiProxy on start
-            boolean enabled = Settings.System.getInt(mContext.getContentResolver(),
-                    Settings.System.ENABLE_TASKBAR, 0) == 1;
-            SystemUiProxy.INSTANCE.get(mContext).setTaskbarEnabled(enabled);
 
-            // Restart launcher
-            System.exit(0);
-        };
+        SharedPreferences prefs = LauncherPrefs.getPrefs(mContext);
+        prefs.registerOnSharedPreferenceChangeListener(this);
+
         // TODO(b/227669780): Consolidate this w/ DisplayController callbacks
         mComponentCallbacks = new ComponentCallbacks() {
             private Configuration mOldConfig = mContext.getResources().getConfiguration();
@@ -255,8 +246,6 @@ public class TaskbarManager {
                 mUserSetupCompleteListener);
         SettingsCache.INSTANCE.get(mContext).register(NAV_BAR_KIDS_MODE,
                 mNavBarKidsModeListener);
-        SettingsCache.INSTANCE.get(mContext).register(ENABLE_TASKBAR_URI,
-                mEnableTaskBarListener);
         mContext.registerComponentCallbacks(mComponentCallbacks);
         mShutdownReceiver.register(mContext, Intent.ACTION_SHUTDOWN);
         UI_HELPER_EXECUTOR.execute(() -> {
@@ -273,6 +262,19 @@ public class TaskbarManager {
 
         debugWhyTaskbarNotDestroyed("TaskbarManager created");
         recreateTaskbar();
+    }
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
+        switch (key) {
+            case DeviceProfile.KEY_PHONE_TASKBAR:
+                boolean enabled = LauncherPrefs.getPrefs(mContext).getBoolean(DeviceProfile.KEY_PHONE_TASKBAR, false);
+                SystemUiProxy.INSTANCE.get(mContext).setTaskbarEnabled(enabled);
+
+                Settings.System.putInt(mContext.getContentResolver(),
+                        Settings.System.ENABLE_TASKBAR, enabled ? 1 : 0);
+                break;
+        }
     }
 
     private void destroyExistingTaskbar() {
