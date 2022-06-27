@@ -80,6 +80,13 @@
             <intent android:action="android.settings.ACTION_CONTENT_SUGGESTIONS_SETTINGS" />
         </androidx.preference.PreferenceScreen>
 
+        <SwitchPreferenceCompat
+            android:key="pref_allow_wallpaper_scrolling"
+            android:title="@string/allow_wallpaper_scrolling"
+            android:summary="@string/allow_wallpaper_scrolling_summary"
+            android:defaultValue="true"
+            launcher:iconSpaceReserved="false" />
+
     </PreferenceCategory>
 
     <PreferenceCategory
