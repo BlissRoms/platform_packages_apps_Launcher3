@@ -125,6 +125,9 @@ public class SettingsMisc extends CollapsingToolbarBaseActivity
             case DeviceProfile.KEY_PHONE_TASKBAR:
                 LauncherAppState.INSTANCE.executeIfCreated(app -> app.setNeedsRestart());
                 break;
+            case Utilities.KEY_BLUR_DEPTH:
+                LauncherAppState.INSTANCE.executeIfCreated(app -> app.setNeedsRestart());
+                break;
             default:
                 break;
         }
