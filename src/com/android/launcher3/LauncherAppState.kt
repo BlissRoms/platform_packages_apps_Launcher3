@@ -71,6 +71,7 @@ constructor(
             LauncherPrefs.DRAWER_SCROLLBAR,
             LauncherPrefs.DARK_STATUS_BAR,
             LauncherPrefs.AUTO_HIDE_DOTS,
+            LauncherPrefs.BLUR_DEPTH,
         )
 
         @JvmField var INSTANCE = DaggerSingletonObject { it.launcherAppState }

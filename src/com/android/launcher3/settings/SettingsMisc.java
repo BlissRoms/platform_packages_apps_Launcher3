@@ -35,11 +35,14 @@ import com.android.launcher3.BuildConfig;
 import com.android.launcher3.Flags;
 import com.android.launcher3.InvariantDeviceProfile;
 import com.android.launcher3.LauncherFiles;
+import com.android.launcher3.LauncherPrefs;
 import com.android.launcher3.R;
 import com.android.launcher3.display.DisplayController;
 import com.android.launcher3.display.LauncherDisplayInfo;
 import com.android.launcher3.util.SafeCloseable;
 import com.android.launcher3.util.SettingsCache;
+
+import com.android.systemui.shared.system.BlurUtils;
 
 import com.android.settingslib.collapsingtoolbar.CollapsingToolbarBaseActivity;
 import com.android.settingslib.widget.SettingsBasePreferenceFragment;
@@ -108,7 +111,14 @@ public class SettingsMisc extends CollapsingToolbarBaseActivity {
 
         private boolean initPreference(Preference preference) {
             LauncherDisplayInfo info = DisplayController.INSTANCE.get(getContext()).getInfo();
-            switch (preference.getKey()) {
+            String key = preference.getKey();
+            if (key == null) {
+                return true;
+            }
+            if (key.equals(LauncherPrefs.BLUR_DEPTH.getSharedPrefKey())) {
+                return BlurUtils.supportsBlursOnWindows();
+            }
+            switch (key) {
                 case DEVELOPER_OPTIONS_KEY:
                     if (IS_STUDIO_BUILD) {
                         preference.setOrder(0);
