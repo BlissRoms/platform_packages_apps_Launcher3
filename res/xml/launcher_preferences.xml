@@ -50,6 +50,16 @@
         launcher:logIdOn="615"
         launcher:logIdOff="616" />
 
+        <Preference
+            android:key="parallel_space"
+            android:title="@string/laboratory_parallel_space_title"
+            android:summary="@string/laboratory_parallel_space_summary"
+            android:order="-994">
+            <intent
+                android:targetPackage="ink.kscope.parallelspace"
+                android:targetClass="ink.kscope.parallelspace.MainActivity" />
+        </Preference>
+
     <androidx.preference.PreferenceScreen
         android:key="pref_developer_options"
         android:persistent="false"
