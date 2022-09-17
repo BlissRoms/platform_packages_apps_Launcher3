@@ -31,4 +31,6 @@
     <!-- Fragment class for recents settings activity -->
     <string name="recents_settings_fragment_name" translatable="false">com.android.launcher3.settings.SettingsRecents$RecentsSettingsFragment</string>
 
+    <!-- Quickspace -->
+    <item type="id" name="reserved_container_workspace" />
 </resources>
