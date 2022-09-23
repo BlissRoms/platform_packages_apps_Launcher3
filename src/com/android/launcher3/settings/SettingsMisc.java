@@ -25,7 +25,9 @@ import static com.android.launcher3.BuildConfig.IS_STUDIO_BUILD;
 import static com.android.launcher3.states.RotationHelper.ALLOW_ROTATION_PREFERENCE_KEY;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
@@ -65,6 +67,8 @@ public class SettingsMisc extends CollapsingToolbarBaseActivity
 
     @VisibleForTesting
     static final String DEVELOPER_OPTIONS_KEY = "pref_developer_options";
+    private static final String SUGGESTIONS_KEY = "pref_suggestions";
+    protected static final String DPS_PACKAGE = "com.google.android.as";
 
     public static final String EXTRA_FRAGMENT_ARGS = ":settings:fragment_args";
 
@@ -249,9 +253,20 @@ public class SettingsMisc extends CollapsingToolbarBaseActivity
                         preference.setOrder(0);
                     }
                     return mDeveloperOptionsEnabled;
+                case SUGGESTIONS_KEY:
+                    // Show if Device Personalization Services is present.
+                    return isDPSEnabled(getContext());
             }
 
             return true;
+        }
+
+        public static boolean isDPSEnabled(Context context) {
+            try {
+                return context.getPackageManager().getApplicationInfo(DPS_PACKAGE, 0).enabled;
+            } catch (PackageManager.NameNotFoundException e) {
+                return false;
+            }
         }
 
         @Override
