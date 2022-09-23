@@ -98,8 +98,20 @@ public class SettingsHomescreen extends CollapsingToolbarBaseActivity {
                     });
                     return true;
                 case KEY_SUGGESTIONS:
-                    return launcherApps != null &&
-                            launcherApps.isPackageEnabled(SUGGESTIONS_PACKAGE, myUserHandle());
+                    if (launcherApps == null ||
+                            !launcherApps.isPackageEnabled(SUGGESTIONS_PACKAGE, myUserHandle())) {
+                        return false;
+                    }
+                    preference.setOnPreferenceClickListener(p -> {
+                        try {
+                            getContext().startActivity(new Intent(
+                                    "android.settings.ACTION_CONTENT_SUGGESTIONS_SETTINGS"));
+                        } catch (android.content.ActivityNotFoundException e) {
+                            // Settings activity not available on this ROM, silently ignore
+                        }
+                        return true;
+                    });
+                    return true;
             }
             return true;
         }

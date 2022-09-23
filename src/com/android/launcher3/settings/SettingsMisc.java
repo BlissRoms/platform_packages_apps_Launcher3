@@ -21,7 +21,10 @@ import static com.android.launcher3.InvariantDeviceProfile.TYPE_MULTI_DISPLAY;
 import static com.android.launcher3.InvariantDeviceProfile.TYPE_TABLET;
 import static com.android.launcher3.states.RotationHelper.ALLOW_ROTATION_PREFERENCE_KEY;
 
+import android.content.Context;
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
@@ -48,6 +51,9 @@ import com.android.settingslib.widget.SettingsBasePreferenceFragment;
 public class SettingsMisc extends CollapsingToolbarBaseActivity {
 
     public static final String FIXED_LANDSCAPE_MODE = "pref_fixed_landscape_mode";
+
+    private static final String SUGGESTIONS_KEY = "pref_suggestions";
+    protected static final String DPS_PACKAGE = "com.google.android.as";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -139,8 +145,29 @@ public class SettingsMisc extends CollapsingToolbarBaseActivity {
                             }
                     );
                     return !info.isTablet(info.realBounds);
+                case SUGGESTIONS_KEY:
+                    // Show if Device Personalization Services is present.
+                    if (!isDPSEnabled(getContext())) return false;
+                    preference.setOnPreferenceClickListener(p -> {
+                        try {
+                            getContext().startActivity(new Intent(
+                                    "android.settings.ACTION_CONTENT_SUGGESTIONS_SETTINGS"));
+                        } catch (android.content.ActivityNotFoundException e) {
+                            // Settings activity not available on this ROM, silently ignore
+                        }
+                        return true;
+                    });
+                    return true;
             }
             return true;
+        }
+
+        public static boolean isDPSEnabled(Context context) {
+            try {
+                return context.getPackageManager().getApplicationInfo(DPS_PACKAGE, 0).enabled;
+            } catch (PackageManager.NameNotFoundException e) {
+                return false;
+            }
         }
 
         @Override
