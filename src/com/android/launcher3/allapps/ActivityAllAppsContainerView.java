@@ -76,6 +76,12 @@ public class ActivityAllAppsContainerView<T extends Context & ActivityContext>
           getSearchView().setBackgroundResource(R.drawable.bg_all_apps_searchbox_google_themed);
         }
 
+        if (Utilities.showSearchBar(getContext())) {
+            getSearchView().setVisibility(View.VISIBLE);
+        } else {
+            getSearchView().setVisibility(View.GONE);
+        }
+
         mSearchUiManager.initializeSearch(this);
     }
 
