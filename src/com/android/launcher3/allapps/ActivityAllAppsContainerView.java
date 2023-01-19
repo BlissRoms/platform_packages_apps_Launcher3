@@ -309,11 +309,6 @@ public class ActivityAllAppsContainerView<T extends Context & ActivityContext>
 
         if (Utilities.showSearch(getContext())) {
             mSearchContainer.setVisibility(View.VISIBLE);
-            if (!Utilities.isThemedIconsEnabled(getContext())) {
-                getSearchView().setBackgroundResource(R.drawable.bg_all_apps_searchbox_google);
-            } else {
-                getSearchView().setBackgroundResource(R.drawable.bg_all_apps_searchbox_google_themed);
-            }
         } else {
             mSearchContainer.setVisibility(View.GONE);
         }
@@ -804,11 +799,6 @@ public class ActivityAllAppsContainerView<T extends Context & ActivityContext>
         if (mTabsProtectionAlpha != tabsAlpha) {
             mTabsProtectionAlpha = tabsAlpha;
             invalidateHeader();
-        }
-        if (!Utilities.isThemedIconsEnabled(getContext())) {
-            getSearchView().setBackgroundResource(R.drawable.bg_all_apps_searchbox_google);
-        } else {
-            getSearchView().setBackgroundResource(R.drawable.bg_all_apps_searchbox_google_themed);
         }
         if (mSearchUiManager.getEditText() == null) {
             return;
