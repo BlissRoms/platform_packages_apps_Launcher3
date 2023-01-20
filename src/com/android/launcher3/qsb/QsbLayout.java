@@ -61,8 +61,10 @@ public class QsbLayout extends FrameLayout {
             gIcon.setImageResource(R.drawable.ic_super_g_color);
             lensIcon.setImageResource(R.drawable.ic_lens_color);
         }
+        if (Utilities.isGSAEnabled(mContext)) {
         setupGIcon();
         setupLensIcon();
+        }
     }
 
     private void clipIconRipples() {
