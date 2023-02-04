@@ -292,4 +292,6 @@
 
     <!-- button string shown pause work profile -->
     <string name="work_apps_pause_btn_text_calyx">Turn off work apps</string>
+
+    <string name="recents_kill_app">Kill app</string>
 </resources>
