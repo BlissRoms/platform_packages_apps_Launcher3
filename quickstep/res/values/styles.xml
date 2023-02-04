@@ -295,4 +295,5 @@
     <style name="rotate_prompt_subtitle" parent="TextAppearance.GestureTutorial.Dialog.Subtitle">
         <item name="android:textColor">?androidprv:attr/materialColorOnSurfaceVariant</item>
     </style>
+
 </resources>
