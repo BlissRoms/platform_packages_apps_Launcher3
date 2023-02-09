@@ -285,6 +285,8 @@ public class SettingsMisc extends CollapsingToolbarBaseActivity
                     return isDPSEnabled(getContext());
                 case Utilities.KEY_BLUR_DEPTH:
                     return BlurUtils.supportsBlursOnWindows();
+                case Utilities.KEY_ACTION_TOAST_ENABLED:
+                    return true;
             }
 
             return true;

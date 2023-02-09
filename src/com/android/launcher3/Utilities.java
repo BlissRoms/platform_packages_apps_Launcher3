@@ -187,6 +187,7 @@ public final class Utilities {
     public static final String KEY_BLUR_DEPTH = "pref_blur_depth";
     public static final String KEY_RECENTS_OPACITY = "pref_recents_opacity";
     public static final String KEY_APP_DRAWER_OPACITY = "pref_app_drawer_opacity";
+    public static final String KEY_ACTION_TOAST_ENABLED = "pref_action_toast_enabled";
     public static final String KEY_HOTSEAT_OPACITY = "pref_hotseat_opacity";
 
     /**
@@ -1100,5 +1101,10 @@ public final class Utilities {
     public static int getHotseatOpacity(Context context) {
         SharedPreferences prefs = getPrefs(context.getApplicationContext());
         return prefs.getInt(KEY_HOTSEAT_OPACITY, 40);
+    }
+
+    public static boolean isActionToastEnabled(Context context) {
+        SharedPreferences prefs = getPrefs(context.getApplicationContext());
+        return prefs.getBoolean(KEY_ACTION_TOAST_ENABLED, true);
     }
 }
