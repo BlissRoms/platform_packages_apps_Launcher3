@@ -281,6 +281,7 @@ constructor(@ApplicationContext private val encryptedContext: Context) {
         @JvmField val SHOW_DESKTOP_LABELS = backedUpItem("pref_desktop_show_labels", true)
         @JvmField val SHOW_DRAWER_LABELS = backedUpItem("pref_drawer_show_labels", true)
         @JvmField val SLEEP_GESTURE = backedUpItem("pref_sleep_gesture", false)
+        @JvmField val SLEEP_GESTURE_HAPTIC = backedUpItem("pref_sleep_gesture_haptic", true)
         @JvmField val WORKSPACE_LOCK = backedUpItem("pref_workspace_lock", false)
         @JvmField val NOTIFICATION_BADGE_COUNTS = backedUpItem("pref_notification_badge_counts", false)
         @JvmField
