@@ -37,6 +37,15 @@
             android:title="@string/pref_sleep_gesture_title"
             android:summary="@string/pref_sleep_gesture_summary" />
 
+        <SwitchPreferenceCompat
+            android:key="pref_sleep_gesture_haptic"
+            android:title="@string/pref_sleep_gesture_haptic_title"
+            android:summary="@string/pref_sleep_gesture_haptic_summary"
+            android:defaultValue="true"
+            android:persistent="true"  
+            android:dependency="pref_sleep_gesture"
+            launcher:iconSpaceReserved="false" /> 
+
         <!--
           LAUNCHER_ADD_NEW_APPS_TO_HOME_SCREEN_ENABLED(613)
           LAUNCHER_ADD_NEW_APPS_TO_HOME_SCREEN_DISABLED(614)
@@ -49,6 +58,7 @@
             android:persistent="true"
             launcher:logIdOn="613"
             launcher:logIdOff="614" />
+
 
         <SwitchPreferenceCompat
             android:defaultValue="true"
