@@ -66,6 +66,8 @@ constructor(
         private val RESTART_PREFS: Array<Item> = arrayOf(
             LauncherPrefs.SHOW_STATUS_BAR,
             LauncherPrefs.RECENTS_MEMINFO,
+            LauncherPrefs.SHORT_PARALLAX,
+            LauncherPrefs.SINGLE_PAGE_CENTER,
         )
 
         @JvmField var INSTANCE = DaggerSingletonObject { it.launcherAppState }

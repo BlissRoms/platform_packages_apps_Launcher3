@@ -302,6 +302,8 @@ constructor(@ApplicationContext private val encryptedContext: Context) {
         @JvmField val RECENTS_MEMINFO_ZRAM = backedUpItem("pref_recents_meminfo_zram", false)
         @JvmField val SHOW_STATUS_BAR = backedUpItem("pref_show_statusbar", true)
         @JvmField val SHOW_TOP_SHADOW = backedUpItem("pref_show_top_shadow", true)
+        @JvmField val SHORT_PARALLAX = backedUpItem("pref_short_parallax", false)
+        @JvmField val SINGLE_PAGE_CENTER = backedUpItem("pref_single_page_center", false)
         @JvmField
         val TASKBAR_PINNING =
             backedUpItem(TASKBAR_PINNING_KEY, false, EncryptionType.DEVICE_PROTECTED)
