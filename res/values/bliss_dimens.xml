@@ -25,6 +25,10 @@
     <!-- Search bar margin -->
     <dimen name="all_apps_search_bar_margin_top">28dp</dimen>
 
+    <!-- Preference style -->
+    <dimen name="card_margin_start_aqua">20dp</dimen>
+    <dimen name="card_margin_end_aqua">20dp</dimen>
+
     <!-- QuickSpace -->
     <dimen name="quickspace_title_size">20sp</dimen>
     <dimen name="quickspace_subtitle_size">16sp</dimen>
