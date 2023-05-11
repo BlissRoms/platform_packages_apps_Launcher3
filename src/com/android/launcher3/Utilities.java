@@ -183,6 +183,7 @@ public final class Utilities {
     public static final String KEY_SHORT_PARALLAX = "pref_short_parallax";
     public static final String KEY_SINGLE_PAGE_CENTER = "pref_single_page_center";
     public static final String KEY_DRAWER_SEARCH = "pref_drawer_search";
+    public static final String KEY_FORCE_MONOCHROME_ICONS = "pref_forced_monochrome_icons";
     public static final String DESKTOP_SHOW_QUICKSPACE = "pref_show_quickspace";
     public static final String KEY_SHOW_ALT_QUICKSPACE = "pref_show_alt_quickspace";
     public static final String KEY_SHOW_QUICKSPACE_PSONALITY = "pref_quickspace_psonality";
@@ -962,6 +963,11 @@ public final class Utilities {
         SharedPreferences prefs = LauncherPrefs.getPrefs(context.getApplicationContext());
         return prefs.getBoolean(KEY_DRAWER_SEARCH, true);
     }
+
+    public static boolean enableMonoChromeThemedIcons(Context context) {
+        SharedPreferences prefs = LauncherPrefs.getPrefs(context.getApplicationContext());
+        return prefs.getBoolean(KEY_FORCE_MONOCHROME_ICONS, false);
+   }
 
     public static boolean showQuickspace(Context context) {
         SharedPreferences prefs = LauncherPrefs.getPrefs(context.getApplicationContext());
