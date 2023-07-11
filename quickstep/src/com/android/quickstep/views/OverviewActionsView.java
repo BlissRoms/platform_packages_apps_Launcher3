@@ -101,6 +101,7 @@ public class OverviewActionsView<T extends OverlayUICallbacks> extends FrameLayo
     public static final int FLAG_SINGLE_TASK = 1 << 0;
 
     private static final String KEY_RECENTS_SCREENSHOT = "pref_recents_screenshot";
+    private static final String KEY_RECENTS_SPLIT = "pref_recents_split";
     private static final String KEY_RECENTS_CLEAR_ALL = "pref_recents_clear_all";
     private static final String KEY_RECENTS_LENS = "pref_recents_lens";
     private static final String KEY_RECENTS_SHAKE_CLEAR_ALL = "pref_recents_shake_clear_all";
@@ -129,6 +130,7 @@ public class OverviewActionsView<T extends OverlayUICallbacks> extends FrameLayo
     private final Rect mTaskSize = new Rect();
 
     private boolean mScreenshot;
+    private boolean mSplit;
     private boolean mClearAll;
     private boolean mLens;
     private boolean mShakeClearAll;
@@ -145,6 +147,7 @@ public class OverviewActionsView<T extends OverlayUICallbacks> extends FrameLayo
         super(context, attrs, defStyleAttr, 0);
         SharedPreferences prefs = LauncherPrefs.getPrefs(context);
         mScreenshot = prefs.getBoolean(KEY_RECENTS_SCREENSHOT, true);
+        mSplit = prefs.getBoolean(KEY_RECENTS_SPLIT, true);
         mClearAll = prefs.getBoolean(KEY_RECENTS_CLEAR_ALL, true);
         mLens = prefs.getBoolean(KEY_RECENTS_LENS, false);
         prefs.registerOnSharedPreferenceChangeListener(this);
@@ -245,6 +248,8 @@ public class OverviewActionsView<T extends OverlayUICallbacks> extends FrameLayo
     public void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
         if (key.equals(KEY_RECENTS_SCREENSHOT)) {
             mScreenshot = prefs.getBoolean(KEY_RECENTS_SCREENSHOT, true);
+        } else if (key.equals(KEY_RECENTS_SPLIT)) {
+            mSplit = prefs.getBoolean(KEY_RECENTS_SPLIT, true);
         } else if (key.equals(KEY_RECENTS_CLEAR_ALL)) {
             mClearAll = prefs.getBoolean(KEY_RECENTS_CLEAR_ALL, true);
         } else if (key.equals(KEY_RECENTS_LENS)) {
@@ -298,8 +303,8 @@ public class OverviewActionsView<T extends OverlayUICallbacks> extends FrameLayo
         }
         if (mSplitButton == null) return;
         boolean shouldBeVisible = mSplitButtonHiddenFlags == 0;
-        mSplitButton.setVisibility(shouldBeVisible ? VISIBLE : GONE);
-        findViewById(R.id.action_split_space).setVisibility(shouldBeVisible ? VISIBLE : GONE);
+        mSplitButton.setVisibility((shouldBeVisible && mSplit) ? VISIBLE : GONE);
+        findViewById(R.id.action_split_space).setVisibility((shouldBeVisible && mSplit) ? VISIBLE : GONE);
     }
 
     /**
