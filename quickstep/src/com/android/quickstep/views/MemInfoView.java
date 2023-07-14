@@ -23,6 +23,7 @@ import static com.android.launcher3.util.NavigationMode.THREE_BUTTONS;
 
 import android.app.ActivityManager;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.AttributeSet;
@@ -36,6 +37,7 @@ import com.android.launcher3.anim.AlphaUpdateListener;
 import com.android.launcher3.DeviceProfile;
 import com.android.launcher3.util.MultiValueAlpha;
 import com.android.launcher3.util.NavigationMode;
+import com.android.launcher3.LauncherPrefs;
 import com.android.launcher3.R;
 import com.android.launcher3.Utilities;
 
@@ -43,7 +45,8 @@ import java.lang.Runnable;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
-public class MemInfoView extends TextView {
+public class MemInfoView extends TextView 
+        implements SharedPreferences.OnSharedPreferenceChangeListener {
 
     // When to show GB instead of MB
     private static final int UNIT_CONVERT_THRESHOLD = 1024; /* MiB */
@@ -66,6 +69,9 @@ public class MemInfoView extends TextView {
                 }
             };
 
+    private static final String KEY_MEMINFO_BOTTOM = "pref_recents_meminfo_bottom";
+    private boolean mMeminfoBottom;
+
     private DeviceProfile mDp;
     private MultiValueAlpha mAlpha;
     private ActivityManager mActivityManager;
@@ -77,12 +83,15 @@ public class MemInfoView extends TextView {
 
     public MemInfoView(Context context, AttributeSet attrs) {
         super(context, attrs);
+        SharedPreferences prefs = LauncherPrefs.getPrefs(context);
 
         mAlpha = new MultiValueAlpha(this, 2);
         mAlpha.setUpdateVisibility(true);
         mActivityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
         mHandler = new Handler(Looper.getMainLooper());
         mWorker = new MemInfoWorker();
+        mMeminfoBottom = prefs.getBoolean(KEY_MEMINFO_BOTTOM, false);
+        prefs.registerOnSharedPreferenceChangeListener(this);
 
         mMemInfoText = context.getResources().getString(R.string.meminfo_text);
     }
@@ -138,7 +147,14 @@ public class MemInfoView extends TextView {
         topMargin=mDp.memInfoMarginTop;
 
         lp.setMargins(lp.leftMargin, lp.topMargin, lp.rightMargin, bottomMargin);
-        lp.gravity = Gravity.CENTER_HORIZONTAL | Gravity.TOP;
+        lp.gravity = Gravity.CENTER_HORIZONTAL | (mMeminfoBottom ? Gravity.BOTTOM : Gravity.TOP) ;
+    }
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
+        if (key.equals(KEY_MEMINFO_BOTTOM)) {
+            mMeminfoBottom = prefs.getBoolean(KEY_MEMINFO_BOTTOM, false);
+        }
     }
 
     private String unitConvert(long valueMiB, boolean alignToGB) {
