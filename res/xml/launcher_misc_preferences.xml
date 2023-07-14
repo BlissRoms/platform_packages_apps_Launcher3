@@ -60,4 +60,10 @@
         android:key="pref_trust_apps"
         android:title="@string/trust_apps_manager_name" />
 
+    <androidx.preference.PreferenceScreen
+        android:key="pref_developer_options"
+        android:persistent="true"
+        android:title="@string/developer_options_title"
+        android:fragment="com.android.launcher3.uioverrides.flags.DeveloperOptionsFragment" />
+
 </androidx.preference.PreferenceScreen>

@@ -69,16 +69,12 @@ public class FlagsFactory {
      */
     public static BooleanFlag getDebugFlag(
             int bugId, String key, boolean defaultValue, String description) {
-        if (Utilities.IS_DEBUG_DEVICE) {
             SharedPreferences prefs = currentApplication()
                     .getSharedPreferences(FLAGS_PREF_NAME, Context.MODE_PRIVATE);
             boolean currentValue = prefs.getBoolean(key, defaultValue);
             DebugFlag flag = new DebugFlag(key, description, defaultValue, currentValue);
             sDebugFlags.add(flag);
             return flag;
-        } else {
-            return new BooleanFlag(defaultValue);
-        }
     }
 
     /**
@@ -88,7 +84,6 @@ public class FlagsFactory {
             int bugId, String key, boolean defaultValueInCode, String description) {
         INSTANCE.mKeySet.add(key);
         boolean defaultValue = DeviceConfig.getBoolean(NAMESPACE_LAUNCHER, key, defaultValueInCode);
-        if (Utilities.IS_DEBUG_DEVICE) {
             SharedPreferences prefs = currentApplication()
                     .getSharedPreferences(FLAGS_PREF_NAME, Context.MODE_PRIVATE);
             boolean currentValue = prefs.getBoolean(key, defaultValue);
@@ -96,9 +91,6 @@ public class FlagsFactory {
                     defaultValueInCode);
             sDebugFlags.add(flag);
             return flag;
-        } else {
-            return new BooleanFlag(defaultValue);
-        }
     }
 
     /**
@@ -111,9 +103,6 @@ public class FlagsFactory {
     }
 
     static List<DebugFlag> getDebugFlags() {
-        if (!Utilities.IS_DEBUG_DEVICE) {
-            return Collections.emptyList();
-        }
         synchronized (sDebugFlags) {
             return new ArrayList<>(sDebugFlags);
         }
