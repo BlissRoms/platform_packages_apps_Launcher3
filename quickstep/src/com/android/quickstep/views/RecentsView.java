@@ -870,10 +870,6 @@ public abstract class RecentsView<ACTIVITY_TYPE extends StatefulActivity<STATE_T
         return mIsRtl;
     }
 
-    public boolean isScrolledFinished() {
-        return mTaskListChangeId != -1 && mScroller.isFinished();
-    }
-
     @Override
     protected void initEdgeEffect() {
         mEdgeGlowLeft = new TranslateEdgeEffect(getContext());
@@ -908,9 +904,6 @@ public abstract class RecentsView<ACTIVITY_TYPE extends StatefulActivity<STATE_T
                 dispatchScrollChanged();
             }
             super.dispatchDraw(canvas);
-        }
-        if (mEnableDrawingLiveTile && mRemoteTargetHandles != null) {
-            redrawLiveTile();
         }
     }
 
@@ -1834,21 +1827,7 @@ public abstract class RecentsView<ACTIVITY_TYPE extends StatefulActivity<STATE_T
                 taskView.setTaskThumbnailSplashAlpha(mTaskThumbnailSplashAlpha);
             }
         }
-        // resetTaskVisuals is called at the end of dismiss animation which could update
-        // primary and secondary translation of the live tile cut out. We will need to do so
-        // here accordingly.
-        runActionOnRemoteHandles(remoteTargetHandle -> {
-            TaskViewSimulator simulator = remoteTargetHandle.getTaskViewSimulator();
-            simulator.taskPrimaryTranslation.value = 0;
-            simulator.taskSecondaryTranslation.value = 0;
-            simulator.fullScreenProgress.value = 0;
-            simulator.recentsViewScale.value = 1;
-        });
-        // Similar to setRunningTaskHidden below, reapply the state before runningTaskView is
-        // null.
-        if (!mRunningTaskShowScreenshot) {
-            setRunningTaskViewShowScreenshot(mRunningTaskShowScreenshot);
-        }
+
         if (mRunningTaskTileHidden) {
             setRunningTaskHidden(mRunningTaskTileHidden);
         }
@@ -2290,12 +2269,7 @@ public abstract class RecentsView<ACTIVITY_TYPE extends StatefulActivity<STATE_T
         mFocusedTaskViewId = -1;
 
         if (mRecentsAnimationController != null) {
-            if (mEnableDrawingLiveTile) {
-                // We are still drawing the live tile, finish it now to clean up.
-                finishRecentsAnimation(true /* toRecents */, null);
-            } else {
-                mRecentsAnimationController = null;
-            }
+            mRecentsAnimationController = null;
         }
         setEnableDrawingLiveTile(false);
         runActionOnRemoteHandles(remoteTargetHandle -> {
@@ -2687,13 +2661,7 @@ public abstract class RecentsView<ACTIVITY_TYPE extends StatefulActivity<STATE_T
         }
     }
 
-    private void setRunningTaskViewShowScreenshot(boolean showScreenshot) {
-        mRunningTaskShowScreenshot = showScreenshot;
-        TaskView runningTaskView = getRunningTaskView();
-        if (runningTaskView != null) {
-            runningTaskView.setShowScreenshot(mRunningTaskShowScreenshot);
-        }
-    }
+    private void setRunningTaskViewShowScreenshot(boolean showScreenshot) {}
 
     public void setTaskIconScaledDown(boolean isScaledDown) {
         if (mTaskIconScaledDown != isScaledDown) {
@@ -3099,18 +3067,6 @@ public abstract class RecentsView<ACTIVITY_TYPE extends StatefulActivity<STATE_T
 
         anim.add(ObjectAnimator.ofFloat(taskView, secondaryViewTranslate,
                 verticalFactor * secondaryTaskDimension * 2).setDuration(duration), LINEAR, sp);
-
-        if (mEnableDrawingLiveTile && taskView.isRunningTask()) {
-            anim.addOnFrameCallback(() -> {
-                runActionOnRemoteHandles(
-                        remoteTargetHandle -> remoteTargetHandle.getTaskViewSimulator()
-                                .taskSecondaryTranslation.value = mOrientationHandler
-                                .getSecondaryValue(taskView.getTranslationX(),
-                                        taskView.getTranslationY()
-                                ));
-                redrawLiveTile();
-            });
-        }
     }
 
     /**
@@ -3168,19 +3124,6 @@ public abstract class RecentsView<ACTIVITY_TYPE extends StatefulActivity<STATE_T
 
         InteractionJankMonitorWrapper.begin(this,
                 InteractionJankMonitorWrapper.CUJ_SPLIT_SCREEN_ENTER, "First tile selected");
-        anim.addListener(new AnimatorListenerAdapter() {
-            @Override
-            public void onAnimationStart(Animator animation) {
-                if (mSplitHiddenTaskView == getRunningTaskView()) {
-                    finishRecentsAnimation(true /* toRecents */, false /* shouldPip */,
-                            null /* onFinishComplete */);
-                } else {
-                    switchToScreenshot(
-                            () -> finishRecentsAnimation(true /* toRecents */,
-                                    false /* shouldPip */, null /* onFinishComplete */));
-                }
-            }
-        });
         anim.addEndListener(success -> {
             if (success) {
                 InteractionJankMonitorWrapper.end(
@@ -3414,16 +3357,6 @@ public abstract class RecentsView<ACTIVITY_TYPE extends StatefulActivity<STATE_T
                             dismissTranslationInterpolationEnd
                                     - halfAdditionalDismissTranslationOffset,
                             END_DISMISS_TRANSLATION_INTERPOLATION_OFFSET, 1);
-                    if (mEnableDrawingLiveTile && taskView.isRunningTask()) {
-                        anim.addOnFrameCallback(() -> {
-                            runActionOnRemoteHandles(
-                                    remoteTargetHandle ->
-                                            remoteTargetHandle.getTaskViewSimulator()
-                                                    .taskPrimaryTranslation.value =
-                                                    TaskView.GRID_END_TRANSLATION_X.get(taskView));
-                            redrawLiveTile();
-                        });
-                    }
                 }
 
                 // Change alpha of clear all if translating grid to hide it
@@ -3518,20 +3451,6 @@ public abstract class RecentsView<ACTIVITY_TYPE extends StatefulActivity<STATE_T
                             )
                     );
 
-                    if (mEnableDrawingLiveTile && child instanceof TaskView
-                            && ((TaskView) child).isRunningTask()) {
-                        anim.addOnFrameCallback(() -> {
-                            runActionOnRemoteHandles(
-                                    remoteTargetHandle ->
-                                            remoteTargetHandle.getTaskViewSimulator()
-                                                    .taskPrimaryTranslation.value =
-                                                    mOrientationHandler.getPrimaryValue(
-                                                            child.getTranslationX(),
-                                                            child.getTranslationY()
-                                                    ));
-                            redrawLiveTile();
-                        });
-                    }
                     needsCurveUpdates = true;
                 }
             } else if (child instanceof TaskView) {
@@ -3634,12 +3553,7 @@ public abstract class RecentsView<ACTIVITY_TYPE extends StatefulActivity<STATE_T
         mPendingAnimation.addEndListener(new Consumer<Boolean>() {
             @Override
             public void accept(Boolean success) {
-                if (mEnableDrawingLiveTile && dismissedTaskView.isRunningTask() && success) {
-                    finishRecentsAnimation(true /* toRecents */, false /* shouldPip */,
-                            () -> onEnd(success));
-                } else {
-                    onEnd(success);
-                }
+                onEnd(success);
             }
 
             @SuppressWarnings("WrongCall")
@@ -3651,12 +3565,7 @@ public abstract class RecentsView<ACTIVITY_TYPE extends StatefulActivity<STATE_T
                 if (success) {
                     if (shouldRemoveTask) {
                         if (dismissedTaskView.getTask() != null) {
-                            if (dismissedTaskView.isRunningTask()) {
-                                finishRecentsAnimation(true /* toRecents */, false /* shouldPip */,
-                                        () -> removeTaskInternal(dismissedTaskViewId));
-                            } else {
-                                removeTaskInternal(dismissedTaskViewId);
-                            }
+                            removeTaskInternal(dismissedTaskViewId);
                             announceForAccessibility(
                                     getResources().getString(R.string.task_view_closed));
                             mActivity.getStatsLogManager().logger()
@@ -4319,12 +4228,6 @@ public abstract class RecentsView<ACTIVITY_TYPE extends StatefulActivity<STATE_T
                     ? ((TaskView) child).getPrimaryTaskOffsetTranslationProperty()
                     : mOrientationHandler.getPrimaryViewTranslate();
             translationPropertyX.set(child, totalTranslationX);
-            if (mEnableDrawingLiveTile && i == getRunningTaskIndex()) {
-                runActionOnRemoteHandles(
-                        remoteTargetHandle -> remoteTargetHandle.getTaskViewSimulator()
-                                .taskPrimaryTranslation.value = totalTranslationX);
-                redrawLiveTile();
-            }
 
             if (showAsGrid && ENABLE_GRID_ONLY_OVERVIEW.get() && child instanceof TaskView) {
                 float totalTranslationY = getVerticalOffsetSize(i, modalOffset);
@@ -4525,6 +4428,8 @@ public abstract class RecentsView<ACTIVITY_TYPE extends StatefulActivity<STATE_T
         mSplitSelectStateController.setAnimateCurrentTaskDismissal(
                 true /*animateCurrentTaskDismissal*/);
         mSplitHiddenTaskViewIndex = indexOfChild(taskView);
+        finishRecentsAnimation(true /* toRecents */, false /* shouldPip */,
+                null /* onFinishComplete */);
         if (DesktopTaskView.DESKTOP_IS_PROTO2_ENABLED) {
             updateDesktopTaskVisibility(false /* visible */);
         }
@@ -4893,15 +4798,6 @@ public abstract class RecentsView<ACTIVITY_TYPE extends StatefulActivity<STATE_T
             anim.play(ObjectAnimator.ofFloat(getPageAt(centerTaskIndex),
                     mOrientationHandler.getPrimaryViewTranslate(), primaryTranslation));
             int runningTaskIndex = getRunningTaskIndex();
-            if (runningTaskIndex != -1 && runningTaskIndex != taskIndex
-                    && getRemoteTargetHandles() != null) {
-                for (RemoteTargetHandle remoteHandle : getRemoteTargetHandles()) {
-                    anim.play(ObjectAnimator.ofFloat(
-                            remoteHandle.getTaskViewSimulator().taskPrimaryTranslation,
-                            AnimatedFloat.VALUE,
-                            primaryTranslation));
-                }
-            }
 
             int otherAdjacentTaskIndex = centerTaskIndex + (centerTaskIndex - taskIndex);
             if (otherAdjacentTaskIndex >= 0 && otherAdjacentTaskIndex < getPageCount()) {
@@ -4982,10 +4878,6 @@ public abstract class RecentsView<ACTIVITY_TYPE extends StatefulActivity<STATE_T
 
         mPendingAnimation = new PendingAnimation(duration);
         mPendingAnimation.add(anim);
-        runActionOnRemoteHandles(
-                remoteTargetHandle -> remoteTargetHandle.getTaskViewSimulator()
-                        .addOverviewToAppAnim(mPendingAnimation, interpolator));
-        mPendingAnimation.addOnFrameCallback(this::redrawLiveTile);
         mPendingAnimation.addEndListener(isSuccess -> {
             if (isSuccess) {
                 if (tv.getTaskIds()[1] != -1 && mRemoteTargetHandles != null) {
@@ -4997,12 +4889,7 @@ public abstract class RecentsView<ACTIVITY_TYPE extends StatefulActivity<STATE_T
                                 dividerAnimator.end();
                             });
                 }
-                if (tv.isRunningTask()) {
-                    finishRecentsAnimation(false /* toRecents */, null);
-                    onTaskLaunchAnimationEnd(true /* success */);
-                } else {
-                    tv.launchTask(this::onTaskLaunchAnimationEnd);
-                }
+                tv.launchTask(this::onTaskLaunchAnimationEnd);
                 Task task = tv.getTask();
                 if (task != null) {
                     mActivity.getStatsLogManager().logger().withItemInfo(tv.getItemInfo())
