@@ -56,7 +56,8 @@ public class SettingsAppDrawer extends CollapsingToolbarBaseActivity
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        if (LauncherPrefs.DRAWER_SEARCH.getSharedPrefKey().equals(key)) {
+        if (LauncherPrefs.DRAWER_SEARCH.getSharedPrefKey().equals(key) ||
+                LauncherPrefs.DRAWER_SCROLLBAR.getSharedPrefKey().equals(key)) {
             LauncherAppState.needsRestart = true;
             recreate();
         }
