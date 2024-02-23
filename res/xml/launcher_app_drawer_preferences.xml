@@ -42,4 +42,10 @@
         settings:units="%"
         android:defaultValue="100" />
 
+    <SwitchPreferenceCompat
+        android:key="pref_drawer_scrollbar"
+        android:title="@string/drawer_scrollbar_title"
+        android:summary="@string/drawer_scrollbar_summary"
+        android:defaultValue="true" />
+
 </androidx.preference.PreferenceScreen>
