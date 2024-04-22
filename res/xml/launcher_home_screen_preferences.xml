@@ -22,7 +22,7 @@
     <PreferenceCategory
         android:title="@string/general_category_title">
 
-        <SwitchPreferenceCompat
+        <SwitchPreference
             android:defaultValue="false"
             android:key="pref_workspace_lock"
             android:persistent="true"
@@ -31,7 +31,7 @@
             android:summaryOff="@string/settings_lock_layout_summary_off"
             launcher:iconSpaceReserved="false" />
 
-        <SwitchPreferenceCompat
+        <SwitchPreference
             android:key="pref_add_icon_to_home"
             android:title="@string/auto_add_shortcuts_label"
             android:summary="@string/auto_add_shortcuts_description"
@@ -41,7 +41,7 @@
             launcher:logIdOff="614"
             launcher:iconSpaceReserved="false" />
 
-        <SwitchPreferenceCompat
+        <SwitchPreference
             android:key="pref_sleep_gesture"
             android:title="@string/pref_sleep_gesture_title"
             android:summary="@string/pref_sleep_gesture_summary"
@@ -49,28 +49,28 @@
             android:persistent="true"
             launcher:iconSpaceReserved="false" />
 
-        <SwitchPreferenceCompat
+        <SwitchPreference
             android:key="pref_allow_wallpaper_scrolling"
             android:title="@string/allow_wallpaper_scrolling"
             android:summary="@string/allow_wallpaper_scrolling_summary"
             android:defaultValue="true"
             launcher:iconSpaceReserved="false" />
 
-        <SwitchPreferenceCompat
+        <SwitchPreference
             android:key="pref_allow_wallpaper_zooming"
             android:title="@string/allow_wallpaper_zooming"
             android:summary="@string/allow_wallpaper_zooming_summary"
             android:defaultValue="true"
             launcher:iconSpaceReserved="false" />
 
-        <SwitchPreferenceCompat
+        <SwitchPreference
             android:key="pref_short_parallax"
             android:title="@string/short_parallax_title"
             android:summary="@string/short_parallax_summary"
             android:defaultValue="false"
             launcher:iconSpaceReserved="false" />
 
-        <SwitchPreferenceCompat
+        <SwitchPreference
             android:key="pref_single_page_center"
             android:title="@string/single_page_center_title"
             android:summary="@string/single_page_center_summary"
@@ -82,35 +82,35 @@
     <PreferenceCategory
         android:title="@string/interface_category_title">
 
-        <SwitchPreferenceCompat
+        <SwitchPreference
             android:key="pref_enable_minus_one"
             android:title="@string/title_show_google_app"
             android:summary="@string/pref_show_google_now_summary"
             android:defaultValue="true"
             launcher:iconSpaceReserved="false" />
 
-        <SwitchPreferenceCompat
+        <SwitchPreference
             android:key="pref_show_statusbar"
             android:title="@string/show_statusbar_title"
             android:defaultValue="true"
             android:persistent="true"
             launcher:iconSpaceReserved="false" />
 
-        <SwitchPreferenceCompat
+        <SwitchPreference
             android:key="pref_show_top_shadow"
             android:title="@string/show_top_shadow"
             android:defaultValue="true"
             android:persistent="true"
             launcher:iconSpaceReserved="false" />
         
-        <SwitchPreferenceCompat
+        <SwitchPreference
             android:key="pref_desktop_show_labels"
             android:title="@string/desktop_show_labels"
             android:defaultValue="true"
             android:persistent="true"
             launcher:iconSpaceReserved="false" />
 
-        <SwitchPreferenceCompat
+        <SwitchPreference
             android:key="pref_show_hotseat_bg"
             android:title="@string/hotseat_bg_title"
             android:summary="@string/hotseat_bg_summary"
@@ -132,7 +132,7 @@
     <PreferenceCategory
         android:title="@string/quickspace_category_title">
 
-        <SwitchPreferenceCompat
+        <SwitchPreference
             android:key="pref_show_quickspace"
             android:title="@string/show_quickspace_title"
             android:summary="@string/show_quickspace_summary"
@@ -140,7 +140,7 @@
             android:persistent="true"
             launcher:iconSpaceReserved="false" />
 
-        <SwitchPreferenceCompat
+        <SwitchPreference
             android:key="pref_quickspace_psonality"
             android:title="@string/quickspace_psa_title"
             android:summary="@string/quickspace_psa_summary"
@@ -149,7 +149,7 @@
             android:persistent="true"
             launcher:iconSpaceReserved="false" />
 
-        <SwitchPreferenceCompat
+        <SwitchPreference
             android:key="pref_show_alt_quickspace"
             android:title="@string/quickspace_alternate_style_title"
             android:summary="@string/quickspace_alternate_style_summary"
@@ -158,7 +158,7 @@
             android:persistent="true"
             launcher:iconSpaceReserved="false" />
 
-        <SwitchPreferenceCompat
+        <SwitchPreference
             android:key="pref_quickspace_np"
             android:title="@string/quickspace_now_playing_title"
             android:summary="@string/quickspace_now_playing_summary"
@@ -167,7 +167,7 @@
             android:persistent="true"
             launcher:iconSpaceReserved="false" />
 
-        <SwitchPreferenceCompat
+        <SwitchPreference
             android:key="pref_quickspace_weather"
             android:title="@string/quick_event_ambient_weather_title"
             android:summary="@string/quick_event_ambient_weather_summary"
@@ -176,7 +176,7 @@
             android:persistent="true"
             launcher:iconSpaceReserved="false" />
 
-        <SwitchPreferenceCompat
+        <SwitchPreference
             android:key="pref_quickspace_weather_city"
             android:title="@string/quick_event_weather_city_title"
             android:summary="@string/quick_event_weather_city_summary"
@@ -185,7 +185,7 @@
             android:persistent="true"
             launcher:iconSpaceReserved="false" />
 
-        <SwitchPreferenceCompat
+        <SwitchPreference
             android:key="pref_quickspace_weather_text"
             android:title="@string/quick_event_weather_text_title"
             android:summary="@string/quick_event_weather_text_summary"
@@ -199,14 +199,14 @@
     <PreferenceCategory
         android:title="@string/search_bar_category_title">
 
-        <SwitchPreferenceCompat
+        <SwitchPreference
             android:key="pref_dock_search"
             android:title="@string/dock_search_title"
             android:summary="@string/dock_search_summary"
             android:defaultValue="true"
             launcher:iconSpaceReserved="false" />
 
-        <SwitchPreferenceCompat
+        <SwitchPreference
             android:key="pref_dock_music_search"
             android:title="@string/dock_music_search_title"
             android:summary="@string/dock_music_search_summary"
@@ -214,7 +214,7 @@
             android:defaultValue="false"
             launcher:iconSpaceReserved="false" />
 
-        <SwitchPreferenceCompat
+        <SwitchPreference
             android:key="pref_dock_theme"
             android:title="@string/dock_theme_title"
             android:summary="@string/dock_theme_summary"
