@@ -13,6 +13,8 @@ import static com.android.launcher3.logging.StatsLogManager.LauncherEvent.LAUNCH
 import static com.android.launcher3.logging.StatsLogManager.LauncherEvent.LAUNCHER_SYSTEM_SHORTCUT_WIDGETS_TAP;
 import static com.android.launcher3.testing.shared.ResourceUtils.INVALID_RESOURCE_HANDLE;
 
+import android.app.ActivityManagerNative;
+import android.app.IActivityManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -23,6 +25,7 @@ import android.content.pm.ShortcutInfo;
 import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Process;
+import android.os.RemoteException;
 import android.os.UserHandle;
 import android.util.Log;
 import android.view.View;
@@ -566,6 +569,36 @@ public abstract class SystemShortcut<T extends ActivityContext> extends ItemInfo
                 AbstractFloatingView.closeAllOpenViews(mTarget);
             } catch (URISyntaxException e) {
                 // Do nothing.
+            }
+        }
+    }
+
+    public static final Factory<ActivityContext> KILL_APP = (activity, itemInfo, originalView) -> {
+        ComponentName component = itemInfo.getTargetComponent();
+        return component == null ? null : new KillApp(activity, itemInfo, originalView);
+    };
+
+    public static class KillApp extends SystemShortcut<ActivityContext> {
+        private final String mPackageName;
+        private final int mUserId;
+
+        public KillApp(ActivityContext target, ItemInfo itemInfo, View originalView) {
+            super(R.drawable.ic_kill_app, R.string.recent_task_option_kill_app,
+                    target, itemInfo, originalView);
+            mPackageName = itemInfo.getTargetComponent().getPackageName();
+            mUserId = itemInfo.user.getIdentifier();
+        }
+
+        @Override
+        public void onClick(View view) {
+            if (mPackageName != null) {
+                IActivityManager iam = ActivityManagerNative.getDefault();
+                try {
+                    iam.forceStopPackage(mPackageName, mUserId);
+                    Toast appKilled = Toast.makeText(view.getContext(), R.string.recents_app_killed, Toast.LENGTH_SHORT);
+                    appKilled.show();
+                    AbstractFloatingView.closeAllOpenViews(mTarget);
+                } catch (RemoteException e) { }
             }
         }
     }
