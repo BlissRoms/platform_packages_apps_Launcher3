@@ -189,4 +189,9 @@
     <string name="recents_screenshot_title">Screenshot</string>
     <string name="recents_clear_all_title">Clear all</string>
     <string name="recents_lens_title">Lens</string>
+
+    <!-- Circle to Search -->
+    <string name="pref_allow_cts_title">Circle to Search</string>
+    <string name="pref_allow_cts_summary">Touch and hold the Home button or the navigation handle to search using the content on your screen.</string>
+
 </resources>
