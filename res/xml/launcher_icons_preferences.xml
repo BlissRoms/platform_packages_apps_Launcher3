@@ -43,7 +43,7 @@
         settings:units="%"
         android:defaultValue="100" />
 
-    <SwitchPreference
+    <SwitchPreferenceCompat
         android:key="pref_enable_two_line_toggle"
         android:title="@string/icon_two_lines_title"
         android:defaultValue="false"
