@@ -16,11 +16,14 @@
 
 package com.android.launcher3.settings;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.preference.PreferenceFragmentCompat;
 
+import com.android.launcher3.LauncherAppState;
 import com.android.launcher3.LauncherFiles;
+import com.android.launcher3.LauncherPrefs;
 import com.android.launcher3.R;
 
 import com.android.settingslib.collapsingtoolbar.CollapsingToolbarBaseActivity;
@@ -29,7 +32,8 @@ import com.android.settingslib.widget.SettingsBasePreferenceFragment;
 /**
  * Recents settings activity for Launcher.
  */
-public class SettingsRecents extends CollapsingToolbarBaseActivity {
+public class SettingsRecents extends CollapsingToolbarBaseActivity
+        implements SharedPreferences.OnSharedPreferenceChangeListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +44,20 @@ public class SettingsRecents extends CollapsingToolbarBaseActivity {
                     .beginTransaction()
                     .replace(com.android.settingslib.collapsingtoolbar.R.id.content_frame, new RecentsSettingsFragment())
                     .commit();
+        }
+        LauncherPrefs.getPrefs(this).registerOnSharedPreferenceChangeListener(this);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        LauncherPrefs.getPrefs(this).unregisterOnSharedPreferenceChangeListener(this);
+    }
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        if (LauncherPrefs.RECENTS_MEMINFO.getSharedPrefKey().equals(key)) {
+            LauncherAppState.INSTANCE.executeIfCreated(app -> app.setNeedsRestart());
         }
     }
 
