@@ -30,4 +30,7 @@
     <dimen name="icon_picker_cell_padding">8dp</dimen>
     <dimen name="icon_picker_search_min_height">52dp</dimen>
 
+    <!-- Wallpaper carousel -->
+    <dimen name="wallpaper_carousel_height">120dp</dimen>
+
 </resources>

@@ -71,6 +71,9 @@
 -keep class androidx.lifecycle.LifecycleRegistry {
   *;
 }
+-keep class com.android.launcher3.data.** {
+  *;
+}
 
 # Keep all classes annotated with @AppFunctionSerializable and their members.
 # These classes are serialized and their structure must be preserved.

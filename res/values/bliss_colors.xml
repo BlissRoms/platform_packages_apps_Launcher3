@@ -37,4 +37,7 @@
     <color name="homepage_red_bg">@color/m3_ref_palette_red90</color>
     <color name="homepage_purple_fg">@color/m3_ref_palette_purple30</color>
     <color name="homepage_purple_bg">@color/m3_ref_palette_purple90</color>
+
+    <!-- Wallpaper carousel -->
+    <color name="accent_primary_device_default">#ffd3e3fd</color>
 </resources>
