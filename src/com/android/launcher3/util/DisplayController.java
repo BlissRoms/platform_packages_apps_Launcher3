@@ -15,6 +15,7 @@
  */
 package com.android.launcher3.util;
 
+import static android.content.Intent.ACTION_CONFIGURATION_CHANGED;
 import static android.view.Display.DEFAULT_DISPLAY;
 import static android.view.WindowManager.LayoutParams.TYPE_APPLICATION;
 
@@ -244,12 +245,24 @@ public class DisplayController implements ComponentCallbacks, SafeCloseable {
     }
 
     private void onIntent(Intent intent) {
+        boolean reconfigure = false;
+        boolean overlaysChanged = false;
+        boolean uiModeChanged = false;
         if (mDestroyed) {
             return;
         }
         if (ACTION_OVERLAY_CHANGED.equals(intent.getAction())) {
             Log.d(TAG, "Overlay changed, notifying listeners");
-            notifyConfigChange(true, false);
+            reconfigure = true;
+            overlaysChanged = true;
+        } else if (ACTION_CONFIGURATION_CHANGED.equals(intent.getAction())) {
+            Configuration config = mContext.getResources().getConfiguration();
+            reconfigure = mUiMode != config.uiMode;
+            uiModeChanged = mUiMode != config.uiMode;
+            mUiMode = config.uiMode;
+        }
+        if (reconfigure) {
+            notifyConfigChange(overlaysChanged, uiModeChanged);
         }
     }
 
@@ -286,7 +299,7 @@ public class DisplayController implements ComponentCallbacks, SafeCloseable {
     public Info getInfo() {
         return mInfo;
     }
-
+    
     @AnyThread
     public void notifyConfigChange() {
         notifyConfigChange(false, false);
