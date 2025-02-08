@@ -124,7 +124,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.function.Predicate;
 
-import static com.android.launcher3.util.Executors.MODEL_EXECUTOR;
+import static com.android.launcher3.util.Executors.MAIN_EXECUTOR;
 
 /**
  * Various utilities shared amongst the Launcher's classes.
@@ -151,7 +151,7 @@ public final class Utilities {
     public static final boolean ATLEAST_V = Build.VERSION.SDK_INT
             >= VERSION_CODES.VANILLA_ICE_CREAM;
 
-    private static final long WAIT_BEFORE_RESTART = 1250;
+    private static final long WAIT_BEFORE_RESTART = 100; // ms
 
     /**
      * Set on a motion event dispatched from the nav bar. See {@link MotionEvent#setEdgeFlags(int)}.
@@ -990,13 +990,10 @@ public final class Utilities {
         return null;
     }
 
-    public static void restart(final Context context) {
-        MODEL_EXECUTOR.execute(() -> {
-            final Handler handler = new Handler(Looper.getMainLooper());
-            handler.postDelayed(() -> {
-                android.os.Process.killProcess(android.os.Process.myPid());
-            }, WAIT_BEFORE_RESTART);
-        });
+    public static void restart() {
+        MAIN_EXECUTOR.getHandler().postDelayed(() -> {
+            System.exit(0);
+        }, WAIT_BEFORE_RESTART);
     }
 
     public static String formatDateTime(Context context) {
