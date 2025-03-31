@@ -308,6 +308,8 @@ public class BubbleTextView extends TextView implements ItemInfoUpdateReceiver,
         mDeviceProfile = mActivity.getDeviceProfile();
         mCenterVertically = a.getBoolean(R.styleable.BubbleTextView_centerVertically, false);
 
+        mShouldShowLabel = SHOW_DESKTOP_LABELS.get(context);
+
         mDisplay = a.getInteger(R.styleable.BubbleTextView_iconDisplay, DISPLAY_WORKSPACE);
         final int defaultIconSize;
         if (mDisplay == DISPLAY_WORKSPACE) {
@@ -315,7 +317,6 @@ public class BubbleTextView extends TextView implements ItemInfoUpdateReceiver,
             setCompoundDrawablePadding(mDeviceProfile.iconDrawablePaddingPx);
             defaultIconSize = mDeviceProfile.iconSizePx;
             setCenterVertically(mDeviceProfile.iconCenterVertically);
-            mShouldShowLabel = SHOW_DESKTOP_LABELS.get(context);
         } else if (displayIsAppDrawer()) {
             setTextSize(TypedValue.COMPLEX_UNIT_PX, mDeviceProfile.allAppsIconTextSizePx);
             setCompoundDrawablePadding(mDeviceProfile.allAppsIconDrawablePaddingPx);
@@ -326,21 +327,18 @@ public class BubbleTextView extends TextView implements ItemInfoUpdateReceiver,
             setTextSize(TypedValue.COMPLEX_UNIT_PX, mDeviceProfile.folderChildTextSizePx);
             setCompoundDrawablePadding(mDeviceProfile.folderChildDrawablePaddingPx);
             defaultIconSize = mDeviceProfile.folderChildIconSizePx;
-            mShouldShowLabel = SHOW_DESKTOP_LABELS.get(context);
         } else if (mDisplay == DISPLAY_SEARCH_RESULT) {
             setTextSize(TypedValue.COMPLEX_UNIT_PX, mDeviceProfile.allAppsIconTextSizePx);
             defaultIconSize = getResources().getDimensionPixelSize(R.dimen.search_row_icon_size);
-            mShouldShowLabel = SHOW_DESKTOP_LABELS.get(context);
         } else if (mDisplay == DISPLAY_SEARCH_RESULT_SMALL) {
             defaultIconSize = getResources().getDimensionPixelSize(
                     R.dimen.search_row_small_icon_size);
-            mShouldShowLabel = SHOW_DESKTOP_LABELS.get(context);
         } else if (mDisplay == DISPLAY_TASKBAR) {
             defaultIconSize = mDeviceProfile.taskbarIconSize;
         } else {
             // widget_selection or shortcut_popup
             defaultIconSize = mDeviceProfile.iconSizePx;
-            mShouldShowLabel = SHOW_DESKTOP_LABELS.get(context);
+            mShouldShowLabel = true;
         }
 
 
