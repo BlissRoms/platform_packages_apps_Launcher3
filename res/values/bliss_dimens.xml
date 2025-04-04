@@ -31,4 +31,7 @@
     <dimen name="quickspace_subtitle_size">16sp</dimen>
     <dimen name="quickspace_alternate_title_size">18sp</dimen>
     <dimen name="quickspace_alternate_subtitle_size">16sp</dimen>
+
+     <!-- Navigation gesture hint -->
+     <dimen name="taskbar_minimum_window_size">1dp</dimen>
 </resources>
