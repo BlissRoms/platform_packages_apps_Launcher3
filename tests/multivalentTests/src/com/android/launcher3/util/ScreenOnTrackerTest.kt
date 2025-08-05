@@ -24,6 +24,7 @@ import android.content.IntentFilter
 import android.util.StringBuilderPrinter
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.SmallTest
+import com.android.launcher3.util.Executors.MAIN_EXECUTOR
 import com.android.launcher3.util.SimpleBroadcastReceiver.Companion.actionsFilter
 import com.google.common.truth.Truth.assertThat
 import org.junit.Before
@@ -79,6 +80,8 @@ class ScreenOnTrackerTest {
 
         underTest.onReceive(Intent(ACTION_SCREEN_ON))
 
+        TestUtil.runOnExecutorSync(MAIN_EXECUTOR) {}
+
         verify(listener).onScreenOnChanged(true)
         assertThat(underTest.isScreenOn).isTrue()
     }
@@ -89,6 +92,8 @@ class ScreenOnTrackerTest {
 
         underTest.onReceive(Intent(ACTION_SCREEN_OFF))
 
+        TestUtil.runOnExecutorSync(MAIN_EXECUTOR) {}
+
         verify(listener).onScreenOnChanged(false)
         assertThat(underTest.isScreenOn).isFalse()
     }
@@ -98,6 +103,8 @@ class ScreenOnTrackerTest {
         underTest.addListener(listener)
 
         underTest.onReceive(Intent(ACTION_USER_PRESENT))
+
+        TestUtil.runOnExecutorSync(MAIN_EXECUTOR) {}
 
         verify(listener).onUserPresent()
         assertThat(underTest.isScreenOn).isTrue()
@@ -110,6 +117,8 @@ class ScreenOnTrackerTest {
         underTest.removeListener(listener)
 
         underTest.onReceive(Intent(ACTION_USER_PRESENT))
+
+        TestUtil.runOnExecutorSync(MAIN_EXECUTOR) {}
         verifyNoMoreInteractions(listener)
     }
 
