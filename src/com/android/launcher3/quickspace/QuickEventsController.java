@@ -94,6 +94,7 @@ public class QuickEventsController {
     public void updateQuickEvents() {
         nowPlayingEvent();
         initNowPlayingEvent();
+        psonalityEvent();
     }
 
     public void updatePsonality() {
