@@ -82,7 +82,6 @@ public class QuickspaceController implements OmniJawsClient.OmniJawsObserver,
                     if (mWeatherInfo != null) {
                         mConditionImage = mWeatherClient.getWeatherConditionImage(mContext, mWeatherInfo.conditionCode);
                     }
-                    notifyListeners();
                 } catch(Exception e) {
                     // Do nothing
                 }
@@ -258,13 +257,12 @@ public class QuickspaceController implements OmniJawsClient.OmniJawsObserver,
     }
 
     private void queryAndUpdateWeather() {
-        MAIN_EXECUTOR.execute(mWeatherRunnable);
+        mHandler.post(mWeatherRunnable);
+        notifyListeners();
     }
 
     public void notifyListeners() {
-        MAIN_EXECUTOR
-            .getHandler()
-            .post(mOnDataUpdatedRunnable);
+        mHandler.post(mOnDataUpdatedRunnable);
     }
 
     private void unregisterMediaController() {
