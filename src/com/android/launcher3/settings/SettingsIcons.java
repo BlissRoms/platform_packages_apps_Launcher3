@@ -16,61 +16,69 @@
 
 package com.android.launcher3.settings;
 
-import android.app.Activity;
+import static com.android.launcher3.util.Executors.MAIN_EXECUTOR;
+import static com.android.launcher3.util.SettingsCache.NOTIFICATION_BADGING_URI;
+
 import android.os.Bundle;
-import android.view.MenuItem;
-import android.view.View;
 
 import androidx.annotation.Nullable;
-import androidx.core.view.WindowCompat;
-import androidx.fragment.app.FragmentActivity;
 import androidx.preference.Preference;
-import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.PreferenceScreen;
 
 import com.android.launcher3.BuildConfig;
 import com.android.launcher3.LauncherFiles;
 import com.android.launcher3.R;
+import com.android.launcher3.util.SafeCloseable;
 import com.android.launcher3.util.SettingsCache;
+
+import kotlin.Unit;
+
+import com.android.settingslib.collapsingtoolbar.CollapsingToolbarBaseActivity;
+import com.android.settingslib.widget.SettingsBasePreferenceFragment;
 
 /**
  * Icons settings activity for Launcher.
  */
-public class SettingsIcons extends FragmentActivity {
+public class SettingsIcons extends CollapsingToolbarBaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.settings_activity);
-
-        setActionBar(findViewById(R.id.action_bar));
-        WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
-        getActionBar().setDisplayHomeAsUpEnabled(true);
 
         if (savedInstanceState == null) {
             getSupportFragmentManager()
                     .beginTransaction()
-                    .replace(R.id.content_frame, new IconsSettingsFragment())
+                    .replace(com.android.settingslib.collapsingtoolbar.R.id.content_frame, new IconsSettingsFragment())
                     .commit();
         }
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == android.R.id.home) {
-            onBackPressed();
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
     }
 
     /**
      * This fragment shows the icons preferences.
      */
-    public static class IconsSettingsFragment extends PreferenceFragmentCompat {
+    public static class IconsSettingsFragment extends SettingsBasePreferenceFragment {
 
         private static final String NOTIFICATION_DOTS_PREFERENCE_KEY = "pref_icon_badging";
         private static final String KEY_NOTIFICATION_BADGE_COUNTS = "pref_notification_badge_counts";
+
+        private @Nullable SafeCloseable mSettingCacheSafeCloseable;
+
+        @Override
+        public void onCreate(@Nullable Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+            mSettingCacheSafeCloseable = SettingsCache.INSTANCE.get(getContext())
+                    .getListenableRef(NOTIFICATION_BADGING_URI).forEach(
+                            MAIN_EXECUTOR, this::onSettingsChanged);
+        }
+
+        @Override
+        public void onDestroy() {
+            super.onDestroy();
+            if (mSettingCacheSafeCloseable != null) {
+                mSettingCacheSafeCloseable.close();
+                mSettingCacheSafeCloseable = null;
+            }
+        }
 
         @Override
         public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
@@ -86,29 +94,13 @@ public class SettingsIcons extends FragmentActivity {
             }
         }
 
-        @Override
-        public void onViewCreated(View view, Bundle savedInstanceState) {
-            super.onViewCreated(view, savedInstanceState);
-            View listView = getListView();
-            final int bottomPadding = listView.getPaddingBottom();
-            listView.setOnApplyWindowInsetsListener((v, insets) -> {
-                v.setPadding(
-                        v.getPaddingLeft(),
-                        v.getPaddingTop(),
-                        v.getPaddingRight(),
-                        bottomPadding + insets.getSystemWindowInsetBottom());
-                return insets.consumeSystemWindowInsets();
-            });
-            view.setTextDirection(View.TEXT_DIRECTION_LOCALE);
-        }
-
         private boolean initPreference(Preference preference) {
             switch (preference.getKey()) {
                 case NOTIFICATION_DOTS_PREFERENCE_KEY:
                     return BuildConfig.NOTIFICATION_DOTS_ENABLED;
                 case KEY_NOTIFICATION_BADGE_COUNTS:
                     boolean dotsEnabled = SettingsCache.INSTANCE.get(getContext())
-                            .getValue(SettingsCache.NOTIFICATION_BADGING_URI);
+                            .getValue(NOTIFICATION_BADGING_URI);
                     preference.setEnabled(dotsEnabled);
                     if (!dotsEnabled) {
                         preference.setSummary(
@@ -117,6 +109,17 @@ public class SettingsIcons extends FragmentActivity {
                     return BuildConfig.NOTIFICATION_DOTS_ENABLED;
             }
             return true;
+        }
+
+        private Unit onSettingsChanged(boolean isEnabled) {
+            // Notification dots toggled, re-evaluate badge counts preference
+            PreferenceScreen screen = getPreferenceScreen();
+            if (screen != null) {
+                for (int i = screen.getPreferenceCount() - 1; i >= 0; i--) {
+                    initPreference(screen.getPreference(i));
+                }
+            }
+            return null;
         }
     }
 }

@@ -25,15 +25,10 @@ import android.content.pm.ActivityInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
-import android.view.MenuItem;
-import android.view.View;
 
 import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
-import androidx.core.view.WindowCompat;
-import androidx.fragment.app.FragmentActivity;
 import androidx.preference.Preference;
-import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.PreferenceScreen;
 
 import com.android.launcher3.BuildConfig;
@@ -46,43 +41,32 @@ import com.android.launcher3.display.LauncherDisplayInfo;
 import com.android.launcher3.util.SafeCloseable;
 import com.android.launcher3.util.SettingsCache;
 
+import com.android.settingslib.collapsingtoolbar.CollapsingToolbarBaseActivity;
+import com.android.settingslib.widget.SettingsBasePreferenceFragment;
+
 /**
  * Miscellaneous settings activity for Launcher.
  */
-public class SettingsMisc extends FragmentActivity {
+public class SettingsMisc extends CollapsingToolbarBaseActivity {
 
     public static final String FIXED_LANDSCAPE_MODE = "pref_fixed_landscape_mode";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.settings_activity);
-
-        setActionBar(findViewById(R.id.action_bar));
-        WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
-        getActionBar().setDisplayHomeAsUpEnabled(true);
 
         if (savedInstanceState == null) {
             getSupportFragmentManager()
                     .beginTransaction()
-                    .replace(R.id.content_frame, new MiscSettingsFragment())
+                    .replace(com.android.settingslib.collapsingtoolbar.R.id.content_frame, new MiscSettingsFragment())
                     .commit();
         }
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == android.R.id.home) {
-            onBackPressed();
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
     }
 
     /**
      * This fragment shows the miscellaneous preferences.
      */
-    public static class MiscSettingsFragment extends PreferenceFragmentCompat {
+    public static class MiscSettingsFragment extends SettingsBasePreferenceFragment {
 
         @VisibleForTesting
         static final String DEVELOPER_OPTIONS_KEY = "pref_developer_options";
@@ -120,22 +104,6 @@ public class SettingsMisc extends FragmentActivity {
                     screen.removePreference(preference);
                 }
             }
-        }
-
-        @Override
-        public void onViewCreated(View view, Bundle savedInstanceState) {
-            super.onViewCreated(view, savedInstanceState);
-            View listView = getListView();
-            final int bottomPadding = listView.getPaddingBottom();
-            listView.setOnApplyWindowInsetsListener((v, insets) -> {
-                v.setPadding(
-                        v.getPaddingLeft(),
-                        v.getPaddingTop(),
-                        v.getPaddingRight(),
-                        bottomPadding + insets.getSystemWindowInsetBottom());
-                return insets.consumeSystemWindowInsets();
-            });
-            view.setTextDirection(View.TEXT_DIRECTION_LOCALE);
         }
 
         private boolean initPreference(Preference preference) {
