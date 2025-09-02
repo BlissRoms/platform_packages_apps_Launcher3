@@ -21,14 +21,9 @@ import static android.os.Process.myUserHandle;
 import android.content.Intent;
 import android.content.pm.LauncherApps;
 import android.os.Bundle;
-import android.view.MenuItem;
-import android.view.View;
 
-import androidx.core.view.WindowCompat;
-import androidx.fragment.app.FragmentActivity;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceCategory;
-import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.PreferenceGroup;
 import androidx.preference.PreferenceScreen;
 
@@ -36,41 +31,30 @@ import com.android.launcher3.R;
 import com.android.launcher3.lineage.LineageUtils;
 import com.android.launcher3.lineage.trust.TrustAppsActivity;
 
+import com.android.settingslib.collapsingtoolbar.CollapsingToolbarBaseActivity;
+import com.android.settingslib.widget.SettingsBasePreferenceFragment;
+
 /**
  * Home screen settings activity for Launcher.
  */
-public class SettingsHomescreen extends FragmentActivity {
+public class SettingsHomescreen extends CollapsingToolbarBaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.settings_activity);
-
-        setActionBar(findViewById(R.id.action_bar));
-        WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
-        getActionBar().setDisplayHomeAsUpEnabled(true);
 
         if (savedInstanceState == null) {
             getSupportFragmentManager()
                     .beginTransaction()
-                    .replace(R.id.content_frame, new HomescreenSettingsFragment())
+                    .replace(com.android.settingslib.collapsingtoolbar.R.id.content_frame, new HomescreenSettingsFragment())
                     .commit();
         }
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == android.R.id.home) {
-            onBackPressed();
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
     }
 
     /**
      * This fragment shows the home screen preferences.
      */
-    public static class HomescreenSettingsFragment extends PreferenceFragmentCompat {
+    public static class HomescreenSettingsFragment extends SettingsBasePreferenceFragment {
 
         private static final String KEY_MINUS_ONE = "pref_enable_minus_one";
         private static final String SEARCH_PACKAGE = "com.google.android.googlequicksearchbox";
@@ -95,22 +79,6 @@ public class SettingsHomescreen extends FragmentActivity {
                     group.removePreference(preference);
                 }
             }
-        }
-
-        @Override
-        public void onViewCreated(View view, Bundle savedInstanceState) {
-            super.onViewCreated(view, savedInstanceState);
-            View listView = getListView();
-            final int bottomPadding = listView.getPaddingBottom();
-            listView.setOnApplyWindowInsetsListener((v, insets) -> {
-                v.setPadding(
-                        v.getPaddingLeft(),
-                        v.getPaddingTop(),
-                        v.getPaddingRight(),
-                        bottomPadding + insets.getSystemWindowInsetBottom());
-                return insets.consumeSystemWindowInsets();
-            });
-            view.setTextDirection(View.TEXT_DIRECTION_LOCALE);
         }
 
         private boolean initPreference(Preference preference) {
