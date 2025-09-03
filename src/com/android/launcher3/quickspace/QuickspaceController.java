@@ -205,8 +205,12 @@ public class QuickspaceController implements OmniJawsClient.OmniJawsObserver,
 
     private void unbindSeraphix() {
         try {
-            if (mSeraphix != null) mSeraphix.unbind();
+            if (mSeraphix != null) {
+                mSeraphix.setOnDataUpdated(null);
+                mSeraphix.unbind();
+            }
         } catch (Throwable ignored) {}
+        mSeraphix = null;
         mSeraphixText = null;
         mSeraphixIcon = null;
     }
@@ -261,6 +265,8 @@ public class QuickspaceController implements OmniJawsClient.OmniJawsObserver,
             }
             unregisterMediaController();
             mHandler.removeCallbacks(mPsaRunnable);
+            mHandler.removeCallbacks(mWeatherRunnable);
+            mHandler.removeCallbacks(mOnDataUpdatedRunnable);
         }
     }
 
@@ -372,6 +378,9 @@ public class QuickspaceController implements OmniJawsClient.OmniJawsObserver,
         for (OnDataListener listener : new ArrayList<>(mListeners)) {
             removeListener(listener);
         }
+        mHandler.removeCallbacks(mPsaRunnable);
+        mHandler.removeCallbacks(mWeatherRunnable);
+        mHandler.removeCallbacks(mOnDataUpdatedRunnable);
     }
 
     @Override
