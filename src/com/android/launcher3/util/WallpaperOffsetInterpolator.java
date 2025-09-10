@@ -42,18 +42,22 @@ public class WallpaperOffsetInterpolator implements
 
     private boolean mLockedToDefaultPage;
     private int mNumScreens;
+    private SharedPreferences mPrefs;
 
     private boolean mAllowScrolling;
 
+    private Context mAppContext;
+
     public WallpaperOffsetInterpolator(Workspace<?> workspace) {
         mWorkspace = workspace;
+        mAppContext = workspace.getContext().getApplicationContext();
         mWallpaperChangeReceiver = new SimpleBroadcastReceiver(
-                workspace.getContext(), UI_HELPER_EXECUTOR, i -> onWallpaperChanged());
+                mAppContext, UI_HELPER_EXECUTOR, i -> onWallpaperChanged());
         mIsRtl = Utilities.isRtl(workspace.getResources());
-        mHandler = new OffsetHandler(workspace.getContext());
-        mAllowScrolling = LauncherPrefs.WALLPAPER_SCROLLING.get(workspace.getContext());
-        SharedPreferences prefs = LauncherPrefs.getPrefs(workspace.getContext());
-        prefs.registerOnSharedPreferenceChangeListener(this);
+        mHandler = new OffsetHandler(mAppContext);
+        mAllowScrolling = LauncherPrefs.WALLPAPER_SCROLLING.get(mAppContext);
+        mPrefs = LauncherPrefs.getPrefs(mAppContext);
+        mPrefs.registerOnSharedPreferenceChangeListener(this);
     }
 
     /**
@@ -67,6 +71,15 @@ public class WallpaperOffsetInterpolator implements
         return mLockedToDefaultPage;
     }
 
+    public void destroy() {
+        if (mRegistered) {
+            mWallpaperChangeReceiver.unregisterReceiverSafely();
+            mRegistered = false;
+        }
+        mHandler.removeCallbacksAndMessages(null);
+        mPrefs.unregisterOnSharedPreferenceChangeListener(this);
+    }
+
     @Override
     public void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
         if (LauncherPrefs.WALLPAPER_SCROLLING.getSharedPrefKey().equals(key)) {
@@ -75,7 +88,7 @@ public class WallpaperOffsetInterpolator implements
     }
 
     private int getMinimumScrollableScreensForParallax() {
-        return LauncherPrefs.SINGLE_PAGE_CENTER.get(mWorkspace.getContext()) ? 0 : 1;
+        return LauncherPrefs.SINGLE_PAGE_CENTER.get(mAppContext) ? 0 : 1;
     }
 
     /**
@@ -206,7 +219,7 @@ public class WallpaperOffsetInterpolator implements
 
     private int getMinParallaxPageSpan() {
         // Don't use all the wallpaper for parallax until you have at least this many pages
-        return LauncherPrefs.SHORT_PARALLAX.get(mWorkspace.getContext()) ? 1 : 4;
+        return LauncherPrefs.SHORT_PARALLAX.get(mAppContext) ? 1 : 4;
     }
 
     @AnyThread
@@ -224,6 +237,7 @@ public class WallpaperOffsetInterpolator implements
         if (mWindowToken == null && mRegistered) {
             mWallpaperChangeReceiver.unregisterReceiverSafely();
             mRegistered = false;
+            mHandler.removeCallbacksAndMessages(null);
         } else if (mWindowToken != null && !mRegistered) {
             mWallpaperChangeReceiver.register(ACTION_WALLPAPER_CHANGED);
             onWallpaperChanged();
@@ -234,7 +248,7 @@ public class WallpaperOffsetInterpolator implements
     private void onWallpaperChanged() {
         UI_HELPER_EXECUTOR.execute(() -> {
             // Updating the boolean on a background thread is fine as the assignments are atomic
-            mWallpaperIsLiveWallpaper = WallpaperManager.getInstance(mWorkspace.getContext())
+            mWallpaperIsLiveWallpaper = WallpaperManager.getInstance(mAppContext)
                     .getWallpaperInfo() != null;
             updateOffset();
         });
