@@ -365,12 +365,16 @@ public class QuickspaceController implements OmniJawsClient.OmniJawsObserver,
 
     public void onPause() {
         unregisterMediaController();
+        mHandler.removeCallbacks(mPsaRunnable);
+        mHandler.removeCallbacks(mWeatherRunnable);
+        mHandler.removeCallbacks(mOnDataUpdatedRunnable);
     }
 
     public void onResume() {
         registerMediaController();
         updateMediaController();
         decideWeatherProvider();
+        mHandler.post(mPsaRunnable);
         notifyListeners();
     }
 
@@ -378,9 +382,6 @@ public class QuickspaceController implements OmniJawsClient.OmniJawsObserver,
         for (OnDataListener listener : new ArrayList<>(mListeners)) {
             removeListener(listener);
         }
-        mHandler.removeCallbacks(mPsaRunnable);
-        mHandler.removeCallbacks(mWeatherRunnable);
-        mHandler.removeCallbacks(mOnDataUpdatedRunnable);
     }
 
     @Override
