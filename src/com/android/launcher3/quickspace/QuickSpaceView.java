@@ -67,7 +67,6 @@ public class QuickSpaceView extends FrameLayout implements OnDataListener {
 
     private boolean mIsAlternateStyle = false;
 
-    private QuickSpaceActionReceiver mActionReceiver;
     public QuickspaceController mController;
 
     public QuickSpaceView(Context context, AttributeSet set) {
@@ -191,22 +190,16 @@ public class QuickSpaceView extends FrameLayout implements OnDataListener {
             container.setVisibility(View.GONE);
             return;
         }
-        boolean hasGoogleApp = isPackageEnabled("com.google.android.googlequicksearchbox", getContext());
         if (container.getVisibility() != View.VISIBLE) {
             animateIn(container);
         }
-        container.setOnClickListener(hasGoogleApp ? getActionReceiver().getWeatherAction() : null);
+        container.setOnClickListener(QuickSpaceActionReceiver.getWeatherAction());
         title.setText(weatherTemp);
+        title.setOnClickListener(QuickSpaceActionReceiver.getWeatherAction());
         Drawable d = mController.getWeatherIcon();
         icon.setImageDrawable(d);
+        icon.setOnClickListener(QuickSpaceActionReceiver.getWeatherAction());
         icon.setVisibility(d != null ? View.VISIBLE : View.GONE);
-    }
-
-    private QuickSpaceActionReceiver getActionReceiver() {
-        if (mActionReceiver == null) {
-            mActionReceiver = new QuickSpaceActionReceiver(getContext().getApplicationContext());
-        }
-        return mActionReceiver;
     }
 
     private final void loadViews() {
@@ -303,14 +296,6 @@ public class QuickSpaceView extends FrameLayout implements OnDataListener {
         }
     }
 
-    public boolean isPackageEnabled(String pkgName, Context context) {
-        try {
-            return context.getPackageManager().getApplicationInfo(pkgName, 0).enabled;
-        } catch (PackageManager.NameNotFoundException e) {
-            return false;
-        }
-    }
-
     @Override
     public void onFinishInflate() {
         super.onFinishInflate();
@@ -340,7 +325,6 @@ public class QuickSpaceView extends FrameLayout implements OnDataListener {
 
     public void onDestroy() {
         mController.onDestroy();
-        mActionReceiver = null;
         mController = null;
         mBubbleTextView = null;
         mQuickspaceContent = null;
