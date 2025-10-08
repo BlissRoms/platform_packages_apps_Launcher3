@@ -110,4 +110,8 @@
     <string name="perf_dark_status_bar_title">Dark status bar</string>
     <string name="perf_dark_status_bar_summary">Always use dark status bar on home screen</string>
 
+    <!-- Auto-hide page indicator dots -->
+    <string name="auto_hide_dots">Auto-hide page indicator</string>
+    <string name="auto_hide_dots_summary">Hide the page indicator dots automatically</string>
+
 </resources>
