@@ -129,6 +129,13 @@
             android:persistent="true"
             android:dependency="pref_show_statusbar" />
 
+        <SwitchPreferenceCompat
+            android:key="pref_auto_hide_dots"
+            android:title="@string/auto_hide_dots"
+            android:summary="@string/auto_hide_dots_summary"
+            android:defaultValue="true"
+            android:persistent="true" />
+
     </PreferenceCategory>
 
 </androidx.preference.PreferenceScreen>
