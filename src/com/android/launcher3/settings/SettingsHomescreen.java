@@ -27,9 +27,11 @@ import androidx.preference.PreferenceCategory;
 import androidx.preference.PreferenceGroup;
 import androidx.preference.PreferenceScreen;
 
+import com.android.launcher3.LauncherPrefs;
 import com.android.launcher3.R;
 import com.android.launcher3.lineage.LineageUtils;
 import com.android.launcher3.lineage.trust.TrustAppsActivity;
+import com.android.launcher3.util.VibratorWrapper;
 
 import com.android.settingslib.collapsingtoolbar.CollapsingToolbarBaseActivity;
 import com.android.settingslib.widget.SettingsBasePreferenceFragment;
@@ -61,6 +63,7 @@ public class SettingsHomescreen extends CollapsingToolbarBaseActivity {
         private static final String KEY_TRUST_APPS = "pref_trust_apps";
         private static final String KEY_SUGGESTIONS = "pref_suggestions";
         private static final String SUGGESTIONS_PACKAGE = "com.google.android.as";
+        private static final String KEY_GENERAL_CATEGORY = "general_category";
 
         @Override
         public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
@@ -68,6 +71,13 @@ public class SettingsHomescreen extends CollapsingToolbarBaseActivity {
 
             PreferenceScreen screen = getPreferenceScreen();
             filterPreferenceGroup(screen);
+
+            if (!VibratorWrapper.INSTANCE.get(getContext()).hasVibrator()) {
+                PreferenceCategory generalCategory = (PreferenceCategory) findPreference(KEY_GENERAL_CATEGORY);
+                Preference d2SHaptic = screen.findPreference(LauncherPrefs.SLEEP_GESTURE_HAPTIC.getSharedPrefKey());
+                generalCategory.removePreference(d2SHaptic);
+            }
+
         }
 
         private void filterPreferenceGroup(PreferenceGroup group) {
