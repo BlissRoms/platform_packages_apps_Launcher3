@@ -28,9 +28,11 @@ import androidx.preference.PreferenceGroup;
 import androidx.preference.PreferenceScreen;
 
 import com.android.launcher3.LauncherFiles;
+import com.android.launcher3.LauncherPrefs;
 import com.android.launcher3.R;
 import com.android.launcher3.lineage.LineageUtils;
 import com.android.launcher3.lineage.trust.TrustAppsActivity;
+import com.android.launcher3.util.VibratorWrapper;
 
 import com.android.settingslib.collapsingtoolbar.CollapsingToolbarBaseActivity;
 import com.android.settingslib.widget.SettingsBasePreferenceFragment;
@@ -109,6 +111,8 @@ public class SettingsHomescreen extends CollapsingToolbarBaseActivity {
                     }
                     return launcherApps != null &&
                             launcherApps.isPackageEnabled(SUGGESTIONS_PACKAGE, myUserHandle());
+                case "pref_sleep_gesture_haptic":
+                    return VibratorWrapper.INSTANCE.get(getContext()).hasVibrator();
                 case SHOW_HOTSEAT_QSB_KEY:
                     return com.android.launcher3.Flags.enableQsbOnHotseat() && launcherApps != null &&
                             launcherApps.isPackageEnabled(SEARCH_PACKAGE, myUserHandle());
