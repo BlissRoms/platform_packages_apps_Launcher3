@@ -67,4 +67,19 @@
         <item>horizontal_list</item>
         <item>vertical</item>
     </string-array>
+
+    <!-- Recent Styles -->
+    <string-array name="recents_styles_entries">
+        <item>@string/recents_style_stock</item>
+        <item>@string/recents_style_staple</item>
+        <item>@string/recents_style_ios</item>
+        <item>@string/recents_style_oxygen</item>
+    </string-array>
+
+    <string-array name="recents_styles_values" translatable="false">
+        <item>stock</item>
+        <item>staple</item>
+        <item>ios</item>
+        <item>oxygen</item>
+    </string-array>
 </resources>
