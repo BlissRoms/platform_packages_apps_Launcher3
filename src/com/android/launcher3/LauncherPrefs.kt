@@ -289,6 +289,8 @@ constructor(@ApplicationContext private val encryptedContext: Context) {
         @JvmField val NOTIFICATION_BADGE_COUNTS = backedUpItem("pref_notification_badge_counts", false)
         @JvmField
         val PROMISE_ICON_IDS = nonRestorableItem(InstallSessionHelper.PROMISE_ICON_IDS, "")
+        @JvmField val WALLPAPER_CAROUSEL = backedUpItem("pref_wallpaper_carousel", true)
+        @JvmField val WALLPAPER_CAROUSEL_LOCKSCREEN = backedUpItem("pref_wallpaper_carousel_lockscreen", true)
         @JvmField val WALLPAPER_SCROLLING = backedUpItem("pref_allow_wallpaper_scrolling", true)
         @JvmField val WORK_EDU_STEP = backedUpItem("showed_work_profile_edu", 0)
         @JvmField
