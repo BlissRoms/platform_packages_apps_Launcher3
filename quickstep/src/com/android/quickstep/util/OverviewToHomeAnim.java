@@ -20,6 +20,7 @@ import static com.android.launcher3.LauncherState.OVERVIEW;
 
 import android.animation.Animator;
 import android.animation.AnimatorSet;
+import android.os.Handler;
 import android.util.Log;
 
 import androidx.annotation.Nullable;
@@ -49,6 +50,11 @@ public class OverviewToHomeAnim {
     // Only run mOnReachedHome when both of these are true.
     private boolean mIsHomeStaggeredAnimFinished;
     private boolean mIsOverviewHidden;
+    private boolean mAnimationStarted = false;
+    private boolean mReachedHomeDispatched = false;
+    private final Handler mHandler = new Handler();
+    @Nullable
+    private Runnable mTimeoutRunnable;
 
     public OverviewToHomeAnim(Launcher launcher, Runnable onReachedHome,
             @Nullable BiConsumer<AnimatorSet, Long> splitCancelConsumer) {
@@ -66,6 +72,21 @@ public class OverviewToHomeAnim {
         LauncherState startState = stateManager.getState();
         if (startState != OVERVIEW) {
             Log.e(TAG, "animateFromOverviewToHome: unexpected start state " + startState);
+            if (startState == NORMAL) {
+                Log.d(TAG, "Already at NORMAL state, completing animation immediately");
+                mIsHomeStaggeredAnimFinished = true;
+                mIsOverviewHidden = true;
+                maybeOverviewToHomeAnimComplete();
+                return;
+            }
+
+            Log.w(TAG, "Force transitioning from " + startState + " to NORMAL");
+            stateManager.goToState(NORMAL, false);
+            mIsHomeStaggeredAnimFinished = true;
+            mIsOverviewHidden = true;
+            maybeOverviewToHomeAnimComplete();
+            return;
+
         }
         AnimatorSet anim = new AnimatorSet();
 
@@ -99,7 +120,30 @@ public class OverviewToHomeAnim {
                 mIsOverviewHidden = true;
                 maybeOverviewToHomeAnimComplete();
             }
+
+            @Override
+            public void onAnimationCancel(Animator animation) {
+                super.onAnimationCancel(animation);
+                Log.w(TAG, "State animation cancelled, forcing completion");
+                mIsOverviewHidden = true;
+                maybeOverviewToHomeAnimComplete();
+            }
         });
+
+        final long ANIMATION_TIMEOUT = config.duration + 1000; // duration + 1 second safety
+        mTimeoutRunnable = () -> {
+            if (mAnimationStarted && (!mIsHomeStaggeredAnimFinished || !mIsOverviewHidden)) {
+                Log.e(TAG, "Animation timeout reached! Force completing animation");
+                Log.e(TAG, "  mIsHomeStaggeredAnimFinished: " + mIsHomeStaggeredAnimFinished);
+                Log.e(TAG, "  mIsOverviewHidden: " + mIsOverviewHidden);
+                Log.e(TAG, "  current state: " + stateManager.getState());
+
+                mIsHomeStaggeredAnimFinished = true;
+                mIsOverviewHidden = true;
+                maybeOverviewToHomeAnimComplete();
+            }
+        };
+        mHandler.postDelayed(mTimeoutRunnable, ANIMATION_TIMEOUT);
 
         if (mSplitCancelConsumer != null) {
             // Clear split state when swiping to home
@@ -107,12 +151,23 @@ public class OverviewToHomeAnim {
         }
         anim.play(stateAnim);
         stateManager.setCurrentAnimation(anim, NORMAL);
+        mAnimationStarted = true;
         anim.start();
     }
 
     private void maybeOverviewToHomeAnimComplete() {
-        if (mIsHomeStaggeredAnimFinished && mIsOverviewHidden) {
-            mOnReachedHome.run();
+        if (mIsHomeStaggeredAnimFinished && mIsOverviewHidden && !mReachedHomeDispatched) {
+            mReachedHomeDispatched = true;
+            mAnimationStarted = false;
+            if (mTimeoutRunnable != null) {
+                mHandler.removeCallbacks(mTimeoutRunnable);
+                mTimeoutRunnable = null;
+            }
+            mHandler.post(() -> {
+                if (mOnReachedHome != null) {
+                    mOnReachedHome.run();
+                }
+            });
         }
     }
 }
