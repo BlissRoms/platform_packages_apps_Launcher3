@@ -411,7 +411,8 @@ public class DeviceProfile {
                     /*isVerticalBarLayout*/ isVerticalBarLayout(),
                     /*res*/ res,
                     /*displayOptionSpec*/ displayOptionSpec,
-                    /*allAppsTopPadding*/ allAppsTopPadding
+                    /*allAppsTopPadding*/ allAppsTopPadding,
+                    /*allAppsCellHeightMultiplier*/ allAppsCellHeightMultiplier
             );
         } else {
             mAllAppsProfile = AllAppsProfile.Factory.createAllAppsProfile(
@@ -424,7 +425,8 @@ public class DeviceProfile {
                     /*deviceProperties*/ mDeviceProperties,
                     /*context*/ context,
                     /* allAppsTopPadding */ allAppsTopPadding,
-                    /* displayOptionSpec */ displayOptionSpec
+                    /* displayOptionSpec */ displayOptionSpec,
+                    /*allAppsCellHeightMultiplier*/ allAppsCellHeightMultiplier
             );
         }
 
@@ -457,7 +459,7 @@ public class DeviceProfile {
                 && allAppsIconText
                 && !(mIsResponsiveGrid && getAllAppsProfile().getMaxAllAppsTextLineCount() == 2)) {
             // Add extra textHeight to the existing allAppsCellHeight.
-            int cellHeight = (int) (getAllAppsProfile().getCellHeightPx() * allAppsCellHeightMultiplier);
+            int cellHeight = getAllAppsProfile().getCellHeightPx();
             mAllAppsProfile = getAllAppsProfile().copyWithCellHeightPx(
                     cellHeight + Utilities.calculateTextHeight(getAllAppsProfile().getIconTextSizePx())
             );
@@ -545,7 +547,7 @@ public class DeviceProfile {
     public int getMaxAllAppsRowCount() {
         return (int) (Math.ceil(
                 (mDeviceProperties.getAvailableHeightPx() - mAllAppsProfile.getPadding().top)
-                        / ((float) getAllAppsProfile().getCellHeightPx() * allAppsCellHeightMultiplier)));
+                        / (float) getAllAppsProfile().getCellHeightPx()));
     }
 
     /**
