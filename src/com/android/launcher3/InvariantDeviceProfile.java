@@ -16,6 +16,7 @@
 
 package com.android.launcher3;
 
+import static com.android.launcher3.LauncherPrefs.ALLAPPS_ICON_CUSTOMIZATION;
 import static com.android.launcher3.LauncherPrefs.ALLAPPS_THEMED_ICONS;
 import static com.android.launcher3.LauncherPrefs.DB_FILE;
 import static com.android.launcher3.LauncherPrefs.DRAWER_OPEN_KEYBOARD;
@@ -307,6 +308,7 @@ public class InvariantDeviceProfile {
                     && com.android.systemui.shared.Flags.workspaceItemsLabelHidden()) {
                 onConfigChanged();
             } else if (ALLAPPS_THEMED_ICONS.getSharedPrefKey().equals(key) ||
+                    ALLAPPS_ICON_CUSTOMIZATION.getSharedPrefKey().equals(key) ||
                     DRAWER_OPEN_KEYBOARD.getSharedPrefKey().equals(key) ||
                     SHOW_DESKTOP_LABELS.getSharedPrefKey().equals(key) ||
                     SHOW_DRAWER_LABELS.getSharedPrefKey().equals(key) ||
@@ -320,11 +322,13 @@ public class InvariantDeviceProfile {
             }
         };
         prefs.addListener(mPrefListener, FIXED_LANDSCAPE_MODE, ENABLE_TWOLINE_ALLAPPS_TOGGLE,
-                SHOW_HOTSEAT_QSB, ALLAPPS_THEMED_ICONS, DRAWER_OPEN_KEYBOARD,
+                SHOW_HOTSEAT_QSB, ALLAPPS_THEMED_ICONS, ALLAPPS_ICON_CUSTOMIZATION,
+                DRAWER_OPEN_KEYBOARD,
                 SHOW_DESKTOP_LABELS, SHOW_DRAWER_LABELS, NOTIFICATION_BADGE_COUNTS);
         lifeCycle.addCloseable(() -> prefs.removeListener(mPrefListener,
                 FIXED_LANDSCAPE_MODE, ENABLE_TWOLINE_ALLAPPS_TOGGLE, SHOW_HOTSEAT_QSB,
-                ALLAPPS_THEMED_ICONS, DRAWER_OPEN_KEYBOARD, SHOW_DESKTOP_LABELS,
+                ALLAPPS_THEMED_ICONS, ALLAPPS_ICON_CUSTOMIZATION, DRAWER_OPEN_KEYBOARD,
+                SHOW_DESKTOP_LABELS,
                 SHOW_DRAWER_LABELS, NOTIFICATION_BADGE_COUNTS));
 
         SimpleBroadcastReceiver localeReceiver = new SimpleBroadcastReceiver(context,

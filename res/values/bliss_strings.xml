@@ -120,4 +120,8 @@
     <string name="background_blur_title">Background blur depth</string>
     <string name="background_blur_summary">Set blur depth level for recents and app drawer</string>
 
+    <!-- All apps icon customizations -->
+    <string name="pref_icon_customization_title">Use icon customizations in drawer</string>
+    <string name="pref_icon_customization_summary">Follow icon customizations used on home screen</string>
+
 </resources>
