@@ -57,4 +57,11 @@
         android:summary="@string/drawer_scrollbar_summary"
         android:defaultValue="true" />
 
+    <SwitchPreferenceCompat
+        android:key="pref_allapps_icon_customization"
+        android:title="@string/pref_icon_customization_title"
+        android:summary="@string/pref_icon_customization_summary"
+        android:defaultValue="true"
+        android:persistent="true" />
+
 </androidx.preference.PreferenceScreen>
