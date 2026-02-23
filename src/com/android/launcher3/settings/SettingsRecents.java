@@ -24,6 +24,8 @@ import androidx.preference.PreferenceGroup;
 
 import com.android.launcher3.LauncherFiles;
 import com.android.launcher3.R;
+import com.android.launcher3.display.DisplayController;
+import com.android.launcher3.display.LauncherDisplayInfo;
 import com.android.launcher3.util.VibratorWrapper;
 
 import com.android.settingslib.collapsingtoolbar.CollapsingToolbarBaseActivity;
@@ -33,6 +35,8 @@ import com.android.settingslib.widget.SettingsBasePreferenceFragment;
  * Recents settings activity for Launcher.
  */
 public class SettingsRecents extends CollapsingToolbarBaseActivity {
+
+    private static final String RECENTS_CATEGORY_ACTION = "recents_category_actions";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,6 +78,10 @@ public class SettingsRecents extends CollapsingToolbarBaseActivity {
         private boolean initPreference(Preference preference) {
             if (RECENTS_SCROLL_VIBRATE_PREF.equals(preference.getKey())) {
                 return VibratorWrapper.INSTANCE.get(getContext()).hasVibrator();
+            }
+            if (RECENTS_CATEGORY_ACTION.equals(preference.getKey())) {
+                LauncherDisplayInfo info = DisplayController.INSTANCE.get(getContext()).getInfo();
+                return !info.isLargeScreen(info.realBounds);
             }
             return true;
         }
