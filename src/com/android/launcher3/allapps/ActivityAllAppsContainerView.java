@@ -81,6 +81,7 @@ import com.android.launcher3.Utilities;
 import com.android.launcher3.allapps.BaseAllAppsAdapter.AdapterItem;
 import com.android.launcher3.allapps.search.AllAppsSearchUiDelegate;
 import com.android.launcher3.allapps.search.SearchAdapterProvider;
+import com.android.launcher3.allapps.search.SearchSessionManager;
 import com.android.launcher3.config.FeatureFlags;
 import com.android.launcher3.keyboard.FocusedItemDecorator;
 import com.android.launcher3.keyboard.ViewGroupFocusHelper;
@@ -571,7 +572,8 @@ public class ActivityAllAppsContainerView<T extends Context & ActivityContext>
      * @return {@code true} if back gesture should exit search rather than change launcher state.
       */
     public boolean shouldBackExitSearch() {
-        return isSearching();
+        return isSearching() && SearchSessionManager.handleAllAppsSearchBackInvoked(
+                mActivityContext, false);
     }
 
     @Override
