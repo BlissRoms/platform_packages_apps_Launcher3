@@ -144,6 +144,7 @@ import com.android.launcher3.Workspace;
 import com.android.launcher3.accessibility.LauncherAccessibilityDelegate;
 import com.android.launcher3.allapps.AllAppsRecyclerView;
 import com.android.launcher3.allapps.AllAppsStore;
+import com.android.launcher3.allapps.search.SearchSessionManager;
 import com.android.launcher3.anim.PendingAnimation;
 import com.android.launcher3.apppairs.AppPairIcon;
 import com.android.launcher3.appprediction.PredictionRowView;
@@ -431,6 +432,13 @@ public class QuickstepLauncher extends Launcher implements RecentsViewContainer,
         mBubbleFeatureConfig = new BubbleFeatureConfigImpl(this, getDesktopState(this));
 
         getAppsView().getAppsStore().addUpdateListener(this);
+    }
+
+    @Override
+    protected void onStateBack() {
+        if (!SearchSessionManager.handleAllAppsSearchBackInvoked(this, true)) {
+            super.onStateBack();
+        }
     }
 
     @Override

@@ -25,8 +25,10 @@ import static com.android.launcher3.icons.IconNormalizer.ICON_VISIBLE_AREA_FACTO
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Rect;
+import android.text.Editable;
 import android.text.Selection;
 import android.text.SpannableStringBuilder;
+import android.text.TextWatcher;
 import android.text.method.TextKeyListener;
 import android.util.AttributeSet;
 import android.view.KeyEvent;
@@ -56,6 +58,8 @@ public class AppsSearchContainerLayout extends ExtendedEditText
         implements SearchUiManager, SearchCallback<AdapterItem>,
         AllAppsStore.OnUpdateListener, Insettable {
 
+    private boolean mIsSearchSessionActive = false;
+
     private final ActivityContext mLauncher;
     private final AllAppsSearchBarController mSearchBarController;
     private final SpannableStringBuilder mSearchQueryBuilder;
@@ -81,6 +85,23 @@ public class AppsSearchContainerLayout extends ExtendedEditText
 
         mSearchQueryBuilder = new SpannableStringBuilder();
         Selection.setSelection(mSearchQueryBuilder, 0);
+
+        addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (s != null && !s.isEmpty()) {
+                    mIsSearchSessionActive = true;
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
+        });
 
         mContentOverlap =
                 getResources().getDimensionPixelSize(R.dimen.all_apps_search_bar_content_overlap);
@@ -149,6 +170,9 @@ public class AppsSearchContainerLayout extends ExtendedEditText
 
     @Override
     public void resetSearch() {
+        // The doc comment for this method in SearchUiManager says this should close any active
+        // search session.
+        mIsSearchSessionActive = false;
         mSearchBarController.reset();
     }
 
@@ -161,6 +185,11 @@ public class AppsSearchContainerLayout extends ExtendedEditText
     public boolean isSearchQueryEmpty() {
         String query = Utilities.trim(getEditableText().toString());
         return query.isEmpty();
+    }
+
+    @Override
+    public boolean shouldInterceptBackButton() {
+        return mIsSearchSessionActive;
     }
 
     @Override
@@ -195,11 +224,29 @@ public class AppsSearchContainerLayout extends ExtendedEditText
 
     @Override
     public void clearSearchResult() {
+        // The doc comment for clearSearchResult in the SearchCallback interface says:
+        // "Called when the search results should be cleared." This is also called when the search
+        // query is empty by AllAppsSearchBarController#afterTextChanged.
+
         // Clear the search query
         mSearchQueryBuilder.clear();
         mSearchQueryBuilder.clearSpans();
         Selection.setSelection(mSearchQueryBuilder, 0);
-        mAppsView.onClearSearchResult();
+
+        // The doc comment for ActivityAllAppsContainerView#onClearSearchResult says, "Invoke when
+        // the current search session is finished," but this is being called in a method called
+        // clearSearchResult. Finishing a search session and clearing the search result should have
+        // different semantics.
+        //
+        // NexusLauncher has similar logic guarding this call in
+        // UniversalSearchInputView#clearSearchResult.
+        if (!mIsSearchSessionActive) {
+            mAppsView.onClearSearchResult();
+        } else {
+            // Must do this or else the latest non-empty search results will remain. This is
+            // normally handled as a result of calling onClearSearchResult
+            mAppsView.setSearchResults(null);
+        }
     }
 
     @Override
