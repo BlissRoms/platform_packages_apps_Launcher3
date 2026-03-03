@@ -297,6 +297,7 @@ constructor(@ApplicationContext private val encryptedContext: Context) {
         @JvmField
         val HOTSEAT_COUNT =
             backedUpItem(DeviceGridState.KEY_HOTSEAT_COUNT, -1, EncryptionType.ENCRYPTED)
+        @JvmField val ALL_APPS_SEARCH_PLACEMENT = backedUpItem("pref_allapps_search_placement", "top")
         @JvmField val ALLAPPS_ICON_CUSTOMIZATION =
             backedUpItem("pref_allapps_icon_customization", Boolean::class.java) {
                 ALLAPPS_THEMED_ICONS.get(it)
