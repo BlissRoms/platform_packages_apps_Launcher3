@@ -18,6 +18,8 @@ package com.android.launcher3.settings;
 
 import android.os.Bundle;
 
+import androidx.preference.ListPreference;
+import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 
 import com.android.launcher3.LauncherFiles;
@@ -48,10 +50,24 @@ public class SettingsAppDrawer extends CollapsingToolbarBaseActivity {
      */
     public static class AppDrawerSettingsFragment extends SettingsBasePreferenceFragment {
 
+        private static final String KEY_SEARCH_PLACEMENT = "pref_allapps_search_placement";
+        private static final String KEY_OPEN_KEYBOARD = "pref_drawer_open_keyboard";
+        private static final String SEARCH_PLACEMENT_HIDDEN = "hidden";
+
         @Override
         public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
             getPreferenceManager().setSharedPreferencesName(LauncherFiles.SHARED_PREFERENCES_KEY);
             setPreferencesFromResource(R.xml.launcher_app_drawer_preferences, rootKey);
+
+            ListPreference searchPlacement = findPreference(KEY_SEARCH_PLACEMENT);
+            Preference openKeyboard = findPreference(KEY_OPEN_KEYBOARD);
+            if (searchPlacement != null && openKeyboard != null) {
+                openKeyboard.setEnabled(!SEARCH_PLACEMENT_HIDDEN.equals(searchPlacement.getValue()));
+                searchPlacement.setOnPreferenceChangeListener((pref, value) -> {
+                    openKeyboard.setEnabled(!SEARCH_PLACEMENT_HIDDEN.equals(value));
+                    return true;
+                });
+            }
         }
     }
 }
