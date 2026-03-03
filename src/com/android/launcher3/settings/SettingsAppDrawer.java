@@ -20,6 +20,8 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.preference.PreferenceFragmentCompat;
+import androidx.preference.ListPreference;
+import androidx.preference.Preference;
 
 import com.android.launcher3.LauncherFiles;
 import com.android.launcher3.LauncherPrefs;
@@ -55,8 +57,7 @@ public class SettingsAppDrawer extends CollapsingToolbarBaseActivity
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        // Both keys require view reinflation.
-        if (LauncherPrefs.DRAWER_SEARCH.getSharedPrefKey().equals(key) ||
+        if (LauncherPrefs.ALL_APPS_SEARCH_PLACEMENT.getSharedPrefKey().equals(key) ||
                 LauncherPrefs.DRAWER_SCROLLBAR.getSharedPrefKey().equals(key)) {
             recreate();
         }
@@ -65,12 +66,45 @@ public class SettingsAppDrawer extends CollapsingToolbarBaseActivity
     /**
      * This fragment shows the app drawer preferences.
      */
-    public static class AppDrawerSettingsFragment extends SettingsBasePreferenceFragment {
+    public static class AppDrawerSettingsFragment extends SettingsBasePreferenceFragment implements
+            SharedPreferences.OnSharedPreferenceChangeListener {
+
+        private static final String KEY_SEARCH_PLACEMENT = "pref_allapps_search_placement";
+        private static final String KEY_OPEN_KEYBOARD = "pref_drawer_open_keyboard";
+
+        private ListPreference mSearchPlacementPref;
+        private Preference mOpenKeyboardPref;
 
         @Override
         public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
             getPreferenceManager().setSharedPreferencesName(LauncherFiles.SHARED_PREFERENCES_KEY);
             setPreferencesFromResource(R.xml.launcher_app_drawer_preferences, rootKey);
+
+            mSearchPlacementPref = findPreference(KEY_SEARCH_PLACEMENT);
+            mOpenKeyboardPref = findPreference(KEY_OPEN_KEYBOARD);
+            updateOpenKeyboardEnabled();
+
+            getPreferenceManager().getSharedPreferences()
+                    .registerOnSharedPreferenceChangeListener(this);
         }
+
+        @Override
+        public void onDestroy() {
+            super.onDestroy();
+            getPreferenceManager().getSharedPreferences()
+                    .unregisterOnSharedPreferenceChangeListener(this);
+        }
+
+        @Override
+        public void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
+            if (KEY_SEARCH_PLACEMENT.equals(key)) {
+                updateOpenKeyboardEnabled();
+            }
+        }
+
+        private void updateOpenKeyboardEnabled() {
+            if (mOpenKeyboardPref == null || mSearchPlacementPref == null) return;
+            mOpenKeyboardPref.setEnabled(!"hidden".equals(mSearchPlacementPref.getValue()));
+       }
     }
 }
