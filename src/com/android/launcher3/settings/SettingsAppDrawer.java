@@ -26,6 +26,7 @@ import androidx.preference.Preference;
 import com.android.launcher3.LauncherFiles;
 import com.android.launcher3.LauncherPrefs;
 import com.android.launcher3.R;
+import com.android.launcher3.allapps.AppDrawerStyle;
 
 import com.android.settingslib.collapsingtoolbar.CollapsingToolbarBaseActivity;
 import com.android.settingslib.widget.SettingsBasePreferenceFragment;
@@ -59,7 +60,8 @@ public class SettingsAppDrawer extends CollapsingToolbarBaseActivity
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         if (LauncherPrefs.ALL_APPS_SEARCH_PLACEMENT.getSharedPrefKey().equals(key) ||
                 LauncherPrefs.DRAWER_SCROLLBAR.getSharedPrefKey().equals(key) ||
-                LauncherPrefs.ALL_APPS_DARK_TEXT.getSharedPrefKey().equals(key)) {
+                LauncherPrefs.ALL_APPS_DARK_TEXT.getSharedPrefKey().equals(key) ||
+                LauncherPrefs.APP_DRAWER_STYLE.getSharedPrefKey().equals(key)) {
             recreate();
         }
     }
@@ -72,8 +74,10 @@ public class SettingsAppDrawer extends CollapsingToolbarBaseActivity
 
         private static final String KEY_SEARCH_PLACEMENT = "pref_allapps_search_placement";
         private static final String KEY_OPEN_KEYBOARD = "pref_drawer_open_keyboard";
+        private static final String KEY_APP_DRAWER_STYLE = "pref_app_drawer_style";
 
         private ListPreference mSearchPlacementPref;
+        private ListPreference mDrawerStylePref;
         private Preference mOpenKeyboardPref;
 
         @Override
@@ -82,8 +86,10 @@ public class SettingsAppDrawer extends CollapsingToolbarBaseActivity
             setPreferencesFromResource(R.xml.launcher_app_drawer_preferences, rootKey);
 
             mSearchPlacementPref = findPreference(KEY_SEARCH_PLACEMENT);
+            mDrawerStylePref = findPreference(KEY_APP_DRAWER_STYLE);
             mOpenKeyboardPref = findPreference(KEY_OPEN_KEYBOARD);
             updateOpenKeyboardEnabled();
+            updateDrawerStyleSummary();
 
             getPreferenceManager().getSharedPreferences()
                     .registerOnSharedPreferenceChangeListener(this);
@@ -98,14 +104,24 @@ public class SettingsAppDrawer extends CollapsingToolbarBaseActivity
 
         @Override
         public void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
-            if (KEY_SEARCH_PLACEMENT.equals(key)) {
+            if (KEY_SEARCH_PLACEMENT.equals(key) || KEY_APP_DRAWER_STYLE.equals(key)) {
                 updateOpenKeyboardEnabled();
+                updateDrawerStyleSummary();
             }
         }
 
         private void updateOpenKeyboardEnabled() {
             if (mOpenKeyboardPref == null || mSearchPlacementPref == null) return;
-            mOpenKeyboardPref.setEnabled(!"hidden".equals(mSearchPlacementPref.getValue()));
-       }
+            boolean searchVisible = !"hidden".equals(mSearchPlacementPref.getValue());
+            mOpenKeyboardPref.setEnabled(searchVisible);
+        }
+
+        private void updateDrawerStyleSummary() {
+            if (mDrawerStylePref == null) {
+                return;
+            }
+            String style = mDrawerStylePref.getValue();
+            mDrawerStylePref.setSummary(mDrawerStylePref.getEntry());
+        }
     }
 }
