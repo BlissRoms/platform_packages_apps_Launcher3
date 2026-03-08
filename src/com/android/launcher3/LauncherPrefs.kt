@@ -254,6 +254,7 @@ constructor(@ApplicationContext private val encryptedContext: Context) {
         @JvmField val ALL_APPS_SEARCH_PLACEMENT = backedUpItem("pref_allapps_search_placement", "top")
         @JvmField val ALLOW_WALLPAPER_ZOOMING = backedUpItem("pref_allow_wallpaper_zooming", true)
         @JvmField val APP_DRAWER_OPACITY = backedUpItem("pref_app_drawer_opacity", 60)
+        @JvmField val APP_DRAWER_SORT_MODE = backedUpItem("pref_app_drawer_sort_mode", 0)
         @JvmField val APP_DRAWER_STYLE = backedUpItem("pref_app_drawer_style", "normal")
         @JvmField val AUTO_HIDE_DOTS = backedUpItem("pref_auto_hide_dots", true)
         @JvmField val BLUR_DEPTH = backedUpItem("pref_blur_depth", 30)
