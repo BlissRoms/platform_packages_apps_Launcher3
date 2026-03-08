@@ -132,4 +132,10 @@
     <string name="drawer_search_location_top">Top</string>
     <string name="drawer_search_location_bottom">Bottom</string>
 
+    <!-- App drawer sorting -->
+    <string name="app_drawer_sort_mode_title">App drawer sorting</string>
+    <string name="app_drawer_sort_alphabetical">Sort alphabetically</string>
+    <string name="app_drawer_sort_install_date">Sort by install date</string>
+    <string name="app_drawer_sort_usage">Sort by usage</string>
+
 </resources>
