@@ -355,13 +355,18 @@ public final class WellbeingModel implements SafeCloseable {
                 }
                 String packageName = itemInfo.getTargetComponent().getPackageName();
                 PackageManager packageManager = originalView.getContext().getPackageManager();
-                if (Arrays.asList(packageManager.getUnsuspendablePackages(
-                        new String[]{packageName})).contains(packageName)) {
-                    return null;
-                }
-                if (packageManager.isPackageSuspendedForUser(
-                        itemInfo.getTargetComponent().getPackageName(),
-                        itemInfo.user.getIdentifier())) {
+                try {
+                    if (Arrays.asList(packageManager.getUnsuspendablePackages(
+                            new String[]{packageName})).contains(packageName)) {
+                        return null;
+                    }
+                    if (packageManager.isPackageSuspendedForUser(
+                            itemInfo.getTargetComponent().getPackageName(),
+                            itemInfo.user.getIdentifier())) {
+                        return null;
+                    }
+                } catch (SecurityException e) {
+                    // SUSPEND_APPS permission not granted — skip pause shortcut
                     return null;
                 }
                 return new PauseApps(activity, itemInfo, originalView);
