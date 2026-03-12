@@ -46,6 +46,7 @@ import com.android.launcher3.Launcher;
 import com.android.launcher3.LauncherSettings;
 import com.android.launcher3.R;
 import com.android.launcher3.Utilities;
+import com.android.launcher3.bliss.grid.GridPickerBottomSheet;
 import com.android.launcher3.logging.StatsLogManager.EventEnum;
 import com.android.launcher3.model.data.WorkspaceItemInfo;
 import com.android.launcher3.popup.ArrowPopup;
@@ -219,6 +220,13 @@ public class OptionsPopupView<T extends Context & ActivityContext> extends Arrow
                     LAUNCHER_WIDGETSTRAY_BUTTON_TAP_OR_LONGPRESS,
                     OptionsPopupView::onWidgetsClicked));
         }
+        if (GridPickerBottomSheet.isGridPickerAvailable(launcher)) {
+            options.add(new OptionItem(launcher,
+                    R.string.grid_picker_button_text,
+                    R.drawable.ic_grid,
+                    IGNORE,
+                    OptionsPopupView::onGridClicked));
+        }
         if (MULTI_SELECT_EDIT_MODE.get()) {
             options.add(new OptionItem(launcher,
                     R.string.edit_home_screen,
@@ -252,6 +260,12 @@ public class OptionsPopupView<T extends Context & ActivityContext> extends Arrow
     private static boolean enterHomeGardening(View view) {
         Launcher launcher = Launcher.getLauncher(view.getContext());
         launcher.getStateManager().goToState(EDIT_MODE);
+        return true;
+    }
+
+    private static boolean onGridClicked(View view) {
+        Launcher launcher = Launcher.getLauncher(view.getContext());
+        GridPickerBottomSheet.show(launcher);
         return true;
     }
 

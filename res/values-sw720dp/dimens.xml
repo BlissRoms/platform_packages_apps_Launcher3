@@ -41,4 +41,9 @@
 
     <!--  Folder spaces  -->
     <dimen name="folder_footer_horiz_padding">24dp</dimen>
+
+<!-- Grid picker (large tablet) -->
+    <dimen name="grid_preview_card_width">140dp</dimen>
+    <dimen name="grid_preview_dot_area_height">130dp</dimen>
+    <dimen name="grid_preview_card_margin">10dp</dimen>
 </resources>
