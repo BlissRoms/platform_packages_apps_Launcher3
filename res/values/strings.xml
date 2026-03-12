@@ -708,4 +708,14 @@
     <string name="folder_creator_add" translatable="false">Add</string>
     <string name="folder_creator_cancel" translatable="false">Cancel</string>
 
+    <!-- Grid picker -->
+    <string name="grid_picker_title">Grid size</string>
+    <string name="grid_picker_button_text">Grid</string>
+    <string name="grid_picker_option_label">%1$d \u00d7 %2$d</string>
+    <string name="grid_change_dialog_title">Change grid size?</string>
+    <string name="grid_change_dialog_message">Changing to a %1$d \u00d7 %2$d grid may rearrange your home screen. Icons and widgets may be moved or removed.</string>
+    <string name="grid_change_dialog_apply">Apply</string>
+    <string name="grid_change_dialog_cancel">Cancel</string>
+    <string name="grid_preview_content_description">%1$d columns by %2$d rows grid</string>
+    <string name="grid_current_label">Current</string>
 </resources>

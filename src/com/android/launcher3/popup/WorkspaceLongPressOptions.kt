@@ -74,6 +74,20 @@ object WorkspaceLongPressOptions {
                 }
             )
         }
+        (ctx as? Launcher)?.let { launcher ->
+            if (GridPickerBottomSheet.isGridPickerAvailable(launcher)) {
+                add(
+                    PopupData(
+                        R.drawable.ic_grid,
+                        R.string.grid_picker_button_text,
+                        SYSTEM_SHORTCUT,
+                        IGNORE,
+                    ) { _, _, _ ->
+                        GridPickerBottomSheet.show(launcher)
+                    }
+                )
+            }
+        }
         if (FeatureFlags.MULTI_SELECT_EDIT_MODE.get()) {
             add(
                 PopupData(
