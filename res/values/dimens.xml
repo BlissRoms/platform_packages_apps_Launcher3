@@ -607,4 +607,15 @@
     <dimen name="grid_preview_card_corner_radius">12dp</dimen>
     <dimen name="grid_preview_card_margin">6dp</dimen>
     <dimen name="grid_picker_bottom_padding">24dp</dimen>
+
+    <!-- Bliss: Icon Pack Picker -->
+    <dimen name="bliss_icon_pack_card_margin">6dp</dimen>
+    <dimen name="bliss_icon_pack_preview_icon_size">44dp</dimen>
+    <dimen name="bliss_icon_pack_picker_bottom_padding">24dp</dimen>
+    <dimen name="bliss_icon_pack_card_padding_horizontal">16dp</dimen>
+    <dimen name="bliss_icon_pack_card_padding_vertical">12dp</dimen>
+    <dimen name="bliss_icon_pack_card_content_margin">14dp</dimen>
+    <dimen name="bliss_icon_pack_sample_icon_size">32dp</dimen>
+    <dimen name="bliss_icon_pack_sample_icon_spacing">8dp</dimen>
+    <dimen name="bliss_icon_pack_preview_row_margin_top">6dp</dimen>
 </resources>

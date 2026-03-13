@@ -28,6 +28,8 @@ import com.android.launcher3.LauncherSettings.Favorites
 import com.android.launcher3.LauncherState
 import com.android.launcher3.R
 import com.android.launcher3.Utilities
+import com.android.launcher3.bliss.grid.GridPickerBottomSheet
+import com.android.launcher3.bliss.iconpack.IconPackPickerBottomSheet
 import com.android.launcher3.config.FeatureFlags
 import com.android.launcher3.homescreenfiles.HomeScreenFilesProvider
 import com.android.launcher3.homescreenfiles.HomeScreenFilesUpdate.Extras.Companion.builder
@@ -62,6 +64,20 @@ object WorkspaceLongPressOptions {
                 startWallpaperPicker(ac, v)
             }
         )
+        (ctx as? Launcher)?.let { launcher ->
+            if (IconPackPickerBottomSheet.isIconPackPickerAvailable(launcher)) {
+                add(
+                    PopupData(
+                        R.drawable.ic_bliss_icon_pack,
+                        R.string.bliss_icon_pack_button_text,
+                        SYSTEM_SHORTCUT,
+                        IGNORE,
+                    ) { _, _, _ ->
+                        IconPackPickerBottomSheet.show(launcher)
+                    }
+                )
+            }
+        }
         if (BuildConfig.WIDGETS_ENABLED && Utilities.isWorkspaceEditAllowed(ctx)) {
             add(
                 PopupData(

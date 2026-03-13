@@ -80,6 +80,7 @@ public abstract class AbstractFloatingView extends LinearLayout implements Touch
             TYPE_TASKBAR_OVERFLOW,
             TYPE_DIALOG_LISTENER,
             TYPE_GRID_PICKER,
+            TYPE_ICON_PACK_PICKER,
     })
     @Retention(RetentionPolicy.SOURCE)
     public @interface FloatingViewType {}
@@ -112,6 +113,7 @@ public abstract class AbstractFloatingView extends LinearLayout implements Touch
     public static final int TYPE_TASKBAR_OVERFLOW = 1 << 25;
     public static final int TYPE_DIALOG_LISTENER = 1 << 26;
     public static final int TYPE_GRID_PICKER = 1 << 27;
+    public static final int TYPE_ICON_PACK_PICKER = 1 << 28;
 
     public static final int TYPE_ALL = TYPE_FOLDER | TYPE_ACTION_POPUP
             | TYPE_WIDGETS_BOTTOM_SHEET | TYPE_WIDGET_RESIZE_FRAME
@@ -122,7 +124,7 @@ public abstract class AbstractFloatingView extends LinearLayout implements Touch
             | TYPE_ADD_TO_HOME_CONFIRMATION | TYPE_TASKBAR_OVERLAY_PROXY
             | TYPE_TASKBAR_PINNING_POPUP | TYPE_PIN_IME_POPUP | TYPE_ONE_GRID_MIGRATION_EDU
             | TYPE_NUDGE | TYPE_TASKBAR_OVERFLOW | TYPE_DIALOG_LISTENER
-            | TYPE_GRID_PICKER;
+            | TYPE_GRID_PICKER | TYPE_ICON_PACK_PICKER;
 
     // Type of popups which should be kept open during launcher rebind
     public static final int TYPE_REBIND_SAFE = TYPE_WIDGETS_BOTTOM_SHEET

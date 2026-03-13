@@ -26,6 +26,8 @@ import com.android.launcher3.graphics.theme.IconThemeFactory
 import com.android.launcher3.graphics.theme.MonoIconThemeFactory
 import com.android.launcher3.graphics.theme.MonoIconThemeFactory.MONO_FACTORY_ID
 import com.android.launcher3.graphics.theme.ThemePreference.Companion.THEME_OVERRIDES_DAGGER_KEY
+import com.android.launcher3.bliss.iconpack.IconPackThemeFactory
+import com.android.launcher3.bliss.iconpack.IconPackThemeFactory.ICON_PACK_FACTORY_ID
 import com.android.launcher3.model.ModelWriterFactory
 import com.android.launcher3.model.ModelWriterFactoryImpl
 import com.android.launcher3.model.data.ItemInfo
@@ -107,5 +109,12 @@ abstract class LauncherModelModule {
         @Named(POPUP_DATA_MAPPER)
         fun provideFilePopupDataMapper(fileShortcuts: FileSystemShortcuts): PopupDataMapper =
             fileShortcuts
+
+        @Provides
+        @IntoMap
+        @StringKey(ICON_PACK_FACTORY_ID)
+        @Named(ICON_FACTORY_DAGGER_KEY)
+        @JvmStatic
+        fun iconPackFactory(): IconThemeFactory = IconPackThemeFactory
     }
 }

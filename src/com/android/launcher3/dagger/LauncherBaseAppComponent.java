@@ -193,6 +193,9 @@ public interface LauncherBaseAppComponent {
     /** Caches BitmapShaders for glow effects */
     GlowMaskCache getGlowMaskCache();
 
+    /** Manager for icon pack discovery, parsing, and icon resolution */
+    com.android.launcher3.bliss.iconpack.IconPackManager getIconPackManager();
+
     /** Builder for LauncherBaseAppComponent. */
     interface Builder {
         @BindsInstance Builder appContext(@ApplicationContext Context context);

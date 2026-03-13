@@ -16,6 +16,7 @@
 
 package com.android.launcher3.icons
 
+import android.content.ComponentName
 import android.content.Context
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageItemInfo
@@ -24,6 +25,7 @@ import android.graphics.drawable.AdaptiveIconDrawable
 import android.graphics.drawable.Drawable
 import android.util.Log
 import com.android.launcher3.LauncherModel
+import com.android.launcher3.bliss.iconpack.IconPackManager
 import com.android.launcher3.dagger.ApplicationContext
 import com.android.launcher3.dagger.LauncherAppSingleton
 import com.android.launcher3.graphics.ShapeDelegate.Circle
@@ -52,6 +54,7 @@ constructor(
     private val modelProvider: Provider<LauncherModel>,
     private val iconChangeTracker: IconChangeTracker,
     private val iconCacheProvider: Provider<IconCache>,
+    private val iconPackManager: IconPackManager,
     pluginManagerWrapper: PluginManagerWrapper,
     lifecycle: DaggerSingletonTracker,
 ) : LauncherIconProvider(ctx, themeManager), PluginListener<IconProcessorPlugin> {
@@ -74,39 +77,66 @@ constructor(
         appInfo: ApplicationInfo,
         density: Int,
     ): Drawable? {
+        val componentName = ComponentName(appInfo.packageName, info.name ?: "")
+
+        // Check icon pack for an explicit mapping before loading system icon
+        iconPackManager
+            .loadIconForComponent(componentName, density)
+            ?.let { return it }
+
         fun Drawable.preprocess(resId: Int) =
             processor?.preprocessDrawable(this, resId, appInfo) ?: this
 
+        var systemIcon: Drawable? = null
         try {
             val resources = mContext.packageManager.getResourcesForApplication(appInfo)
             // Try to load the package item icon first
             if (info !== appInfo && info.icon != 0) {
                 try {
                     val icon = resources.getDrawableForDensity(info.icon, density, null)
-                    if (icon != null) return icon.preprocess(info.icon)
+                    if (icon != null) {
+                        systemIcon = icon.preprocess(info.icon)
+                    }
                 } catch (_: NotFoundException) {}
             }
-            // Load the fallback app icon
-            if (appInfo.icon != 0) {
-                // Tries to load the round icon res, if the app defines it as an adaptive icon
-                if (mThemeManager.iconShape is Circle) {
-                    if (appInfo.roundIconRes != 0 && appInfo.roundIconRes != appInfo.icon) {
+            if (systemIcon == null) {
+                // Load the fallback app icon
+                if (appInfo.icon != 0) {
+                    // Tries to load the round icon res, if the app defines it as an adaptive icon
+                    if (mThemeManager.iconShape is Circle) {
+                        if (appInfo.roundIconRes != 0 && appInfo.roundIconRes != appInfo.icon) {
+                            try {
+                                val d =
+                                    resources.getDrawableForDensity(
+                                        appInfo.roundIconRes, density, null
+                                    )
+                                if (d is AdaptiveIconDrawable) {
+                                    systemIcon = d.preprocess(appInfo.roundIconRes)
+                                }
+                            } catch (_: NotFoundException) {}
+                        }
+                    }
+
+                    if (systemIcon == null) {
                         try {
-                            val d =
-                                resources.getDrawableForDensity(appInfo.roundIconRes, density, null)
-                            if (d is AdaptiveIconDrawable) return d.preprocess(appInfo.roundIconRes)
+                            systemIcon = resources
+                                .getDrawableForDensity(appInfo.icon, density, null)
+                                ?.preprocess(appInfo.icon)
                         } catch (_: NotFoundException) {}
                     }
                 }
-
-                try {
-                    return resources
-                        .getDrawableForDensity(appInfo.icon, density, null)
-                        ?.preprocess(appInfo.icon)
-                } catch (_: NotFoundException) {}
             }
         } catch (_: Exception) {}
-        return null
+
+        // If an icon pack is active but had no mapping for this component, apply its
+        // mask/back/upon layers to the system icon for visual consistency.
+        if (systemIcon != null) {
+            iconPackManager
+                .applyMaskToIcon(systemIcon!!, componentName, density)
+                ?.let { return it }
+        }
+
+        return systemIcon
     }
 
     override fun onPluginLoaded(
