@@ -47,6 +47,7 @@ import com.android.launcher3.LauncherSettings;
 import com.android.launcher3.R;
 import com.android.launcher3.Utilities;
 import com.android.launcher3.bliss.grid.GridPickerBottomSheet;
+import com.android.launcher3.bliss.iconpack.IconPackPickerBottomSheet;
 import com.android.launcher3.logging.StatsLogManager.EventEnum;
 import com.android.launcher3.model.data.WorkspaceItemInfo;
 import com.android.launcher3.popup.ArrowPopup;
@@ -213,6 +214,13 @@ public class OptionsPopupView<T extends Context & ActivityContext> extends Arrow
                 R.drawable.ic_palette,
                 IGNORE,
                 OptionsPopupView::startWallpaperPicker));
+        if (IconPackPickerBottomSheet.isIconPackPickerAvailable(launcher)) {
+            options.add(new OptionItem(launcher,
+                    R.string.bliss_icon_pack_button_text,
+                    R.drawable.ic_bliss_icon_pack,
+                    IGNORE,
+                    OptionsPopupView::onIconPackClicked));
+        }
         if (WIDGETS_ENABLED && Utilities.isWorkspaceEditAllowed(launcher)) {
             options.add(new OptionItem(launcher,
                     R.string.widget_button_text,
@@ -266,6 +274,12 @@ public class OptionsPopupView<T extends Context & ActivityContext> extends Arrow
     private static boolean onGridClicked(View view) {
         Launcher launcher = Launcher.getLauncher(view.getContext());
         GridPickerBottomSheet.show(launcher);
+        return true;
+    }
+
+    private static boolean onIconPackClicked(View view) {
+        Launcher launcher = Launcher.getLauncher(view.getContext());
+        IconPackPickerBottomSheet.show(launcher);
         return true;
     }
 

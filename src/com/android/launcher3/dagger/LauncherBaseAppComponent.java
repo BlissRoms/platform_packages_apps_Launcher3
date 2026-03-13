@@ -149,6 +149,9 @@ public interface LauncherBaseAppComponent {
     /** Tracker for any app icon changes */
     IconChangeTracker getIconChangeTracker();
 
+    /** Manager for icon pack discovery, parsing, and icon resolution */
+    com.android.launcher3.bliss.iconpack.IconPackManager getIconPackManager();
+
     /** Builder for LauncherBaseAppComponent. */
     interface Builder {
         @BindsInstance Builder appContext(@ApplicationContext Context context);

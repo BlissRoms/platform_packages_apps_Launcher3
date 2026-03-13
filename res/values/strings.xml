@@ -590,4 +590,11 @@
     <string name="grid_change_dialog_cancel">Cancel</string>
     <string name="grid_preview_content_description">%1$d columns by %2$d rows grid</string>
     <string name="grid_current_label">Current</string>
+
+    <!-- Bliss: Icon Pack Picker -->
+    <string name="bliss_icon_pack_picker_title">Icon pack</string>
+    <string name="bliss_icon_pack_button_text">Icons</string>
+    <string name="bliss_icon_pack_system_default">System default</string>
+    <string name="bliss_icon_pack_content_description">Icon pack: %1$s</string>
+    <string name="bliss_icon_pack_current_label">selected</string>
 </resources>
