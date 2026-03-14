@@ -11,7 +11,11 @@ import android.util.AttributeSet
 import android.view.View
 import android.view.View.MeasureSpec
 import android.view.animation.Interpolator
-import androidx.recyclerview.widget.LinearLayoutManager
+import android.widget.Button
+import android.widget.ImageView
+import android.widget.ProgressBar
+import android.widget.TextView
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.android.app.animation.Interpolators
 import com.android.launcher3.DeviceProfile
@@ -19,20 +23,22 @@ import com.android.launcher3.DeviceProfile.OnDeviceProfileChangeListener
 import com.android.launcher3.Insettable
 import com.android.launcher3.Launcher
 import com.android.launcher3.R
+import com.android.launcher3.bliss.iconpack.IconPackThemeFactory.ICON_PACK_FACTORY_ID
 import com.android.launcher3.dagger.LauncherComponentProvider.appComponent
-import com.android.launcher3.graphics.theme.ThemePreference
+import com.android.launcher3.graphics.theme.ThemePreference.ThemeValue
 import com.android.launcher3.views.AbstractSlideInView
 
 /**
- * Bottom sheet for selecting an icon pack from installed icon packs on the device.
+ * Bottom sheet that shows a full preview of an icon pack before applying it.
  *
- * Displays a vertical list of icon pack cards with the "System Default" option always first. Each
- * card shows the pack's app icon, a row of sample themed icons (Phone, Messages, Camera, Settings),
- * and the pack label. Tapping a card instantly applies the icon pack via the theme preference
- * system, which triggers cache invalidation and model reload. Handles phone, tablet, foldable,
- * and desktop form factors by adapting content width and margins based on [DeviceProfile].
+ * Displays the pack's name, coverage statistics (e.g., "Themes 142 of 187 apps"), a progress bar,
+ * and a grid showing all installed apps with their themed icons (full opacity) or original icons
+ * (dimmed) for unthemed apps. An "Apply" button at the bottom commits the selection.
+ *
+ * Handles phone, tablet, foldable, and desktop form factors by adapting grid columns and content
+ * width based on [DeviceProfile].
  */
-class IconPackPickerBottomSheet(
+class IconPackDetailBottomSheet(
     context: Context,
     attrs: AttributeSet?,
 ) :
@@ -41,12 +47,22 @@ class IconPackPickerBottomSheet(
     OnDeviceProfileChangeListener {
 
     private lateinit var recyclerView: RecyclerView
+    private lateinit var titleView: TextView
+    private lateinit var coverageView: TextView
+    private lateinit var progressBar: ProgressBar
+    private lateinit var iconView: ImageView
+    private lateinit var applyButton: Button
     private val mInsets = Rect()
 
     override fun onFinishInflate() {
         super.onFinishInflate()
-        mContent = findViewById(R.id.bliss_icon_pack_picker_sheet)
-        recyclerView = findViewById(R.id.bliss_icon_pack_grid)
+        mContent = findViewById(R.id.bliss_icon_pack_detail_sheet)
+        recyclerView = findViewById(R.id.bliss_icon_pack_detail_grid)
+        titleView = findViewById(R.id.bliss_icon_pack_detail_title)
+        coverageView = findViewById(R.id.bliss_icon_pack_detail_coverage)
+        progressBar = findViewById(R.id.bliss_icon_pack_detail_progress)
+        iconView = findViewById(R.id.bliss_icon_pack_detail_icon)
+        applyButton = findViewById(R.id.bliss_icon_pack_detail_apply)
         setContentBackgroundWithParent(
             context.getDrawable(R.drawable.bg_rounded_corner_bottom_sheet)!!,
             mContent,
@@ -68,7 +84,7 @@ class IconPackPickerBottomSheet(
     }
 
     override fun isOfType(type: Int): Boolean {
-        return type and TYPE_ICON_PACK_PICKER != 0
+        return type and TYPE_ICON_PACK_DETAIL != 0
     }
 
     override fun handleClose(animate: Boolean) {
@@ -148,13 +164,31 @@ class IconPackPickerBottomSheet(
         setTranslationShift(mTranslationShift)
     }
 
-    private fun populateIconPacks() {
+    private fun populate(packInfo: IconPackInfo) {
         val iconPackManager = context.appComponent.iconPackManager
         val themePreference = context.appComponent.themePreference
 
-        recyclerView.layoutManager = LinearLayoutManager(context)
+        titleView.text = packInfo.label
+        iconView.setImageDrawable(packInfo.icon)
 
-        val spacing = resources.getDimensionPixelSize(R.dimen.bliss_icon_pack_card_margin)
+        val coverage = iconPackManager.getIconPackCoverage(packInfo.packageName)
+
+        coverageView.text = context.getString(
+            R.string.bliss_icon_pack_detail_coverage,
+            coverage.themedApps,
+            coverage.totalApps,
+        )
+        progressBar.progress = coverage.coveragePercent
+
+        val spanCount =
+            if (mActivityContext.deviceProfile.deviceProperties.isTablet) {
+                TABLET_SPAN_COUNT
+            } else {
+                PHONE_SPAN_COUNT
+            }
+        recyclerView.layoutManager = GridLayoutManager(context, spanCount)
+
+        val spacing = resources.getDimensionPixelSize(R.dimen.bliss_icon_pack_detail_item_spacing)
         recyclerView.addItemDecoration(
             object : RecyclerView.ItemDecoration() {
                 override fun getItemOffsets(
@@ -163,37 +197,16 @@ class IconPackPickerBottomSheet(
                     parent: RecyclerView,
                     state: RecyclerView.State,
                 ) {
-                    outRect.set(0, spacing, 0, spacing)
+                    outRect.set(spacing, spacing, spacing, spacing)
                 }
             }
         )
 
-        val installedPacks = iconPackManager.getInstalledIconPacks()
-        val systemDefault =
-            IconPackInfo(
-                packageName = "",
-                label = context.getString(R.string.bliss_icon_pack_system_default),
-                icon = context.packageManager.getApplicationIcon(context.packageName),
-                previewIcons = iconPackManager.loadSystemDefaultPreviewIcons(),
-            )
-        val allPacks = listOf(systemDefault) + installedPacks
-        val activePackage = iconPackManager.getActiveIconPackPackage()
+        recyclerView.adapter = IconPackDetailAdapter(coverage.items)
 
-        recyclerView.adapter =
-            IconPackPreviewAdapter(allPacks, activePackage) { selectedPack ->
-                onPackSelected(themePreference, selectedPack)
-            }
-    }
-
-    private fun onPackSelected(themePreference: ThemePreference, pack: IconPackInfo) {
-        if (pack.isSystemDefault) {
-            // System default applies instantly — no preview needed
-            themePreference.setValue(null)
+        applyButton.setOnClickListener {
+            themePreference.setValue(ThemeValue(ICON_PACK_FACTORY_ID, packInfo.packageName))
             handleClose(true)
-        } else {
-            // Show detail preview before applying
-            handleClose(false)
-            IconPackDetailBottomSheet.show(mActivityContext, pack)
         }
     }
 
@@ -207,25 +220,22 @@ class IconPackPickerBottomSheet(
 
     companion object {
         private const val DEFAULT_CLOSE_DURATION = 200
+        private const val PHONE_SPAN_COUNT = 5
+        private const val TABLET_SPAN_COUNT = 8
 
         @JvmStatic
-        fun show(launcher: Launcher): IconPackPickerBottomSheet {
+        fun show(launcher: Launcher, packInfo: IconPackInfo): IconPackDetailBottomSheet {
             closeAllOpenViews(launcher, true)
             val sheet =
                 launcher.layoutInflater.inflate(
-                    R.layout.bliss_icon_pack_picker_bottom_sheet,
+                    R.layout.bliss_icon_pack_detail_bottom_sheet,
                     launcher.dragLayer,
                     false,
-                ) as IconPackPickerBottomSheet
-            sheet.populateIconPacks()
+                ) as IconPackDetailBottomSheet
+            sheet.populate(packInfo)
             sheet.attachToContainer()
             sheet.animateOpen()
             return sheet
-        }
-
-        @JvmStatic
-        fun isIconPackPickerAvailable(@Suppress("UNUSED_PARAMETER") launcher: Launcher): Boolean {
-            return true
         }
     }
 }

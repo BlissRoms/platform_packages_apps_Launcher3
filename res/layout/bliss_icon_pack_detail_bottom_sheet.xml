@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+     Copyright (C) 2026 The BlissROMs Project
+
+     Licensed under the Apache License, Version 2.0 (the "License");
+     you may not use this file except in compliance with the License.
+     You may obtain a copy of the License at
+
+          http://www.apache.org/licenses/LICENSE-2.0
+
+     Unless required by applicable law or agreed to in writing, software
+     distributed under the License is distributed on an "AS IS" BASIS,
+     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     See the License for the specific language governing permissions and
+     limitations under the License.
+-->
+<com.android.launcher3.bliss.iconpack.IconPackDetailBottomSheet
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="bottom">
+
+    <LinearLayout
+        android:id="@+id/bliss_icon_pack_detail_sheet"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingTop="@dimen/bottom_sheet_handle_margin"
+        android:background="@drawable/bg_rounded_corner_bottom_sheet">
+
+        <!-- Drag handle -->
+        <View
+            android:layout_width="@dimen/bottom_sheet_handle_width"
+            android:layout_height="@dimen/bottom_sheet_handle_height"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="@dimen/widgets_bottom_sheet_handle_margin"
+            android:background="@drawable/bg_rounded_corner_bottom_sheet_handle"
+            android:importantForAccessibility="no" />
+
+        <!-- Header: pack icon, name, coverage -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingHorizontal="24dp"
+            android:paddingBottom="12dp">
+
+            <ImageView
+                android:id="@+id/bliss_icon_pack_detail_icon"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:importantForAccessibility="no"
+                android:scaleType="fitCenter" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="16dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/bliss_icon_pack_detail_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:textColor="?android:attr/textColorPrimary"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/bliss_icon_pack_detail_coverage"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:textColor="?android:attr/textColorSecondary"
+                    android:textSize="14sp" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- Coverage progress bar -->
+        <ProgressBar
+            android:id="@+id/bliss_icon_pack_detail_progress"
+            style="@android:style/Widget.Material.ProgressBar.Horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="4dp"
+            android:layout_marginHorizontal="24dp"
+            android:layout_marginBottom="16dp"
+            android:max="100"
+            android:progressTint="@color/materialColorPrimary"
+            android:progressBackgroundTint="@color/materialColorSurfaceContainerHigh" />
+
+        <!-- Icon comparison grid -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/bliss_icon_pack_detail_grid"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clipToPadding="false"
+            android:paddingHorizontal="16dp"
+            android:paddingBottom="8dp"
+            android:overScrollMode="ifContentScrolls" />
+
+        <!-- Apply button -->
+        <Button
+            android:id="@+id/bliss_icon_pack_detail_apply"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="24dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="16dp"
+            android:backgroundTint="@color/materialColorPrimary"
+            android:text="@string/bliss_icon_pack_apply"
+            android:textColor="@color/materialColorOnPrimary"
+            android:textSize="16sp" />
+    </LinearLayout>
+</com.android.launcher3.bliss.iconpack.IconPackDetailBottomSheet>
