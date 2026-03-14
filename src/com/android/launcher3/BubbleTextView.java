@@ -82,6 +82,7 @@ import androidx.annotation.VisibleForTesting;
 import androidx.core.view.accessibility.AccessibilityNodeInfoCompat;
 
 import com.android.launcher3.accessibility.BaseAccessibilityDelegate;
+import com.android.launcher3.bliss.badge.BlissBadgeRenderer;
 import com.android.launcher3.dot.DotInfo;
 import com.android.launcher3.dragndrop.DragOptions.PreDragCondition;
 import com.android.launcher3.dragndrop.DraggableView;
@@ -209,6 +210,8 @@ public class BubbleTextView extends TextView implements ItemInfoUpdateReceiver,
     @ViewDebug.ExportedProperty(category = "launcher")
     private DotInfo mDotInfo;
     private final DotRenderer mDotRenderer;
+    private final BlissBadgeRenderer mBadgeRenderer;
+    private int mBadgeColor;
     @ViewDebug.ExportedProperty(category = "launcher", deepExport = true)
     protected final DotRenderer.DrawParams mDotParams;
     private Animator mDotScaleAnim;
@@ -340,15 +343,20 @@ public class BubbleTextView extends TextView implements ItemInfoUpdateReceiver,
         mLongPressHelper = new CheckLongPressHelper(this);
 
         mDotParams = new DotRenderer.DrawParams();
-        mDotParams.setDotColor(Themes.getAttrColor(context, R.attr.notificationDotColor));
+        mBadgeColor = Themes.getAttrColor(context, R.attr.notificationDotColor);
+        mDotParams.setDotColor(mBadgeColor);
 
         if (mDisplay == DISPLAY_ALL_APPS) {
             mDotRenderer = mActivity.getDeviceProfile().mDotRendererAllApps;
+            mBadgeRenderer = new BlissBadgeRenderer(
+                    mActivity.getDeviceProfile().getAllAppsProfile().getIconSizePx());
 
             // Do not use normalized info, as we account for normalization in iconBounds
             mDotParams.shapeInfo = IconShapeInfo.DEFAULT;
         } else {
             mDotRenderer = mActivity.getDeviceProfile().mDotRendererWorkSpace;
+            mBadgeRenderer = new BlissBadgeRenderer(
+                    mActivity.getDeviceProfile().getWorkspaceIconProfile().getIconSizePx());
             mDotParams.shapeInfo = ThemeManager.INSTANCE.get(context)
                     .getIconState().getIconShapeInfo();
         }
@@ -853,7 +861,10 @@ public class BubbleTextView extends TextView implements ItemInfoUpdateReceiver,
     }
 
     /**
-     * Draws the notification dot in the top right corner of the icon bounds.
+     * Draws the notification dot or badge count in the top right corner of the icon bounds.
+     *
+     * When badge counts are enabled via the preference, draws a filled circle with the
+     * unread count instead of the standard notification dot.
      *
      * @param canvas The canvas to draw to.
      */
@@ -864,7 +875,17 @@ public class BubbleTextView extends TextView implements ItemInfoUpdateReceiver,
             final int scrollX = getScrollX();
             final int scrollY = getScrollY();
             canvas.translate(scrollX, scrollY);
-            mDotRenderer.draw(canvas, mDotParams);
+
+            boolean showBadgeCount = LauncherPrefs.get(getContext())
+                    .get(LauncherPrefs.NOTIFICATION_BADGE_COUNTS);
+            if (showBadgeCount && mDotInfo != null && mDotInfo.getNotificationCount() > 0) {
+                mBadgeRenderer.draw(canvas, mDotParams.iconBounds,
+                        mDotInfo.getNotificationCount(), mBadgeColor,
+                        mDotParams.scale);
+            } else {
+                mDotRenderer.draw(canvas, mDotParams);
+            }
+
             canvas.translate(-scrollX, -scrollY);
         }
     }

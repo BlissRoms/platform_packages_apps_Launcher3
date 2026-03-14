@@ -601,4 +601,7 @@
     <string name="bliss_icon_pack_detail_coverage">Themes %1$d of %2$d apps</string>
     <string name="bliss_icon_pack_detail_themed_description">%1$s, themed</string>
     <string name="bliss_icon_pack_detail_unthemed_description">%1$s, not themed</string>
+    <!-- Bliss: Notification badge counts -->
+    <string name="bliss_notification_badge_counts_title">Notification count</string>
+    <string name="bliss_notification_badge_counts_summary">Show unread count on app icons instead of dots</string>
 </resources>
