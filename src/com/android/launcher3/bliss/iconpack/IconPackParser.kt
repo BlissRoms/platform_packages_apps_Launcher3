@@ -23,12 +23,14 @@ object IconPackParser {
     private const val TAG = "IconPackParser"
 
     private const val TAG_ITEM = "item"
+    private const val TAG_CALENDAR = "calendar"
     private const val TAG_ICONBACK = "iconback"
     private const val TAG_ICONMASK = "iconmask"
     private const val TAG_ICONUPON = "iconupon"
     private const val TAG_SCALE = "scale"
     private const val ATTR_COMPONENT = "component"
     private const val ATTR_DRAWABLE = "drawable"
+    private const val ATTR_PREFIX = "prefix"
     private const val ATTR_FACTOR = "factor"
     private const val DEFAULT_SCALE_FACTOR = 1.0f
     private const val MAX_IMG_ATTRIBUTES = 8
@@ -37,6 +39,7 @@ object IconPackParser {
     data class ParseResult(
         val mappings: Map<ComponentName, String>,
         val maskConfig: IconPackMaskConfig,
+        val calendarIcons: List<CalendarIconConfig>,
     )
 
     /**
@@ -53,13 +56,14 @@ object IconPackParser {
         val appFilterId = resources.getIdentifier("appfilter", "xml", iconPackPackage)
         if (appFilterId == 0) {
             Log.w(TAG, "No appfilter.xml found in $iconPackPackage")
-            return ParseResult(emptyMap(), IconPackMaskConfig.EMPTY)
+            return ParseResult(emptyMap(), IconPackMaskConfig.EMPTY, emptyList())
         }
 
         val mappings = mutableMapOf<ComponentName, String>()
         val iconBackImages = mutableListOf<String>()
         val iconMaskImages = mutableListOf<String>()
         val iconUponImages = mutableListOf<String>()
+        val calendarIcons = mutableListOf<CalendarIconConfig>()
         var scaleFactor = DEFAULT_SCALE_FACTOR
 
         try {
@@ -70,6 +74,7 @@ object IconPackParser {
 
                     when (parser.name) {
                         TAG_ITEM -> parseItem(parser, mappings)
+                        TAG_CALENDAR -> parseCalendar(parser, calendarIcons)
                         TAG_ICONBACK -> parseImgAttributes(parser, iconBackImages)
                         TAG_ICONMASK -> parseImgAttributes(parser, iconMaskImages)
                         TAG_ICONUPON -> parseImgAttributes(parser, iconUponImages)
@@ -90,7 +95,7 @@ object IconPackParser {
             iconUponDrawables = iconUponImages,
             scaleFactor = scaleFactor,
         )
-        return ParseResult(mappings, maskConfig)
+        return ParseResult(mappings, maskConfig, calendarIcons)
     }
 
     /**
@@ -112,6 +117,21 @@ object IconPackParser {
 
         val componentName = parseComponentName(componentStr) ?: return
         out[componentName] = drawableName
+    }
+
+    /**
+     * Parses a `<calendar>` element from appfilter.xml.
+     *
+     * Format: `<calendar component="ComponentInfo{pkg/cls}" prefix="calendar_" />`
+     * For day N (1–31), the drawable is named `"{prefix}{N}"`.
+     */
+    private fun parseCalendar(parser: XmlResourceParser, out: MutableList<CalendarIconConfig>) {
+        val componentStr = parser.getAttributeValue(null, ATTR_COMPONENT) ?: return
+        val prefix = parser.getAttributeValue(null, ATTR_PREFIX) ?: return
+        if (prefix.isEmpty()) return
+
+        val componentName = parseComponentName(componentStr) ?: return
+        out.add(CalendarIconConfig(componentName = componentName, drawablePrefix = prefix))
     }
 
     /**

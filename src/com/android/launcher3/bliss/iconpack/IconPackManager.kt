@@ -48,6 +48,9 @@ constructor(
     /** Cached mask/back/upon configs keyed by icon pack package name. */
     private val cachedMaskConfigs = ConcurrentHashMap<String, IconPackMaskConfig>()
 
+    /** Cached calendar icon configs keyed by icon pack package name. */
+    private val cachedCalendarConfigs = ConcurrentHashMap<String, List<CalendarIconConfig>>()
+
     /** Cached Resources for icon pack packages. */
     private val cachedResources = ConcurrentHashMap<String, Resources>()
 
@@ -186,6 +189,30 @@ constructor(
     }
 
     /**
+     * Loads a dynamic calendar icon for a [ComponentName] from the active icon pack.
+     *
+     * Checks if the active icon pack defines a `<calendar>` entry for this component. If so,
+     * loads the day-specific drawable (e.g., `"calendar_15"` for the 15th).
+     *
+     * @param componentName The component to look up.
+     * @param density The target display density.
+     * @return The calendar day icon, or null if no calendar config exists for this component.
+     */
+    fun loadCalendarIcon(componentName: ComponentName, density: Int): Drawable? {
+        val activePackage = getActiveIconPackPackage() ?: return null
+
+        // Ensure configs are parsed
+        getOrParseMappings(activePackage)
+        val calendarConfigs = cachedCalendarConfigs[activePackage] ?: return null
+
+        val config = calendarConfigs.find { it.componentName == componentName } ?: return null
+        val dayOfMonth = java.util.Calendar.getInstance().get(java.util.Calendar.DAY_OF_MONTH)
+        val drawableName = "${config.drawablePrefix}$dayOfMonth"
+
+        return loadDrawableFromPack(activePackage, drawableName, density)
+    }
+
+    /**
      * Loads the icon drawable for a [ComponentName] from the active icon pack.
      *
      * @param componentName The component to look up.
@@ -262,6 +289,7 @@ constructor(
             val resources = getPackResources(iconPackPackage) ?: return@getOrPut emptyMap()
             val result = IconPackParser.parseAppFilterFull(resources, iconPackPackage)
             cachedMaskConfigs[iconPackPackage] = result.maskConfig
+            cachedCalendarConfigs[iconPackPackage] = result.calendarIcons
             result.mappings
         }
     }
@@ -318,6 +346,7 @@ constructor(
     private fun onPackageChanged(packageName: String) {
         cachedMappings.remove(packageName)
         cachedMaskConfigs.remove(packageName)
+        cachedCalendarConfigs.remove(packageName)
         cachedResources.remove(packageName)
 
         val activePackage = getActiveIconPackPackage() ?: return
