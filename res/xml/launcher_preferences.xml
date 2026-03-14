@@ -39,6 +39,13 @@
         android:persistent="false"
         android:widgetLayout="@layout/notification_pref_warning" />
 
+    <SwitchPreferenceCompat
+        android:key="pref_notification_badge_counts"
+        android:title="@string/bliss_notification_badge_counts_title"
+        android:summary="@string/bliss_notification_badge_counts_summary"
+        android:defaultValue="false"
+        android:persistent="true" />
+
     <!--
       LAUNCHER_ADD_NEW_APPS_TO_HOME_SCREEN_ENABLED(613)
       LAUNCHER_ADD_NEW_APPS_TO_HOME_SCREEN_DISABLED(614)

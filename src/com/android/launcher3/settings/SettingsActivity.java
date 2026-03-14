@@ -79,6 +79,7 @@ public class SettingsActivity extends FragmentActivity
     public static final String FIXED_LANDSCAPE_MODE = "pref_fixed_landscape_mode";
 
     private static final String NOTIFICATION_DOTS_PREFERENCE_KEY = "pref_icon_badging";
+    private static final String KEY_NOTIFICATION_BADGE_COUNTS = "pref_notification_badge_counts";
 
     private static final String SHOW_HOTSEAT_QSB_KEY = "pref_show_hotseat_qsb";
 
@@ -330,6 +331,15 @@ public class SettingsActivity extends FragmentActivity
             LauncherDisplayInfo info = DisplayController.INSTANCE.get(getContext()).getInfo();
             switch (preference.getKey()) {
                 case NOTIFICATION_DOTS_PREFERENCE_KEY:
+                    return BuildConfig.NOTIFICATION_DOTS_ENABLED;
+                case KEY_NOTIFICATION_BADGE_COUNTS:
+                    boolean dotsEnabled = SettingsCache.INSTANCE.get(getContext())
+                            .getValue(SettingsCache.NOTIFICATION_BADGING_URI);
+                    preference.setEnabled(dotsEnabled);
+                    if (!dotsEnabled) {
+                        preference.setSummary(
+                                R.string.bliss_notification_badge_counts_disabled_summary);
+                    }
                     return BuildConfig.NOTIFICATION_DOTS_ENABLED;
                 case DEVELOPER_OPTIONS_KEY:
                     if (IS_STUDIO_BUILD) {
