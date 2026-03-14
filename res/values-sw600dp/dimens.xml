@@ -64,4 +64,8 @@
     <dimen name="bliss_icon_pack_sample_icon_size">36dp</dimen>
     <dimen name="bliss_icon_pack_sample_icon_spacing">10dp</dimen>
     <dimen name="bliss_icon_pack_preview_row_margin_top">8dp</dimen>
+    <!-- Bliss: Icon Pack Detail (tablet) -->
+    <dimen name="bliss_icon_pack_detail_icon_size">48dp</dimen>
+    <dimen name="bliss_icon_pack_detail_item_padding">6dp</dimen>
+    <dimen name="bliss_icon_pack_detail_item_spacing">3dp</dimen>
 </resources>

@@ -725,4 +725,8 @@
     <string name="bliss_icon_pack_system_default">System default</string>
     <string name="bliss_icon_pack_content_description">Icon pack: %1$s</string>
     <string name="bliss_icon_pack_current_label">selected</string>
+    <string name="bliss_icon_pack_apply">Apply</string>
+    <string name="bliss_icon_pack_detail_coverage">Themes %1$d of %2$d apps</string>
+    <string name="bliss_icon_pack_detail_themed_description">%1$s, themed</string>
+    <string name="bliss_icon_pack_detail_unthemed_description">%1$s, not themed</string>
 </resources>

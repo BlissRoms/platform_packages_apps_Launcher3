@@ -8,9 +8,11 @@ package com.android.launcher3.bliss.iconpack
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
+import android.content.pm.LauncherApps
 import android.content.pm.PackageManager
 import android.content.res.Resources
 import android.graphics.drawable.Drawable
+import android.os.Process
 import android.util.Log
 import com.android.launcher3.bliss.iconpack.IconPackThemeFactory.ICON_PACK_FACTORY_ID
 import com.android.launcher3.dagger.ApplicationContext
@@ -129,6 +131,58 @@ constructor(
                 }
             }
         }
+    }
+
+    /**
+     * Computes icon coverage data for a given icon pack against installed launcher activities.
+     *
+     * For each installed app, checks whether the icon pack has a themed icon mapping and loads
+     * both the original system icon and the themed icon (if available).
+     *
+     * @param iconPackPackage The icon pack's package name.
+     * @return An [IconPackCoverageData] with matched/total counts and per-app icon pairs.
+     */
+    fun getIconPackCoverage(iconPackPackage: String): IconPackCoverageData {
+        val launcherApps = context.getSystemService(Context.LAUNCHER_APPS_SERVICE) as LauncherApps
+        val activities = launcherApps.getActivityList(null, Process.myUserHandle())
+        val mapping = getOrParseMappings(iconPackPackage)
+        val density = context.resources.displayMetrics.densityDpi
+
+        val items = mutableListOf<IconPackCoverageItem>()
+        var themedCount = 0
+
+        for (activityInfo in activities) {
+            val cn = activityInfo.componentName
+            val appLabel = activityInfo.label?.toString() ?: cn.packageName
+            val originalIcon = activityInfo.getIcon(density)
+            val drawableName = mapping[cn]
+            val themedIcon = if (drawableName != null) {
+                loadDrawableFromPack(iconPackPackage, drawableName, density)
+            } else {
+                null
+            }
+
+            if (themedIcon != null) themedCount++
+
+            items.add(
+                IconPackCoverageItem(
+                    componentName = cn,
+                    label = appLabel,
+                    originalIcon = originalIcon,
+                    themedIcon = themedIcon,
+                )
+            )
+        }
+
+        // Sort: themed icons first, then alphabetically
+        items.sortWith(compareByDescending<IconPackCoverageItem> { it.themedIcon != null }
+            .thenBy { it.label.lowercase() })
+
+        return IconPackCoverageData(
+            totalApps = activities.size,
+            themedApps = themedCount,
+            items = items,
+        )
     }
 
     /**

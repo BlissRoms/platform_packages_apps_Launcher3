@@ -52,4 +52,8 @@
     <dimen name="bliss_icon_pack_sample_icon_size">40dp</dimen>
     <dimen name="bliss_icon_pack_sample_icon_spacing">12dp</dimen>
     <dimen name="bliss_icon_pack_preview_row_margin_top">8dp</dimen>
+    <!-- Bliss: Icon Pack Detail (large tablet) -->
+    <dimen name="bliss_icon_pack_detail_icon_size">52dp</dimen>
+    <dimen name="bliss_icon_pack_detail_item_padding">8dp</dimen>
+    <dimen name="bliss_icon_pack_detail_item_spacing">4dp</dimen>
 </resources>
