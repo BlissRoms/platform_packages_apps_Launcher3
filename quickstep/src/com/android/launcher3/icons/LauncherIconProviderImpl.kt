@@ -79,6 +79,11 @@ constructor(
     ): Drawable? {
         val componentName = ComponentName(appInfo.packageName, info.name ?: "")
 
+        // Check icon pack for dynamic calendar icons (day-specific)
+        iconPackManager
+            .loadCalendarIcon(componentName, density)
+            ?.let { return it }
+
         // Check icon pack for an explicit mapping before loading system icon
         iconPackManager
             .loadIconForComponent(componentName, density)
