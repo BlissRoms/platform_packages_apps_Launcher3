@@ -21,7 +21,7 @@ import android.view.View.OnClickListener;
 
 import com.android.launcher3.R;
 import com.android.launcher3.quickspace.receivers.QuickSpaceActionReceiver;
-import com.android.launcher3.util.MSMHProxy;
+import com.android.launcher3.util.MediaSessionManagerHelper;
 
 import java.util.Calendar;
 import java.util.Locale;
@@ -119,8 +119,8 @@ public class BlissEventsController {
                 : mNowPlayingTitle + " · " + (mNowPlayingArtist.isEmpty()
                         ? mResources.getString(R.string.qe_now_playing_unknown_artist)
                         : mNowPlayingArtist);
-        mRow3Icon = MSMHProxy.INSTANCE(mContext).getMediaAppIcon();
-        mRow3Action = v -> MSMHProxy.INSTANCE(mContext).launchMediaApp();
+        mRow3Icon = MediaSessionManagerHelper.getInstance(mContext).getMediaAppIcon();
+        mRow3Action = v -> MediaSessionManagerHelper.getInstance(mContext).launchMediaApp();
     }
 
     private void buildCalendarRow3() {
