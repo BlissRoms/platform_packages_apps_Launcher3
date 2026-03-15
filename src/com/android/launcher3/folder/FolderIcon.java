@@ -137,6 +137,7 @@ public class FolderIcon extends FrameLayout implements FloatingIconViewCompanion
     private DotRenderer mDotRenderer;
     private BlissBadgeRenderer mBadgeRenderer;
     private int mBadgeColor;
+    private boolean mShowBadgeCounts;
     @ViewDebug.ExportedProperty(category = "launcher", deepExport = true)
     private final DotRenderer.DrawParams mDotParams;
     private float mDotScale;
@@ -176,6 +177,7 @@ public class FolderIcon extends FrameLayout implements FloatingIconViewCompanion
         mBadgeColor = Themes.getAttrColor(context, R.attr.notificationDotColor);
         mDotParams.setDotColor(mBadgeColor);
         mDotParams.shapeInfo = ThemeManager.INSTANCE.get(context).getIconState().getIconShapeInfo();
+        mShowBadgeCounts = LauncherPrefs.get(context).get(LauncherPrefs.NOTIFICATION_BADGE_COUNTS);
     }
 
     public static <T extends Context & ActivityContext> FolderIcon inflateFolderAndIcon(int resId,
@@ -630,9 +632,7 @@ public class FolderIcon extends FrameLayout implements FloatingIconViewCompanion
             // If we are animating to the accepting state, animate the dot out.
             mDotParams.scale = Math.max(0, mDotScale - mBackground.getAcceptScaleProgress());
 
-            boolean showBadgeCount = LauncherPrefs.get(getContext())
-                    .get(LauncherPrefs.NOTIFICATION_BADGE_COUNTS);
-            if (showBadgeCount && mBadgeRenderer != null
+            if (mShowBadgeCounts && mBadgeRenderer != null
                     && mDotInfo != null && mDotInfo.getNotificationCount() > 0) {
                 mBadgeRenderer.draw(canvas, iconBounds,
                         mDotInfo.getNotificationCount(), mBadgeColor, mDotParams.scale);

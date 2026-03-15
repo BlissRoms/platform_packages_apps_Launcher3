@@ -212,6 +212,7 @@ public class BubbleTextView extends TextView implements ItemInfoUpdateReceiver,
     private final DotRenderer mDotRenderer;
     private final BlissBadgeRenderer mBadgeRenderer;
     private int mBadgeColor;
+    private boolean mShowBadgeCounts;
     @ViewDebug.ExportedProperty(category = "launcher", deepExport = true)
     protected final DotRenderer.DrawParams mDotParams;
     private Animator mDotScaleAnim;
@@ -345,6 +346,7 @@ public class BubbleTextView extends TextView implements ItemInfoUpdateReceiver,
         mDotParams = new DotRenderer.DrawParams();
         mBadgeColor = Themes.getAttrColor(context, R.attr.notificationDotColor);
         mDotParams.setDotColor(mBadgeColor);
+        mShowBadgeCounts = LauncherPrefs.get(context).get(LauncherPrefs.NOTIFICATION_BADGE_COUNTS);
 
         if (mDisplay == DISPLAY_ALL_APPS) {
             mDotRenderer = mActivity.getDeviceProfile().mDotRendererAllApps;
@@ -876,9 +878,7 @@ public class BubbleTextView extends TextView implements ItemInfoUpdateReceiver,
             final int scrollY = getScrollY();
             canvas.translate(scrollX, scrollY);
 
-            boolean showBadgeCount = LauncherPrefs.get(getContext())
-                    .get(LauncherPrefs.NOTIFICATION_BADGE_COUNTS);
-            if (showBadgeCount && mDotInfo != null && mDotInfo.getNotificationCount() > 0) {
+            if (mShowBadgeCounts && mDotInfo != null && mDotInfo.getNotificationCount() > 0) {
                 mBadgeRenderer.draw(canvas, mDotParams.iconBounds,
                         mDotInfo.getNotificationCount(), mBadgeColor,
                         mDotParams.scale);
