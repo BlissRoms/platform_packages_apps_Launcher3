@@ -80,6 +80,7 @@ public class SettingsActivity extends FragmentActivity
     public static final String FIXED_LANDSCAPE_MODE = "pref_fixed_landscape_mode";
 
     private static final String NOTIFICATION_DOTS_PREFERENCE_KEY = "pref_icon_badging";
+    private static final String KEY_NOTIFICATION_BADGE_COUNTS = "pref_notification_badge_counts";
 
     public static final String EXTRA_FRAGMENT_ARGS = ":settings:fragment_args";
 
@@ -320,6 +321,15 @@ public class SettingsActivity extends FragmentActivity
             LauncherApps launcherApps = getContext().getSystemService(LauncherApps.class);
             switch (preference.getKey()) {
                 case NOTIFICATION_DOTS_PREFERENCE_KEY:
+                    return BuildConfig.NOTIFICATION_DOTS_ENABLED;
+                case KEY_NOTIFICATION_BADGE_COUNTS:
+                    boolean dotsEnabled = SettingsCache.INSTANCE.get(getContext())
+                            .getValue(SettingsCache.NOTIFICATION_BADGING_URI);
+                    preference.setEnabled(dotsEnabled);
+                    if (!dotsEnabled) {
+                        preference.setSummary(
+                                R.string.bliss_notification_badge_counts_disabled_summary);
+                    }
                     return BuildConfig.NOTIFICATION_DOTS_ENABLED;
                 case ALLOW_ROTATION_PREFERENCE_KEY:
                     if (Flags.oneGridSpecs() && !info.isRotationAllowed()) {

@@ -604,4 +604,5 @@
     <!-- Bliss: Notification badge counts -->
     <string name="bliss_notification_badge_counts_title">Notification count</string>
     <string name="bliss_notification_badge_counts_summary">Show unread count on app icons instead of dots</string>
+    <string name="bliss_notification_badge_counts_disabled_summary">Enable notification dots first</string>
 </resources>
