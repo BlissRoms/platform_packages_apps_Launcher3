@@ -339,7 +339,8 @@ public class FloatingIconView extends FrameLayout implements
             }
         }
 
-        drawable = drawable == null ? null : drawable.getConstantState().newDrawable();
+        Drawable.ConstantState cs = drawable == null ? null : drawable.getConstantState();
+        drawable = cs != null ? cs.newDrawable() : drawable;
         int iconOffset = getOffsetForIconBounds(l, drawable, pos);
         // Clone right away as we are on the background thread instead of blocking the
         // main thread later
