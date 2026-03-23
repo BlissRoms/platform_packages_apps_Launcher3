@@ -14,7 +14,7 @@ import android.graphics.Typeface
 /**
  * Renders notification badge count numbers on top of app icons.
  *
- * Draws a filled circle with a white count text in the top-right corner of the icon bounds.
+ * Draws a filled circle with a contrasting count text in the top-right corner of the icon bounds.
  * The badge size scales proportionally to the icon size for correct rendering across all
  * DPIs and screen resolutions.
  *
@@ -31,7 +31,6 @@ class BlissBadgeRenderer(iconSize: Int) {
     }
 
     private val textPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        color = Color.WHITE
         textAlign = Paint.Align.CENTER
         typeface = Typeface.create(Typeface.SANS_SERIF, Typeface.BOLD)
     }
@@ -64,6 +63,7 @@ class BlissBadgeRenderer(iconSize: Int) {
 
         // Draw badge background
         circlePaint.color = badgeColor
+        textPaint.color = contrastColor(badgeColor)
         if (extraWidth > 0f) {
             // Draw pill shape for multi-digit numbers
             val left = cx - radius
@@ -96,5 +96,17 @@ class BlissBadgeRenderer(iconSize: Int) {
 
         /** Maximum count shown before displaying "99+". */
         private const val MAX_DISPLAY_COUNT = 99
+
+        /**
+         * Returns black or white depending on which has better contrast against [color].
+         * Uses the WCAG relative luminance formula.
+         */
+        private fun contrastColor(color: Int): Int {
+            val r = Color.red(color) / 255.0
+            val g = Color.green(color) / 255.0
+            val b = Color.blue(color) / 255.0
+            val luminance = 0.2126 * r + 0.7152 * g + 0.0722 * b
+            return if (luminance > 0.179) Color.BLACK else Color.WHITE
+        }
     }
 }
