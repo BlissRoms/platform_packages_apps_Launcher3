@@ -16,30 +16,15 @@
 
 package com.android.launcher3.settings;
 
-import static android.os.Process.myUserHandle;
-import static android.provider.Settings.Global.DEVELOPMENT_SETTINGS_ENABLED;
-
 import static androidx.preference.PreferenceFragmentCompat.ARG_PREFERENCE_ROOT;
 
-import static com.android.launcher3.BuildConfig.IS_STUDIO_BUILD;
-import static com.android.launcher3.InvariantDeviceProfile.TYPE_MULTI_DISPLAY;
-import static com.android.launcher3.InvariantDeviceProfile.TYPE_TABLET;
-import static com.android.launcher3.util.Executors.MAIN_EXECUTOR;
-
-import android.app.Activity;
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
-import android.content.pm.LauncherApps;
 import android.content.res.Resources;
-import android.net.Uri;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
 
-import androidx.annotation.Nullable;
-import androidx.annotation.VisibleForTesting;
 import androidx.core.view.WindowCompat;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
@@ -49,39 +34,21 @@ import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.PreferenceFragmentCompat.OnPreferenceStartFragmentCallback;
 import androidx.preference.PreferenceFragmentCompat.OnPreferenceStartScreenCallback;
-import androidx.preference.PreferenceGroup;
 import androidx.preference.PreferenceGroup.PreferencePositionCallback;
 import androidx.preference.PreferenceScreen;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.android.launcher3.BuildConfig;
-import com.android.launcher3.InvariantDeviceProfile;
 import com.android.launcher3.LauncherFiles;
 import com.android.launcher3.R;
-import com.android.launcher3.display.DisplayController;
-import com.android.launcher3.display.LauncherDisplayInfo;
-import com.android.launcher3.lineage.LineageUtils;
-import com.android.launcher3.lineage.trust.TrustAppsActivity;
-import com.android.launcher3.util.SafeCloseable;
-import com.android.launcher3.util.SettingsCache;
 import com.android.settingslib.widget.SettingsBasePreferenceFragment;
 import com.android.settingslib.widget.SettingsThemeHelper;
 
 /**
- * Settings activity for Launcher.
+ * Settings activity for Launcher. Shows the categorized settings menu.
  */
 public class SettingsActivity extends FragmentActivity
         implements OnPreferenceStartFragmentCallback, OnPreferenceStartScreenCallback {
 
-    @VisibleForTesting
-    static final String DEVELOPER_OPTIONS_KEY = "pref_developer_options";
-
-    public static final String FIXED_LANDSCAPE_MODE = "pref_fixed_landscape_mode";
-
-    private static final String NOTIFICATION_DOTS_PREFERENCE_KEY = "pref_icon_badging";
-    private static final String KEY_NOTIFICATION_BADGE_COUNTS = "pref_notification_badge_counts";
-
-    private static final String SHOW_HOTSEAT_QSB_KEY = "pref_show_hotseat_qsb";
 
     public static final String EXTRA_FRAGMENT_ARGS = ":settings:fragment_args";
 
@@ -92,13 +59,6 @@ public class SettingsActivity extends FragmentActivity
 
     private static final int DELAY_HIGHLIGHT_DURATION_MILLIS = 600;
     public static final String SAVE_HIGHLIGHTED_KEY = "android:preference_highlighted";
-
-    private static final String KEY_MINUS_ONE = "pref_enable_minus_one";
-    private static final String SEARCH_PACKAGE = "com.google.android.googlequicksearchbox";
-    public static final String KEY_TRUST_APPS = "pref_trust_apps";
-
-    private static final String KEY_SUGGESTIONS = "pref_suggestions";
-    private static final String SUGGESTIONS_PACKAGE = "com.google.android.as";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -190,40 +150,16 @@ public class SettingsActivity extends FragmentActivity
     }
 
     /**
-     * This fragment shows the launcher preferences.
+     * This fragment shows the launcher preferences main menu (category list).
      */
     public static class LauncherSettingsFragment extends SettingsBasePreferenceFragment {
 
-        private @Nullable SafeCloseable mSettingCacheSafeCloseable;
-
-        protected boolean mDeveloperOptionsEnabled = false;
-
-        private boolean mRestartOnResume = false;
 
         private String mHighLightKey;
-
         private boolean mPreferenceHighlighted = false;
 
         @Override
-        public void onCreate(@Nullable Bundle savedInstanceState) {
-            if (BuildConfig.IS_DEBUG_DEVICE) {
-                // Query DEVELOPMENT_SETTINGS_ENABLED and recreate activity if such setting
-                // has changed.
-                Uri devUri = Settings.Global.getUriFor(DEVELOPMENT_SETTINGS_ENABLED);
-                SettingsCache settingsCache = SettingsCache.INSTANCE.get(getContext());
-                mDeveloperOptionsEnabled = settingsCache.getValue(devUri);
-                mSettingCacheSafeCloseable = settingsCache.getListenableRef(devUri).forEach(
-                        MAIN_EXECUTOR, (v) -> {
-                            if (v != mDeveloperOptionsEnabled) {
-                                tryRecreateActivity();
-                            }
-                            return null;
-                        });
-            }
-            super.onCreate(savedInstanceState);
-        }
 
-        @Override
         public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
             final Bundle args = getArguments();
             mHighLightKey = args == null ? null : args.getString(EXTRA_FRAGMENT_HIGHLIGHT_KEY);
@@ -235,67 +171,9 @@ public class SettingsActivity extends FragmentActivity
             getPreferenceManager().setSharedPreferencesName(LauncherFiles.SHARED_PREFERENCES_KEY);
             setPreferencesFromResource(R.xml.launcher_preferences, rootKey);
 
-            PreferenceScreen screen = getPreferenceScreen();
-            for (int i = screen.getPreferenceCount() - 1; i >= 0; i--) {
-                Preference preference = screen.getPreference(i);
-                if (!initPreference(preference)) {
-                    screen.removePreference(preference);
-                }
-            }
-
-            // If the target preference is not in the current preference screen, find the parent
-            // preference screen that contains the target preference and set it as the preference
-            // screen.
-            if (mHighLightKey != null
-                    && !isKeyInPreferenceGroup(mHighLightKey, screen)) {
-                final PreferenceScreen parentPreferenceScreen =
-                        findParentPreference(screen, mHighLightKey);
-                if (parentPreferenceScreen != null && getActivity() != null) {
-                    if (!TextUtils.isEmpty(parentPreferenceScreen.getTitle())) {
-                        getActivity().setTitle(parentPreferenceScreen.getTitle());
-                    }
-                    setPreferenceScreen(parentPreferenceScreen);
-                    return;
-                }
-            }
-
             if (getActivity() != null && !TextUtils.isEmpty(getPreferenceScreen().getTitle())) {
                 getActivity().setTitle(getPreferenceScreen().getTitle());
             }
-        }
-
-        private boolean isKeyInPreferenceGroup(String targetKey, PreferenceGroup parent) {
-            for (int i = 0; i < parent.getPreferenceCount(); i++) {
-                Preference pref = parent.getPreference(i);
-                if (pref.getKey() != null && pref.getKey().equals(targetKey)) {
-                    return true;
-                }
-            }
-            return false;
-        }
-
-        /**
-         * Finds the parent preference screen for the given target key.
-         *
-         * @param parent    the parent preference screen
-         * @param targetKey the key of the preference to find
-         * @return the parent preference screen that contains the target preference
-         */
-        @Nullable
-        private PreferenceScreen findParentPreference(PreferenceScreen parent, String targetKey) {
-            for (int i = 0; i < parent.getPreferenceCount(); i++) {
-                Preference pref = parent.getPreference(i);
-                if (pref instanceof PreferenceScreen) {
-                    PreferenceScreen foundKey = findParentPreference((PreferenceScreen) pref,
-                            targetKey);
-                    if (foundKey != null) {
-                        return foundKey;
-                    }
-                } else if (pref.getKey() != null && pref.getKey().equals(targetKey)) {
-                    return parent;
-                }
-            }
-            return null;
         }
 
         @Override
@@ -322,73 +200,6 @@ public class SettingsActivity extends FragmentActivity
             outState.putBoolean(SAVE_HIGHLIGHTED_KEY, mPreferenceHighlighted);
         }
 
-        /**
-         * Initializes a preference. This is called for every preference. Returning false here
-         * will remove that preference from the list.
-         */
-        protected boolean initPreference(Preference preference) {
-            LauncherApps launcherApps = getContext().getSystemService(LauncherApps.class);
-            LauncherDisplayInfo info = DisplayController.INSTANCE.get(getContext()).getInfo();
-            switch (preference.getKey()) {
-                case NOTIFICATION_DOTS_PREFERENCE_KEY:
-                    return BuildConfig.NOTIFICATION_DOTS_ENABLED;
-                case KEY_NOTIFICATION_BADGE_COUNTS:
-                    boolean dotsEnabled = SettingsCache.INSTANCE.get(getContext())
-                            .getValue(SettingsCache.NOTIFICATION_BADGING_URI);
-                    preference.setEnabled(dotsEnabled);
-                    if (!dotsEnabled) {
-                        preference.setSummary(
-                                R.string.bliss_notification_badge_counts_disabled_summary);
-                    }
-                    return BuildConfig.NOTIFICATION_DOTS_ENABLED;
-                case DEVELOPER_OPTIONS_KEY:
-                    if (IS_STUDIO_BUILD) {
-                        preference.setOrder(0);
-                    }
-                    return mDeveloperOptionsEnabled;
-                case FIXED_LANDSCAPE_MODE:
-                    if ((InvariantDeviceProfile.INSTANCE.get(getContext()).deviceType
-                                    == TYPE_MULTI_DISPLAY)
-                            || (InvariantDeviceProfile.INSTANCE.get(getContext()).deviceType
-                                    == TYPE_TABLET)) {
-                        return false;
-                    }
-                    // When the setting changes rotate the screen accordingly to showcase the result
-                    // of the setting
-                    preference.setOnPreferenceChangeListener(
-                            (pref, newValue) -> {
-                                getActivity().setRequestedOrientation(
-                                        (boolean) newValue
-                                                ? ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
-                                                : ActivityInfo.SCREEN_ORIENTATION_USER
-                                );
-                                return true;
-                            }
-                    );
-                    return !info.isLargeScreen(info.realBounds);
-                case KEY_MINUS_ONE:
-                    return launcherApps != null &&
-                            launcherApps.isPackageEnabled(SEARCH_PACKAGE, myUserHandle());
-                case KEY_SUGGESTIONS:
-                    return launcherApps != null &&
-                            launcherApps.isPackageEnabled(SUGGESTIONS_PACKAGE, myUserHandle());
-                case KEY_TRUST_APPS:
-                    preference.setOnPreferenceClickListener(p -> {
-                        LineageUtils.showLockScreen(getActivity(),
-                                getString(R.string.trust_apps_manager_name), () -> {
-                            Intent intent = new Intent(getActivity(), TrustAppsActivity.class);
-                            startActivity(intent);
-                        });
-                        return true;
-                    });
-                    return true;
-                case SHOW_HOTSEAT_QSB_KEY:
-                    return launcherApps != null &&
-                            launcherApps.isPackageEnabled(SEARCH_PACKAGE, myUserHandle());
-            }
-            return true;
-        }
-
         @Override
         public void onResume() {
             super.onResume();
@@ -401,36 +212,6 @@ public class SettingsActivity extends FragmentActivity
                 }
             }
 
-            if (mRestartOnResume) {
-                recreateActivityNow();
-            }
-        }
-
-        @Override
-        public void onDestroy() {
-            super.onDestroy();
-            if (mSettingCacheSafeCloseable != null) {
-                mSettingCacheSafeCloseable.close();
-                mSettingCacheSafeCloseable = null;
-            }
-        }
-
-        /**
-         * Tries to recreate the preference
-         */
-        protected void tryRecreateActivity() {
-            if (isResumed()) {
-                recreateActivityNow();
-            } else {
-                mRestartOnResume = true;
-            }
-        }
-
-        private void recreateActivityNow() {
-            Activity activity = getActivity();
-            if (activity != null) {
-                activity.recreate();
-            }
         }
 
         private PreferenceHighlighter createHighlighter() {
@@ -444,7 +225,8 @@ public class SettingsActivity extends FragmentActivity
             }
 
             RecyclerView list = getListView();
-            PreferencePositionCallback callback = (PreferencePositionCallback) list.getAdapter();
+            PreferencePositionCallback callback =
+                    (PreferencePositionCallback) list.getAdapter();
             int position = callback.getPreferenceAdapterPosition(mHighLightKey);
             return position >= 0 ? new PreferenceHighlighter(
                     list, position, screen.findPreference(mHighLightKey))

@@ -121,6 +121,7 @@ import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.PowerManager;
 import android.os.SystemClock;
 import android.os.Trace;
 import android.os.UserHandle;
@@ -2498,9 +2499,12 @@ public class Launcher extends StatefulActivity<LauncherState>
         // Overridden
     }
 
-    /** To be overridden by subclasses */
+    /** Put the device to sleep on gesture */
     public void onSleepEvent(MotionEvent ev) {
-        // Overridden
+        PowerManager pm = getSystemService(PowerManager.class);
+        if (pm != null) {
+            pm.goToSleep(SystemClock.uptimeMillis());
+        }
     }
 
     public void closeOpenViews() {

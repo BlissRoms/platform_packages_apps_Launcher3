@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+     Copyright (C) 2016-2025 crDroid Android Project
+
+     Licensed under the Apache License, Version 2.0 (the "License");
+     you may not use this file except in compliance with the License.
+     You may obtain a copy of the License at
+
+          http://www.apache.org/licenses/LICENSE-2.0
+
+     Unless required by applicable law or agreed to in writing, software
+     distributed under the License is distributed on an "AS IS" BASIS,
+     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     See the License for the specific language governing permissions and
+     limitations under the License.
+-->
+<androidx.preference.PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:launcher="http://schemas.android.com/apk/res-auto"
+    xmlns:settings="http://schemas.android.com/apk/res/com.android.launcher3">
+
+    <PreferenceCategory
+        android:title="@string/general_category_title">
+
+        <SwitchPreferenceCompat
+            android:defaultValue="false"
+            android:key="pref_workspace_lock"
+            android:persistent="true"
+            android:title="@string/settings_lock_layout_title"
+            android:summaryOn="@string/settings_lock_layout_summary_on"
+            android:summaryOff="@string/settings_lock_layout_summary_off" />
+
+        <SwitchPreferenceCompat
+            android:defaultValue="false"
+            android:key="pref_sleep_gesture"
+            android:persistent="true"
+            android:title="@string/pref_sleep_gesture_title"
+            android:summary="@string/pref_sleep_gesture_summary" />
+
+        <!--
+          LAUNCHER_ADD_NEW_APPS_TO_HOME_SCREEN_ENABLED(613)
+          LAUNCHER_ADD_NEW_APPS_TO_HOME_SCREEN_DISABLED(614)
+        -->
+        <SwitchPreferenceCompat
+            android:key="pref_add_icon_to_home"
+            android:title="@string/auto_add_shortcuts_label"
+            android:summary="@string/auto_add_shortcuts_description"
+            android:defaultValue="true"
+            android:persistent="true"
+            launcher:logIdOn="613"
+            launcher:logIdOff="614" />
+
+        <SwitchPreferenceCompat
+            android:key="pref_show_hotseat_qsb"
+            android:title="@string/pref_show_hotseat_qsb_title"
+            android:summary="@string/pref_show_hotseat_qsb_summary"
+            android:defaultValue="false"
+            android:persistent="true" />
+
+        <SwitchPreferenceCompat
+            android:defaultValue="true"
+            android:key="pref_enable_minus_one"
+            android:summary="@string/pref_show_google_now_summary"
+            android:title="@string/title_show_google_app" />
+
+        <Preference
+            android:key="pref_trust_apps"
+            android:title="@string/trust_apps_manager_name" />
+
+        <androidx.preference.PreferenceScreen
+            android:key="pref_suggestions"
+            android:title="@string/pref_suggestions_title"
+            android:summary="@string/pref_suggestions_summary"
+            android:persistent="false">
+
+            <intent android:action="android.settings.ACTION_CONTENT_SUGGESTIONS_SETTINGS" />
+        </androidx.preference.PreferenceScreen>
+
+    </PreferenceCategory>
+
+</androidx.preference.PreferenceScreen>

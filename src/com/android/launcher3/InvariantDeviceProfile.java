@@ -23,6 +23,7 @@ import static com.android.launcher3.LauncherPrefs.ENABLE_TWOLINE_ALLAPPS_TOGGLE;
 import static com.android.launcher3.LauncherPrefs.FIXED_LANDSCAPE_MODE;
 import static com.android.launcher3.LauncherPrefs.GRID_NAME;
 import static com.android.launcher3.LauncherPrefs.NON_FIXED_LANDSCAPE_GRID_NAME;
+import static com.android.launcher3.LauncherPrefs.NOTIFICATION_BADGE_COUNTS;
 import static com.android.launcher3.LauncherPrefs.SHOW_DESKTOP_LABELS;
 import static com.android.launcher3.LauncherPrefs.SHOW_DRAWER_LABELS;
 import static com.android.launcher3.LauncherPrefs.SHOW_HOTSEAT_QSB;
@@ -255,6 +256,7 @@ public class InvariantDeviceProfile {
 
     public TaskbarModeUtil taskbarModeUtil;
     private final LooperExecutor mMainExecutor;
+    private final LauncherPrefChangeListener mPrefListener;
 
     @Inject
     InvariantDeviceProfile(
@@ -288,7 +290,7 @@ public class InvariantDeviceProfile {
             }));
         }
 
-        LauncherPrefChangeListener prefListener = key -> {
+        mPrefListener = key -> {
             if (FIXED_LANDSCAPE_MODE.getSharedPrefKey().equals(key)
                     && isFixedLandscape != prefs.get(FIXED_LANDSCAPE_MODE)) {
                 Trace.beginSection("InvariantDeviceProfile#setFixedLandscape");
@@ -309,14 +311,18 @@ public class InvariantDeviceProfile {
                     DRAWER_OPEN_KEYBOARD.getSharedPrefKey().equals(key) ||
                     SHOW_DESKTOP_LABELS.getSharedPrefKey().equals(key) ||
                     SHOW_DRAWER_LABELS.getSharedPrefKey().equals(key) ||
-                    SHOW_HOTSEAT_QSB.getSharedPrefKey().equals(key)) {
+                    SHOW_HOTSEAT_QSB.getSharedPrefKey().equals(key) ||
+                    NOTIFICATION_BADGE_COUNTS.getSharedPrefKey().equals(key)) {
                 onConfigChanged();
             }
         };
-        prefs.addListener(prefListener, FIXED_LANDSCAPE_MODE, ENABLE_TWOLINE_ALLAPPS_TOGGLE,
-                SHOW_HOTSEAT_QSB);
-        lifeCycle.addCloseable(() -> prefs.removeListener(prefListener,
-                FIXED_LANDSCAPE_MODE, ENABLE_TWOLINE_ALLAPPS_TOGGLE, SHOW_HOTSEAT_QSB));
+        prefs.addListener(mPrefListener, FIXED_LANDSCAPE_MODE, ENABLE_TWOLINE_ALLAPPS_TOGGLE,
+                SHOW_HOTSEAT_QSB, ALLAPPS_THEMED_ICONS, DRAWER_OPEN_KEYBOARD,
+                SHOW_DESKTOP_LABELS, SHOW_DRAWER_LABELS, NOTIFICATION_BADGE_COUNTS);
+        lifeCycle.addCloseable(() -> prefs.removeListener(mPrefListener,
+                FIXED_LANDSCAPE_MODE, ENABLE_TWOLINE_ALLAPPS_TOGGLE, SHOW_HOTSEAT_QSB,
+                ALLAPPS_THEMED_ICONS, DRAWER_OPEN_KEYBOARD, SHOW_DESKTOP_LABELS,
+                SHOW_DRAWER_LABELS, NOTIFICATION_BADGE_COUNTS));
 
         SimpleBroadcastReceiver localeReceiver = new SimpleBroadcastReceiver(context,
                 mMainExecutor, i -> onConfigChanged());

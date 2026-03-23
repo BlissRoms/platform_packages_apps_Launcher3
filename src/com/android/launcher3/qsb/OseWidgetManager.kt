@@ -73,6 +73,12 @@ constructor(
 
     private var lastOseInfo: OSEInfo? = null
 
+    private val prefListener = LauncherPrefChangeListener { key ->
+        if (key == LauncherPrefs.SHOW_HOTSEAT_QSB.sharedPrefKey) {
+            executor.execute { handleQsbPreferenceChange() }
+        }
+    }
+
     init {
         tracker.addCloseable(widgetHost.addCallbacks(mutableState))
         tracker.addCloseable(oseManager.oseInfo.forEach(executor, this::handleOseInfoUpdate))
@@ -84,13 +90,8 @@ constructor(
 
         try {
             val prefs = LauncherPrefs.get(context)
-            val listener = LauncherPrefChangeListener { key ->
-                if (key == LauncherPrefs.SHOW_HOTSEAT_QSB.sharedPrefKey) {
-                    executor.execute { handleQsbPreferenceChange() }
-                }
-            }
-            prefs.addListener(listener, LauncherPrefs.SHOW_HOTSEAT_QSB)
-            tracker.addCloseable { prefs.removeListener(listener, LauncherPrefs.SHOW_HOTSEAT_QSB) }
+            prefs.addListener(prefListener, LauncherPrefs.SHOW_HOTSEAT_QSB)
+            tracker.addCloseable { prefs.removeListener(prefListener, LauncherPrefs.SHOW_HOTSEAT_QSB) }
         } catch (e: IllegalStateException) {
             Log.w(TAG, "Failed to register QSB preference listener", e)
         }

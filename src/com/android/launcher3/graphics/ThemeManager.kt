@@ -97,12 +97,13 @@ constructor(
 
     private val listeners = CopyOnWriteArrayList<ThemeChangeListener>()
 
+    private val prefListener = LauncherPrefChangeListener {
+        if (it == PREF_ICON_SHAPE.sharedPrefKey) verifyIconState()
+    }
+
     init {
         lifecycle.addCloseable(overlayChangeHandler.addCallback { verifyIconState() })
 
-        val prefListener = LauncherPrefChangeListener {
-            if (it == PREF_ICON_SHAPE.sharedPrefKey) verifyIconState()
-        }
         prefs.addListener(prefListener, PREF_ICON_SHAPE)
         lifecycle.addCloseable(themePreference.forEach(mainExecutor) { verifyIconState() })
         lifecycle.addCloseable {
