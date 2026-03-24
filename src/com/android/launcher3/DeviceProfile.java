@@ -348,6 +348,7 @@ public class DeviceProfile {
         int hotseatBarBottomSpace;
         int minQsbMargin = res.getDimensionPixelSize(R.dimen.min_qsb_margin);
 
+        boolean showQsb = Utilities.showQSB(context);
         if (mIsResponsiveGrid) {
             float responsiveAspectRatio =
                     (float) mDeviceProperties.getWidthPx() / mDeviceProperties.getHeightPx();
@@ -361,16 +362,22 @@ public class DeviceProfile {
                             : hotseatSpecsProvider.getCalculatedSpec(responsiveAspectRatio,
                                     DimensionType.HEIGHT, mDeviceProperties.getHeightPx());
             hotseatQsbSpace = mResponsiveHotseatSpec.getHotseatQsbSpace();
-            hotseatBarBottomSpace =
-                    isVerticalBarLayout() ? 0 : mResponsiveHotseatSpec.getEdgePadding();
+            if (showQsb || isTaskbarPresent) {
+                hotseatBarBottomSpace =
+                        isVerticalBarLayout() ? 0 : mResponsiveHotseatSpec.getEdgePadding();
+            } else {
+                hotseatBarBottomSpace = 0;
+            }
 
             ResponsiveCellSpecsProvider workspaceCellSpecs = ResponsiveCellSpecsProvider.create(
                     new ResourceHelper(context, displayOptionSpec.workspaceCellSpecsId));
             mResponsiveWorkspaceCellSpec = workspaceCellSpecs.getCalculatedSpec(
                     responsiveAspectRatio, mDeviceProperties.getHeightPx());
         } else {
-            hotseatQsbSpace = pxFromDp(inv.hotseatQsbSpace[mTypeIndex], mMetrics);
-            hotseatBarBottomSpace = pxFromDp(inv.hotseatBarBottomSpace[mTypeIndex], mMetrics);
+            hotseatQsbSpace = showQsb
+                    ? pxFromDp(inv.hotseatQsbSpace[mTypeIndex], mMetrics) : 0;
+            hotseatBarBottomSpace = showQsb || isTaskbarPresent
+                    ? pxFromDp(inv.hotseatBarBottomSpace[mTypeIndex], mMetrics) : 0;
         }
 
         hotseatProfile = HotseatProfile.Factory.createHotseatProfile(
@@ -401,7 +408,7 @@ public class DeviceProfile {
 
         if (!isVerticalBarLayout()) {
             // Have a little space between the inset and the QSB
-            if (mInsets.bottom + minQsbMargin > hotseatBarBottomSpace) {
+            if (showQsb && (mInsets.bottom + minQsbMargin) > hotseatBarBottomSpace) {
                 int availableSpace = hotseatQsbSpace - (mInsets.bottom - hotseatBarBottomSpace);
 
                 // Only change the spaces if there is space
