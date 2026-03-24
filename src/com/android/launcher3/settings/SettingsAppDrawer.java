@@ -21,6 +21,7 @@ import android.os.Bundle;
 
 import androidx.preference.PreferenceFragmentCompat;
 
+import com.android.launcher3.LauncherAppState;
 import com.android.launcher3.LauncherFiles;
 import com.android.launcher3.LauncherPrefs;
 import com.android.launcher3.R;
@@ -56,6 +57,7 @@ public class SettingsAppDrawer extends CollapsingToolbarBaseActivity
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         if (LauncherPrefs.DRAWER_SEARCH.getSharedPrefKey().equals(key)) {
+            LauncherAppState.needsRestart = true;
             recreate();
         }
     }

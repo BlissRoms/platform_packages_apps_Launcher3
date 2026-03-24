@@ -28,6 +28,7 @@ import androidx.preference.PreferenceCategory;
 import androidx.preference.PreferenceGroup;
 import androidx.preference.PreferenceScreen;
 
+import com.android.launcher3.LauncherAppState;
 import com.android.launcher3.LauncherFiles;
 import com.android.launcher3.LauncherPrefs;
 import com.android.launcher3.Utilities;
@@ -74,7 +75,9 @@ public class SettingsHomescreen extends CollapsingToolbarBaseActivity
                 LauncherPrefs.DOCK_MUSIC_SEARCH.getSharedPrefKey().equals(key) ||
                 LauncherPrefs.HOTSEAT_QSB_OPACITY.getSharedPrefKey().equals(key) ||
                 LauncherPrefs.HOTSEAT_QSB_STROKE_WIDTH.getSharedPrefKey().equals(key) ||
-                LauncherPrefs.SHOW_STATUS_BAR.getSharedPrefKey().equals(key)) {
+                LauncherPrefs.SHOW_STATUS_BAR.getSharedPrefKey().equals(key) ||
+                LauncherPrefs.SHOW_TOP_SHADOW.getSharedPrefKey().equals(key)) {
+            LauncherAppState.needsRestart = true;
             recreate();
         }
     }

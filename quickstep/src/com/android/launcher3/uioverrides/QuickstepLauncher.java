@@ -882,6 +882,8 @@ public class QuickstepLauncher extends Launcher implements RecentsViewContainer,
         QuickstepOnboardingPrefs.setup(this);
         if (!LauncherPrefs.SHOW_STATUS_BAR.get(this)) {
             getStateManager().addStateListener(noStatusBarStateListener);
+            getWindow().getDecorView().getWindowInsetsController()
+                    .hide(WindowInsetsCompat.Type.statusBars());
         }
         View.setTraceLayoutSteps(TRACE_LAYOUTS);
         View.setTracedRequestLayoutClassClass(TRACE_RELAYOUT_CLASS);
