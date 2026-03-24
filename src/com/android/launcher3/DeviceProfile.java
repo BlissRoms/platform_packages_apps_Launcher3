@@ -1307,7 +1307,8 @@ public class DeviceProfile {
             hotseatBarPadding.top = hotseatBarTopPadding;
             hotseatBarPadding.bottom = hotseatBarBottomPadding;
         } else {
-            int sideSpacing = (mDeviceProperties.getAvailableWidthPx() - hotseatWidth) / 2;
+            // Use workspace margin so hotseat icons align with the workspace grid
+            int sideSpacing = mWorkspaceProfile.getDesiredWorkspaceHorizontalMarginPx();
             if (isRtl) {
                 hotseatBarPadding.set(sideSpacing + mInsets.left,
                         0,
