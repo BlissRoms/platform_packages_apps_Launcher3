@@ -11,6 +11,7 @@ import android.util.AttributeSet
 import android.view.View
 import android.view.View.MeasureSpec
 import android.view.animation.Interpolator
+import android.widget.LinearLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.android.app.animation.Interpolators
@@ -21,7 +22,9 @@ import com.android.launcher3.Launcher
 import com.android.launcher3.R
 import com.android.launcher3.dagger.LauncherComponentProvider.appComponent
 import com.android.launcher3.graphics.theme.ThemePreference
+import com.android.launcher3.graphics.theme.ThemePreference.Companion.MONO_THEME_VALUE
 import com.android.launcher3.views.AbstractSlideInView
+import android.widget.Switch
 
 /**
  * Bottom sheet for selecting an icon pack from installed icon packs on the device.
@@ -41,12 +44,16 @@ class IconPackPickerBottomSheet(
     OnDeviceProfileChangeListener {
 
     private lateinit var recyclerView: RecyclerView
+    private lateinit var themedIconsRow: LinearLayout
+    private lateinit var themedIconsSwitch: Switch
     private val mInsets = Rect()
 
     override fun onFinishInflate() {
         super.onFinishInflate()
         mContent = findViewById(R.id.bliss_icon_pack_picker_sheet)
         recyclerView = findViewById(R.id.bliss_icon_pack_grid)
+        themedIconsRow = findViewById(R.id.bliss_icon_pack_themed_icons_row)
+        themedIconsSwitch = findViewById(R.id.bliss_icon_pack_themed_icons_switch)
         setContentBackgroundWithParent(
             context.getDrawable(R.drawable.bg_rounded_corner_bottom_sheet)!!,
             mContent,
@@ -177,17 +184,29 @@ class IconPackPickerBottomSheet(
                 previewIcons = iconPackManager.loadSystemDefaultPreviewIcons(),
             )
         val allPacks = listOf(systemDefault) + installedPacks
+
+        val isMonoThemeActive = MONO_THEME_VALUE == themePreference.value
         val activePackage = iconPackManager.getActiveIconPackPackage()
 
         recyclerView.adapter =
-            IconPackPreviewAdapter(allPacks, activePackage) { selectedPack ->
+            IconPackPreviewAdapter(allPacks, activePackage, isMonoThemeActive) { selectedPack ->
                 onPackSelected(themePreference, selectedPack)
             }
+
+        themedIconsSwitch.isChecked = isMonoThemeActive
+        themedIconsRow.setOnClickListener {
+            val nowEnabled = !themedIconsSwitch.isChecked
+            themedIconsSwitch.isChecked = nowEnabled
+            if (nowEnabled) {
+                themePreference.setValue(MONO_THEME_VALUE)
+            } else {
+                themePreference.setValue(null, MONO_THEME_VALUE::equals)
+            }
+        }
     }
 
     private fun onPackSelected(themePreference: ThemePreference, pack: IconPackInfo) {
         if (pack.isSystemDefault) {
-            // System default applies instantly — no preview needed
             themePreference.setValue(null)
             handleClose(true)
         } else {

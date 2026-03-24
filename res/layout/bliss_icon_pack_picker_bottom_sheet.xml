@@ -52,7 +52,38 @@
             android:layout_height="wrap_content"
             android:clipToPadding="false"
             android:paddingHorizontal="16dp"
-            android:paddingBottom="@dimen/bliss_icon_pack_picker_bottom_padding"
             android:overScrollMode="ifContentScrolls" />
+
+        <LinearLayout
+            android:id="@+id/bliss_icon_pack_themed_icons_row"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingHorizontal="16dp"
+            android:paddingVertical="12dp"
+            android:paddingBottom="@dimen/bliss_icon_pack_picker_bottom_padding"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="?android:attr/selectableItemBackground">
+
+            <TextView
+                android:id="@+id/bliss_icon_pack_themed_icons_label"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/bliss_icon_pack_themed_icons"
+                android:textColor="?android:attr/textColorPrimary"
+                android:textSize="16sp" />
+
+            <Switch
+                android:id="@+id/bliss_icon_pack_themed_icons_switch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:clickable="false"
+                android:focusable="false"
+                android:showText="false" />
+
+        </LinearLayout>
     </LinearLayout>
 </com.android.launcher3.bliss.iconpack.IconPackPickerBottomSheet>
