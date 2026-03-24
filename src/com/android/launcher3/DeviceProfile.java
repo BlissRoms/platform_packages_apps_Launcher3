@@ -675,7 +675,8 @@ public class DeviceProfile {
                     - hotseatBorderSpace * numShownHotseatIcons
                     - iconExtraSpacePx;
         } else {
-            return getIconToIconWidthForColumns(mHotseatColumnSpan) - iconExtraSpacePx;
+            return getIconToIconWidthForColumns(mHotseatColumnSpan) - iconExtraSpacePx
+                    - hotseatBorderSpace;
         }
     }
 
@@ -1290,8 +1291,7 @@ public class DeviceProfile {
                     hotseatBarPadding.right = endSpacing;
                 }
             } else {
-                int sideSpacing = isQsbInline ? (mDeviceProperties.getAvailableWidthPx() - hotseatWidth) / 2 : 
-                        (mDeviceProperties.getAvailableWidthPx() - (hotseatQsbWidth + iconExtraSpacePx)) / 2;
+                int sideSpacing = (mDeviceProperties.getAvailableWidthPx() - hotseatWidth) / 2;
                 if (isRtl) {
                     hotseatBarPadding.left = sideSpacing + mInsets.left;
                     hotseatBarPadding.right = sideSpacing + getAdditionalQsbSpace() + mInsets.right;
@@ -1304,8 +1304,7 @@ public class DeviceProfile {
             hotseatBarPadding.top = hotseatBarTopPadding;
             hotseatBarPadding.bottom = hotseatBarBottomPadding;
         } else {
-            int sideSpacing = isQsbInline ? (mDeviceProperties.getAvailableWidthPx() - hotseatWidth) / 2 : 
-                            (mDeviceProperties.getAvailableWidthPx() - (hotseatQsbWidth + iconExtraSpacePx)) / 2;
+            int sideSpacing = (mDeviceProperties.getAvailableWidthPx() - hotseatWidth) / 2;
             if (isRtl) {
                 hotseatBarPadding.set(sideSpacing + mInsets.left,
                         0,
