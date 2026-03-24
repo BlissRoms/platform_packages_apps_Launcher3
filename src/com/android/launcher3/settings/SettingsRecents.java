@@ -20,6 +20,7 @@ import android.os.Bundle;
 
 import androidx.preference.PreferenceFragmentCompat;
 
+import com.android.launcher3.LauncherFiles;
 import com.android.launcher3.R;
 
 import com.android.settingslib.collapsingtoolbar.CollapsingToolbarBaseActivity;
@@ -49,6 +50,7 @@ public class SettingsRecents extends CollapsingToolbarBaseActivity {
 
         @Override
         public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
+            getPreferenceManager().setSharedPreferencesName(LauncherFiles.SHARED_PREFERENCES_KEY);
             setPreferencesFromResource(R.xml.launcher_recents_preferences, rootKey);
         }
     }

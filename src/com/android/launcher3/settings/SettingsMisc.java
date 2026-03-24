@@ -35,6 +35,7 @@ import androidx.preference.Preference;
 import androidx.preference.PreferenceScreen;
 
 import com.android.launcher3.BuildConfig;
+import com.android.launcher3.LauncherFiles;
 import com.android.launcher3.Flags;
 import com.android.launcher3.InvariantDeviceProfile;
 import com.android.launcher3.R;
@@ -92,6 +93,7 @@ public class SettingsMisc extends CollapsingToolbarBaseActivity {
 
         @Override
         public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
+            getPreferenceManager().setSharedPreferencesName(LauncherFiles.SHARED_PREFERENCES_KEY);
             setPreferencesFromResource(R.xml.launcher_misc_preferences, rootKey);
 
             PreferenceScreen screen = getPreferenceScreen();
