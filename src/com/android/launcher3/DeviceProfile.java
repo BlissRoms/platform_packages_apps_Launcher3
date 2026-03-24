@@ -423,6 +423,9 @@ public class DeviceProfile {
                 }
                 hotseatBarBottomSpacePx = mInsets.bottom + minQsbMargin;
 
+            } else if (!showQsb && !isTaskbarPresent && mInsets.bottom > 0) {
+                // When QSB is hidden on gesture nav, ensure icons clear the navigation bar
+                hotseatBarBottomSpacePx = mInsets.bottom + minQsbMargin;
             } else {
                 hotseatBarBottomSpacePx = hotseatBarBottomSpace;
             }
