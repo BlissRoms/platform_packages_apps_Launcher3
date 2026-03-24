@@ -23,16 +23,21 @@ import com.android.launcher3.R
 class IconPackPreviewAdapter(
     private val items: List<IconPackInfo>,
     private val activePackage: String?,
+    private val isMonoThemeActive: Boolean,
     private val onPackSelected: (IconPackInfo) -> Unit,
 ) : RecyclerView.Adapter<IconPackPreviewAdapter.ViewHolder>() {
 
     private var selectedPosition: Int =
-        items
-            .indexOfFirst { item ->
-                if (activePackage == null) item.isSystemDefault
-                else item.packageName == activePackage
-            }
-            .coerceAtLeast(0)
+        if (isMonoThemeActive) {
+            RecyclerView.NO_POSITION
+        } else {
+            items
+                .indexOfFirst { item ->
+                    if (activePackage != null) item.packageName == activePackage
+                    else item.isSystemDefault
+                }
+                .coerceAtLeast(0)
+        }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view =
