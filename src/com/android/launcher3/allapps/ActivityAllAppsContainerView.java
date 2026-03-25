@@ -305,12 +305,7 @@ public class ActivityAllAppsContainerView<T extends Context & ActivityContext>
     protected void onFinishInflate() {
         super.onFinishInflate();
 
-        if (LauncherPrefs.DRAWER_SEARCH.get(getContext())) {
-            mSearchContainer.setVisibility(View.VISIBLE);
-        } else {
-            mSearchContainer.setVisibility(View.GONE);
-        }
-
+        refreshSearchBarVisibility();
         mAH.get(SEARCH).setup(mSearchRecyclerView,
                 /* Filter out A-Z apps */ itemInfo -> false);
         rebindAdapters(true /* force */);
@@ -339,6 +334,19 @@ public class ActivityAllAppsContainerView<T extends Context & ActivityContext>
 
         updateBackgroundVisibility(mActivityContext.getDeviceProfile());
         mSearchUiManager.initializeSearch(this);
+    }
+
+    /** Updates search bar visibility to reflect the current DRAWER_SEARCH pref. */
+    public void refreshSearchBarVisibility() {
+        mSearchContainer.setVisibility(
+                LauncherPrefs.DRAWER_SEARCH.get(getContext()) ? View.VISIBLE : View.GONE);
+    }
+
+    /** Updates scrollbar visibility to reflect the current DRAWER_SCROLLBAR pref. */
+    public void refreshScrollbarVisibility() {
+        mShowFastScroller = LauncherPrefs.DRAWER_SCROLLBAR.get(getContext());
+        mFastScroller.setVisibility(mShowFastScroller ? VISIBLE : INVISIBLE);
+        mFastScrollLetterLayout.setVisibility(mShowFastScroller ? VISIBLE : INVISIBLE);
     }
 
     @Override

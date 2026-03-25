@@ -196,9 +196,6 @@ CONTAINER : StatefulContainer<STATE_TYPE> {
         val isPinnedTaskbar = TaskbarFeatureEvaluator.INSTANCE.get(container).isPinned
         val isThreeButton =
             (DisplayController.getNavigationMode(container) == NavigationMode.THREE_BUTTONS)
-        if (toState == NORMAL) {
-            LauncherAppState.INSTANCE.executeIfCreated(LauncherAppState::checkIfRestartNeeded)
-        }
         if ((fromState == OVERVIEW || fromState == OVERVIEW_SPLIT_SELECT) && toState == NORMAL) {
             applyOverviewToHomeAnimConfig(
                 fromState,

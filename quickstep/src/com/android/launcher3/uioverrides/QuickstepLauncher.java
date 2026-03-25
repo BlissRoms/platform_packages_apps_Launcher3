@@ -762,6 +762,20 @@ public class QuickstepLauncher extends Launcher implements RecentsViewContainer,
     }
 
     @Override
+    protected void updateStatusBar() {
+        super.updateStatusBar();
+        if (LauncherPrefs.SHOW_STATUS_BAR.get(this)) {
+            getStateManager().removeStateListener(noStatusBarStateListener);
+            getWindow().getDecorView().getWindowInsetsController()
+                    .show(WindowInsetsCompat.Type.statusBars());
+        } else {
+            getStateManager().addStateListener(noStatusBarStateListener);
+            getWindow().getDecorView().getWindowInsetsController()
+                    .hide(WindowInsetsCompat.Type.statusBars());
+        }
+    }
+
+    @Override
     public void onStateSetEnd(LauncherState state) {
         super.onStateSetEnd(state);
         handlePendingActivityRequest();

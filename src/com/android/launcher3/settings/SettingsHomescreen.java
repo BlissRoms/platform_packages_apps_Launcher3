@@ -28,7 +28,6 @@ import androidx.preference.PreferenceCategory;
 import androidx.preference.PreferenceGroup;
 import androidx.preference.PreferenceScreen;
 
-import com.android.launcher3.LauncherAppState;
 import com.android.launcher3.LauncherFiles;
 import com.android.launcher3.LauncherPrefs;
 import com.android.launcher3.Utilities;
@@ -67,20 +66,10 @@ public class SettingsHomescreen extends CollapsingToolbarBaseActivity
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        if (LauncherPrefs.SHOW_HOTSEAT_BG.getSharedPrefKey().equals(key) ||
-                LauncherPrefs.HOTSEAT_OPACITY.getSharedPrefKey().equals(key) ||
-                LauncherPrefs.DOCK_SEARCH.getSharedPrefKey().equals(key) ||
+        if (LauncherPrefs.DOCK_SEARCH.getSharedPrefKey().equals(key) ||
                 LauncherPrefs.DOCK_THEME.getSharedPrefKey().equals(key) ||
                 LauncherPrefs.SEARCH_RADIUS_SIZE.getSharedPrefKey().equals(key) ||
-                LauncherPrefs.DOCK_MUSIC_SEARCH.getSharedPrefKey().equals(key) ||
-                LauncherPrefs.HOTSEAT_QSB_OPACITY.getSharedPrefKey().equals(key) ||
-                LauncherPrefs.HOTSEAT_QSB_STROKE_WIDTH.getSharedPrefKey().equals(key) ||
-                LauncherPrefs.SHOW_STATUS_BAR.getSharedPrefKey().equals(key) ||
-                LauncherPrefs.SHOW_TOP_SHADOW.getSharedPrefKey().equals(key) ||
-                LauncherPrefs.SHORT_PARALLAX.getSharedPrefKey().equals(key) ||
-                LauncherPrefs.SINGLE_PAGE_CENTER.getSharedPrefKey().equals(key) ||
-                LauncherPrefs.DARK_STATUS_BAR.getSharedPrefKey().equals(key)) {
-            LauncherAppState.needsRestart = true;
+                LauncherPrefs.DOCK_MUSIC_SEARCH.getSharedPrefKey().equals(key)) {
             recreate();
         }
     }

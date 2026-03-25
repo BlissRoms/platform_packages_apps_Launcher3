@@ -556,6 +556,11 @@ public class InvariantDeviceProfile {
                 iconBitmapSize, fillResIconDpi, numDatabaseAllAppsColumns, dbFile, mLocale};
     }
 
+    /** Forces a full IDP reinit and notifies all listeners. Use when display-affecting prefs change. */
+    public void refreshProfiles() {
+        mMainExecutor.execute(this::onConfigChanged);
+    }
+
     /** Updates IDP using the provided context. Notifies listeners of change. */
     private void onConfigChanged() {
         Object[] oldState = toModelState();

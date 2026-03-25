@@ -214,6 +214,7 @@ import com.android.launcher3.pm.PinRequestHelper;
 import com.android.launcher3.popup.ArrowPopup;
 import com.android.launcher3.popup.PopupController;
 import com.android.launcher3.popup.SystemShortcut;
+import com.android.launcher3.qsb.QsbLayout;
 import com.android.launcher3.statemanager.StateManager;
 import com.android.launcher3.statemanager.StateManager.StateHandler;
 import com.android.launcher3.statemanager.StatefulActivity;
@@ -421,8 +422,40 @@ public class Launcher extends StatefulActivity<LauncherState>
 
     private boolean mIsNaturalScrollingEnabled;
 
+    // Snapshots of prefs taken in onStop to detect changes while Launcher is in the background.
+    private boolean mStoppedDockSearch;
+    private boolean mStoppedDrawerSearch;
+    private boolean mStoppedDrawerScrollbar;
+    private boolean mHasStopped = false;
+
     private final SettingsCache.OnChangeListener mNaturalScrollingChangedListener =
             enabled -> mIsNaturalScrollingEnabled = enabled;
+
+    private final LauncherPrefChangeListener mPrefChangeListener = key -> {
+        if (LauncherPrefs.SHOW_HOTSEAT_BG.getSharedPrefKey().equals(key) ||
+                LauncherPrefs.HOTSEAT_OPACITY.getSharedPrefKey().equals(key)) {
+            updateHotseatBackground();
+        } else if (LauncherPrefs.SHOW_STATUS_BAR.getSharedPrefKey().equals(key) ||
+                LauncherPrefs.DARK_STATUS_BAR.getSharedPrefKey().equals(key)) {
+            updateStatusBar();
+        } else if (LauncherPrefs.SHORT_PARALLAX.getSharedPrefKey().equals(key) ||
+                LauncherPrefs.SINGLE_PAGE_CENTER.getSharedPrefKey().equals(key)) {
+            triggerWallpaperOffsetUpdate();
+        } else if (LauncherPrefs.HOTSEAT_QSB_OPACITY.getSharedPrefKey().equals(key) ||
+                LauncherPrefs.HOTSEAT_QSB_STROKE_WIDTH.getSharedPrefKey().equals(key)) {
+            refreshQsbBackground();
+        } else if (LauncherPrefs.DOCK_SEARCH.getSharedPrefKey().equals(key)) {
+            InvariantDeviceProfile.INSTANCE.get(this).refreshProfiles();
+        } else if (LauncherPrefs.DOCK_THEME.getSharedPrefKey().equals(key) ||
+                LauncherPrefs.SEARCH_RADIUS_SIZE.getSharedPrefKey().equals(key) ||
+                LauncherPrefs.DOCK_MUSIC_SEARCH.getSharedPrefKey().equals(key)) {
+            refreshQsbIcons();
+        } else if (LauncherPrefs.DRAWER_SEARCH.getSharedPrefKey().equals(key)) {
+            mAppsView.refreshSearchBarVisibility();
+        } else if (LauncherPrefs.DRAWER_SCROLLBAR.getSharedPrefKey().equals(key)) {
+            mAppsView.refreshScrollbarVisibility();
+        }
+    };
 
     private StartupLatencyLogger mStartupLatencyLogger;
 
@@ -996,6 +1029,11 @@ public class Launcher extends StatefulActivity<LauncherState>
 
     @Override
     protected void onStop() {
+        mStoppedDockSearch = LauncherPrefs.DOCK_SEARCH.get(this);
+        mStoppedDrawerSearch = LauncherPrefs.DRAWER_SEARCH.get(this);
+        mStoppedDrawerScrollbar = LauncherPrefs.DRAWER_SCROLLBAR.get(this);
+        mHasStopped = true;
+        LauncherPrefs.getPrefs(this).unregisterOnSharedPreferenceChangeListener(mPrefChangeListener);
         super.onStop();
         if (mDeferOverlayCallbacks) {
             checkIfOverlayStillDeferred();
@@ -1020,6 +1058,24 @@ public class Launcher extends StatefulActivity<LauncherState>
 
         mAppWidgetHolder.setActivityStarted(true);
         TraceHelper.INSTANCE.endSection();
+        LauncherPrefs.getPrefs(this).registerOnSharedPreferenceChangeListener(mPrefChangeListener);
+        if (mHasStopped && LauncherPrefs.DOCK_SEARCH.get(this) != mStoppedDockSearch) {
+            InvariantDeviceProfile.INSTANCE.get(this).refreshProfiles();
+            return;
+        }
+        updateHotseatBackground();
+        updateStatusBar();
+        triggerWallpaperOffsetUpdate();
+        refreshQsbBackground();
+        refreshQsbIcons();
+        if (mHasStopped) {
+            if (LauncherPrefs.DRAWER_SEARCH.get(this) != mStoppedDrawerSearch) {
+                mAppsView.refreshSearchBarVisibility();
+            }
+            if (LauncherPrefs.DRAWER_SCROLLBAR.get(this) != mStoppedDrawerScrollbar) {
+                mAppsView.refreshScrollbarVisibility();
+            }
+        }
     }
 
     @Override
@@ -1304,10 +1360,7 @@ public class Launcher extends StatefulActivity<LauncherState>
         mLeftArrow.setOnClickListener(v -> mWorkspace.snapToPage(
                 mWorkspace.getCurrentPage() - 1));
 
-        if (LauncherPrefs.SHOW_HOTSEAT_BG.get(this)) {
-            mHotseat.setBackgroundResource(R.drawable.bkg_appseat);
-            mHotseat.getBackground().setAlpha(LauncherPrefs.HOTSEAT_OPACITY.get(this) * 255 / 100);
-        }
+        updateHotseatBackground();
 
         // Setup the drag layer
         mDragLayer.setup(mDragController, mWorkspace);
@@ -1342,6 +1395,52 @@ public class Launcher extends StatefulActivity<LauncherState>
 
         mItemInflater = new ItemInflater<>(this, mAppWidgetHolder, getItemOnClickListener(),
                 mFocusHandler, new CellLayout(mWorkspace.getContext(), mWorkspace));
+    }
+
+    /** Applies current hotseat background and opacity prefs without recreating. */
+    private void updateHotseatBackground() {
+        if (mHotseat == null) return;
+        if (LauncherPrefs.SHOW_HOTSEAT_BG.get(this)) {
+            mHotseat.setBackgroundResource(R.drawable.bkg_appseat);
+            if (mHotseat.getBackground() != null) {
+                mHotseat.getBackground().setAlpha(
+                        LauncherPrefs.HOTSEAT_OPACITY.get(this) * 255 / 100);
+            }
+        } else {
+            mHotseat.setBackground(null);
+        }
+    }
+
+    /** Applies current status bar color/dark prefs without recreating. */
+    protected void updateStatusBar() {
+        getSystemUiController().updateUiState(SystemUiController.UI_STATE_BASE_WINDOW,
+                Themes.getAttrBoolean(this, R.attr.isWorkspaceDarkText)
+                || LauncherPrefs.DARK_STATUS_BAR.get(this));
+    }
+
+    /** Triggers a wallpaper offset recalculation to reflect SHORT_PARALLAX/SINGLE_PAGE_CENTER. */
+    private void triggerWallpaperOffsetUpdate() {
+        if (mWorkspace != null) {
+            mWorkspace.mWallpaperOffset.syncWithScroll();
+        }
+    }
+
+    /** Refreshes the QSB background to reflect HOTSEAT_QSB_OPACITY/HOTSEAT_QSB_STROKE_WIDTH. */
+    private void refreshQsbBackground() {
+        if (mHotseat == null) return;
+        View qsb = mHotseat.getQsb();
+        if (qsb instanceof QsbLayout) {
+            ((QsbLayout) qsb).refreshBackground();
+        }
+    }
+
+    /** Refreshes the QSB icons to reflect DOCK_MUSIC_SEARCH. */
+    private void refreshQsbIcons() {
+        if (mHotseat == null) return;
+        View qsb = mHotseat.getQsb();
+        if (qsb instanceof QsbLayout) {
+            ((QsbLayout) qsb).refreshIcons();
+        }
     }
 
     /**

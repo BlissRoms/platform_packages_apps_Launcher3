@@ -100,6 +100,20 @@ public class QsbLayout extends FrameLayout implements Reorderable {
         }
     }
 
+    /** Called when QSB appearance prefs change to re-apply background without reinflation. */
+    public void refreshBackground() {
+        setUpBackground();
+    }
+
+    /** Called when QSB icon prefs change (e.g. themed icons, music search) without reinflation. */
+    public void refreshIcons() {
+        mIsThemed = LauncherPrefs.DOCK_THEME.get(getContext());
+        setupGIcon();
+        setupLensIcon();
+        setupMicIcon();
+        setUpBackground();
+    }
+
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         int width = MeasureSpec.getSize(widthMeasureSpec);
