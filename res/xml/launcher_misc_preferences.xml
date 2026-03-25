@@ -32,7 +32,7 @@
         launcher:logIdOn="615"
         launcher:logIdOff="616" />
 
-    <SwitchPreference
+    <SwitchPreferenceCompat
         android:key="pref_fixed_landscape_mode"
         android:title="@string/landscape_mode_title"
         android:summary="@string/landscape_mode_desc"
