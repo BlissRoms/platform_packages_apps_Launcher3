@@ -71,14 +71,11 @@
             android:key="pref_trust_apps"
             android:title="@string/trust_apps_manager_name" />
 
-        <androidx.preference.PreferenceScreen
+        <Preference
             android:key="pref_suggestions"
             android:title="@string/pref_suggestions_title"
             android:summary="@string/pref_suggestions_summary"
-            android:persistent="false">
-
-            <intent android:action="android.settings.ACTION_CONTENT_SUGGESTIONS_SETTINGS" />
-        </androidx.preference.PreferenceScreen>
+            android:persistent="false" />
 
         <SwitchPreferenceCompat
             android:key="pref_show_statusbar"
