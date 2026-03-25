@@ -19,11 +19,8 @@ import static com.android.launcher3.settings.SettingsActivity.EXTRA_FRAGMENT_HIG
 import static com.android.launcher3.util.Executors.MAIN_EXECUTOR;
 import static com.android.launcher3.util.SettingsCache.NOTIFICATION_BADGING_URI;
 
-import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.ComponentName;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.ContentObserver;
 import android.os.Bundle;
@@ -31,7 +28,6 @@ import android.provider.Settings;
 import android.util.AttributeSet;
 import android.view.View;
 
-import androidx.fragment.app.DialogFragment;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceViewHolder;
 
@@ -86,12 +82,15 @@ public class NotificationDotsPreference extends Preference
                 false, mListenerListObserver);
         updateUI();
 
-        // Update intent
-        Bundle extras = new Bundle();
-        extras.putString(EXTRA_FRAGMENT_HIGHLIGHT_KEY, "notification_badging");
+        // Update intent: go directly to notification listener access settings
+        ComponentName cn = new ComponentName(getContext(), NotificationListener.class);
+        Bundle showFragmentArgs = new Bundle();
+        showFragmentArgs.putString(EXTRA_FRAGMENT_HIGHLIGHT_KEY, cn.flattenToString());
 
-        setIntent(new Intent("android.settings.NOTIFICATION_SETTINGS")
-                .putExtra(EXTRA_SHOW_FRAGMENT_ARGS, extras));
+        setIntent(new Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS)
+                .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                .putExtra(EXTRA_FRAGMENT_HIGHLIGHT_KEY, cn.flattenToString())
+                .putExtra(EXTRA_SHOW_FRAGMENT_ARGS, showFragmentArgs));
     }
 
     private void updateUI() {
@@ -145,37 +144,7 @@ public class NotificationDotsPreference extends Preference
             }
         }
         setWidgetFrameVisible(!serviceEnabled);
-        setFragment(serviceEnabled ? null : NotificationAccessConfirmation.class.getName());
         setSummary(summary);
     }
 
-    public static class NotificationAccessConfirmation
-            extends DialogFragment implements DialogInterface.OnClickListener {
-
-        @Override
-        public Dialog onCreateDialog(Bundle savedInstanceState) {
-            final Context context = getActivity();
-            String msg = context.getString(R.string.msg_missing_notification_access,
-                    context.getString(R.string.derived_app_name));
-            return new AlertDialog.Builder(context)
-                    .setTitle(R.string.title_missing_notification_access)
-                    .setMessage(msg)
-                    .setNegativeButton(android.R.string.cancel, null)
-                    .setPositiveButton(R.string.title_change_settings, this)
-                    .create();
-        }
-
-        @Override
-        public void onClick(DialogInterface dialogInterface, int i) {
-            ComponentName cn = new ComponentName(getActivity(), NotificationListener.class);
-            Bundle showFragmentArgs = new Bundle();
-            showFragmentArgs.putString(EXTRA_FRAGMENT_HIGHLIGHT_KEY, cn.flattenToString());
-
-            Intent intent = new Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS)
-                    .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                    .putExtra(EXTRA_FRAGMENT_HIGHLIGHT_KEY, cn.flattenToString())
-                    .putExtra(EXTRA_SHOW_FRAGMENT_ARGS, showFragmentArgs);
-            getActivity().startActivity(intent);
-        }
-    }
 }
