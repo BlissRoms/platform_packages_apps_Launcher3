@@ -579,7 +579,8 @@ public class InvariantDeviceProfile {
 
     private static boolean firstGridFilter(GridOption gridOption, int deviceType,
             boolean allowDisabledGrid, boolean isFixedLandscapeMode) {
-        return (gridOption.isEnabled(deviceType) || allowDisabledGrid);
+        return (gridOption.isEnabled(deviceType) || allowDisabledGrid)
+                && gridOption.filterByFlag(deviceType, isFixedLandscapeMode);
     }
 
     private static List<DisplayOption> getPredefinedDeviceProfiles(
