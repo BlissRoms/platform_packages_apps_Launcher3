@@ -169,6 +169,10 @@
     <!-- Quickspace alternative view -->
     <string name="quickspace_alternate_style_title">Extended style</string>
     <string name="quickspace_alternate_style_summary">Switch to extended style</string>
+    <string name="quickspace_style_title">Quickspace style</string>
+    <string name="quickspace_style_default">Default</string>
+    <string name="quickspace_style_extended">Extended</string>
+    <string name="quickspace_style_bliss">Bliss</string>
 
     <!-- Quickspace PSA - Custom messages for the glance -->
     <string name="quickspace_psa_title">Random messages</string>

@@ -45,6 +45,8 @@ import com.android.settingslib.widget.SettingsBasePreferenceFragment;
 public class SettingsHomescreen extends CollapsingToolbarBaseActivity
         implements SharedPreferences.OnSharedPreferenceChangeListener {
 
+    private SharedPreferences.OnSharedPreferenceChangeListener mStyleShadowListener;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,12 +58,26 @@ public class SettingsHomescreen extends CollapsingToolbarBaseActivity
                     .commit();
         }
         LauncherPrefs.getPrefs(this).registerOnSharedPreferenceChangeListener(this);
+
+        SharedPreferences prefs = LauncherPrefs.getPrefs(this);
+        if (prefs.contains(LauncherPrefs.SHOW_QUICKSPACE_ALT.getSharedPrefKey()) && !prefs.contains("pref_quickspace_style")) {
+            boolean wasAlt = prefs.getBoolean(LauncherPrefs.SHOW_QUICKSPACE_ALT.getSharedPrefKey(), false);
+            prefs.edit().putString("pref_quickspace_style", wasAlt ? "1" : "0").apply();
+        }
+        mStyleShadowListener = (sp, key) -> {
+            if (LauncherPrefs.QUICKSPACE_STYLE.getSharedPrefKey().equals(key)) {
+                boolean isExtended = "1".equals(sp.getString(key, "0"));
+                sp.edit().putBoolean(LauncherPrefs.SHOW_QUICKSPACE_ALT.getSharedPrefKey(), isExtended).apply();
+            }
+        };
+        prefs.registerOnSharedPreferenceChangeListener(mStyleShadowListener);
     }
 
     @Override
     public void onDestroy() {
-        super.onDestroy();
+        LauncherPrefs.getPrefs(this).unregisterOnSharedPreferenceChangeListener(mStyleShadowListener);
         LauncherPrefs.getPrefs(this).unregisterOnSharedPreferenceChangeListener(this);
+        super.onDestroy();
     }
 
     @Override
@@ -71,7 +87,7 @@ public class SettingsHomescreen extends CollapsingToolbarBaseActivity
                 LauncherPrefs.SEARCH_RADIUS_SIZE.getSharedPrefKey().equals(key) ||
                 LauncherPrefs.DOCK_MUSIC_SEARCH.getSharedPrefKey().equals(key) ||
                 LauncherPrefs.SHOW_QUICKSPACE.getSharedPrefKey().equals(key) ||
-                LauncherPrefs.SHOW_QUICKSPACE_ALT.getSharedPrefKey().equals(key) ||
+                LauncherPrefs.QUICKSPACE_STYLE.getSharedPrefKey().equals(key) ||
                 LauncherPrefs.SHOW_QUICKSPACE_PSONALITY.getSharedPrefKey().equals(key) ||
                 LauncherPrefs.SHOW_QUICKSPACE_NOWPLAYING.getSharedPrefKey().equals(key) ||
                 LauncherPrefs.SHOW_QUICKSPACE_WEATHER.getSharedPrefKey().equals(key) ||

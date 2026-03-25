@@ -214,6 +214,9 @@ import com.android.launcher3.pm.PinRequestHelper;
 import com.android.launcher3.popup.ArrowPopup;
 import com.android.launcher3.popup.PopupController;
 import com.android.launcher3.popup.SystemShortcut;
+import android.view.LayoutInflater;
+import android.widget.FrameLayout;
+import com.android.launcher3.quickspace.BlissSpaceView;
 import com.android.launcher3.quickspace.QuickSpaceView;
 import com.android.launcher3.qsb.QsbLayout;
 import com.android.launcher3.statemanager.StateManager;
@@ -465,7 +468,7 @@ public class Launcher extends StatefulActivity<LauncherState>
     private boolean mIsTopResumedActivity;
 
     // QuickSpace
-    private QuickSpaceView mQuickSpace;
+    private FrameLayout mQuickSpace;
 
     public static Launcher getLauncher(Context context) {
         return fromContext(context);
@@ -1045,7 +1048,7 @@ public class Launcher extends StatefulActivity<LauncherState>
             mOverlayManager.onActivityStopped();
         }
         if (mQuickSpace != null) {
-            mQuickSpace.onPause();
+            dispatchQuickSpacePause();
         }
         hideKeyboard();
         logStopAndResume(false /* isResume */);
@@ -1276,7 +1279,7 @@ public class Launcher extends StatefulActivity<LauncherState>
         super.onResume();
 
         if (mQuickSpace != null) {
-            mQuickSpace.onResume();
+            dispatchQuickSpaceResume();
         }
 
         if (mDeferOverlayCallbacks) {
@@ -1303,9 +1306,24 @@ public class Launcher extends StatefulActivity<LauncherState>
             mOverlayManager.onActivityPaused();
         }
         if (mQuickSpace != null) {
-            mQuickSpace.onPause();
+            dispatchQuickSpacePause();
         }
         mAppWidgetHolder.setActivityResumed(false);
+    }
+
+    private void dispatchQuickSpacePause() {
+        if (mQuickSpace instanceof QuickSpaceView) ((QuickSpaceView) mQuickSpace).onPause();
+        else if (mQuickSpace instanceof BlissSpaceView) ((BlissSpaceView) mQuickSpace).onPause();
+    }
+
+    private void dispatchQuickSpaceResume() {
+        if (mQuickSpace instanceof QuickSpaceView) ((QuickSpaceView) mQuickSpace).onResume();
+        else if (mQuickSpace instanceof BlissSpaceView) ((BlissSpaceView) mQuickSpace).onResume();
+    }
+
+    private void dispatchQuickSpaceDestroy() {
+        if (mQuickSpace instanceof QuickSpaceView) ((QuickSpaceView) mQuickSpace).onDestroy();
+        else if (mQuickSpace instanceof BlissSpaceView) ((BlissSpaceView) mQuickSpace).onDestroy();
     }
 
     /**
@@ -1398,6 +1416,23 @@ public class Launcher extends StatefulActivity<LauncherState>
 
         // QuickSpace
         mQuickSpace = findViewById(R.id.reserved_container_workspace);
+        // Shadow write: keep pref_quickspace_alt accurate for QuickEventsController
+        String qsStyle = LauncherPrefs.QUICKSPACE_STYLE.get(this);
+        LauncherPrefs.getPrefs(this).edit()
+                .putBoolean("pref_quickspace_alt", "1".equals(qsStyle)).apply();
+        // Swap to BlissSpaceView if Bliss style is selected
+        if ("2".equals(qsStyle) && mQuickSpace != null) {
+            ViewGroup qsParent = (ViewGroup) mQuickSpace.getParent();
+            int qsIndex = qsParent.indexOfChild(mQuickSpace);
+            ViewGroup.LayoutParams qsLp = mQuickSpace.getLayoutParams();
+            ((QuickSpaceView) mQuickSpace).onDestroy();
+            qsParent.removeViewAt(qsIndex);
+            BlissSpaceView bliss = (BlissSpaceView) LayoutInflater.from(this)
+                    .inflate(R.layout.quickspace_bliss, qsParent, false);
+            bliss.setLayoutParams(qsLp);
+            qsParent.addView(bliss, qsIndex);
+            mQuickSpace = bliss;
+        }
         if (!LauncherPrefs.SHOW_QUICKSPACE.get(this) && mQuickSpace != null) {
             mQuickSpace.setVisibility(View.GONE);
         }
@@ -1872,7 +1907,7 @@ public class Launcher extends StatefulActivity<LauncherState>
         PillColorProvider.getInstance(mWorkspace.getContext()).unregisterObserver();
 
         if (mQuickSpace != null) {
-            mQuickSpace.onDestroy();
+            dispatchQuickSpaceDestroy();
         }
     }
 

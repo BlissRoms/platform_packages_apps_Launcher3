@@ -27,4 +27,16 @@
         <item>seraphix</item>
         <item>omnijaws</item>
     </string-array>
+
+    <string-array name="quickspace_style_entries">
+        <item>@string/quickspace_style_default</item>
+        <item>@string/quickspace_style_extended</item>
+        <item>@string/quickspace_style_bliss</item>
+    </string-array>
+
+    <string-array name="quickspace_style_values">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+    </string-array>
 </resources>

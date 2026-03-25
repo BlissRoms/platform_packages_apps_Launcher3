@@ -144,12 +144,14 @@
             android:persistent="true"
             launcher:iconSpaceReserved="false" />
 
-        <SwitchPreferenceCompat
-            android:key="pref_quickspace_alt"
-            android:title="@string/quickspace_alternate_style_title"
-            android:summary="@string/quickspace_alternate_style_summary"
+        <ListPreference
+            android:key="pref_quickspace_style"
+            android:title="@string/quickspace_style_title"
+            android:summary="%s"
+            android:entries="@array/quickspace_style_entries"
+            android:entryValues="@array/quickspace_style_values"
             android:dependency="pref_quickspace"
-            android:defaultValue="false"
+            android:defaultValue="0"
             android:persistent="true"
             launcher:iconSpaceReserved="false" />
 
