@@ -109,8 +109,8 @@ public class SettingsHomescreen extends CollapsingToolbarBaseActivity
         private static final String KEY_SUGGESTIONS = "pref_suggestions";
         private static final String SUGGESTIONS_PACKAGE = "com.google.android.as";
         private static final String KEY_GENERAL_CATEGORY = "general_category";
-
-        private Preference mShowGoogleBarPref;
+        private static final String KEY_DOCK_SEARCH = "pref_dock_search";
+        private static final String KEY_DOCK_MUSIC_SEARCH = "pref_dock_music_search";
 
         @Override
         public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
@@ -119,8 +119,6 @@ public class SettingsHomescreen extends CollapsingToolbarBaseActivity
 
             PreferenceScreen screen = getPreferenceScreen();
             filterPreferenceGroup(screen);
-
-            mShowGoogleBarPref = screen.findPreference(LauncherPrefs.DOCK_SEARCH.getSharedPrefKey());
 
             if (!VibratorWrapper.INSTANCE.get(getContext()).hasVibrator()) {
                 PreferenceCategory generalCategory = (PreferenceCategory) findPreference(KEY_GENERAL_CATEGORY);
@@ -172,14 +170,11 @@ public class SettingsHomescreen extends CollapsingToolbarBaseActivity
                         return true;
                     });
                     return true;
+                case KEY_DOCK_SEARCH:
+                case KEY_DOCK_MUSIC_SEARCH:
+                    return Utilities.isGSAEnabled(getContext());
             }
             return true;
-        }
-
-        private void updateIsGoogleAppEnabled() {
-            if (mShowGoogleBarPref != null) {
-                mShowGoogleBarPref.setEnabled(Utilities.isGSAEnabled(getContext()));
-            }
         }
     }
 }
