@@ -117,6 +117,8 @@ public class SettingsHomescreen extends CollapsingToolbarBaseActivity
         private static final String KEY_GENERAL_CATEGORY = "general_category";
         private static final String KEY_DOCK_SEARCH = "pref_dock_search";
         private static final String KEY_DOCK_MUSIC_SEARCH = "pref_dock_music_search";
+        private static final String KEY_HOTSEAT_QSB_OPACITY = "pref_hotseat_qsb_opacity";
+        private static final String KEY_HOTSEAT_QSB_STROKE_WIDTH = "pref_hotseat_qsb_stroke_width";
 
         @Override
         public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
@@ -178,6 +180,8 @@ public class SettingsHomescreen extends CollapsingToolbarBaseActivity
                     return true;
                 case KEY_DOCK_SEARCH:
                 case KEY_DOCK_MUSIC_SEARCH:
+                case KEY_HOTSEAT_QSB_OPACITY:
+                case KEY_HOTSEAT_QSB_STROKE_WIDTH:
                     return Utilities.isGSAEnabled(getContext());
             }
             return true;
