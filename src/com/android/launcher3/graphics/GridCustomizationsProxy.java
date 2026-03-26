@@ -226,6 +226,7 @@ public class GridCustomizationsProxy implements ProxyProvider {
                         KEY_NAME, KEY_GRID_TITLE, KEY_ROWS, KEY_COLS, KEY_PREVIEW_COUNT,
                         KEY_IS_DEFAULT, KEY_GRID_ICON_ID});
                 List<GridOption> gridOptionList = mIdp.parseAllGridOptions(mContext);
+                gridOptionList.removeIf(GridOption::isFixedLandscapeGrid);
                 if (gridOptionList.isEmpty()) {
                     Log.e(TAG, "query: No grid options are available, returning null.");
                     return null;

@@ -1362,6 +1362,10 @@ public class InvariantDeviceProfile {
             }
         }
 
+        public boolean isFixedLandscapeGrid() {
+            return mIsFixedLandscape;
+        }
+
         /**
          * Returns true if the grid option should be used given the flags that are toggled on/off.
          */

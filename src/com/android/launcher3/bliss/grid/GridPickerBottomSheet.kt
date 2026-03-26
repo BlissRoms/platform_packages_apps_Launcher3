@@ -263,6 +263,7 @@ class GridPickerBottomSheet(
         ): List<InvariantDeviceProfile.GridOption> {
             val idp = InvariantDeviceProfile.INSTANCE.get(context)
             return idp.parseAllGridOptions(context)
+                .filterNot { it.isFixedLandscapeGrid() }
         }
     }
 }
