@@ -23,6 +23,7 @@ import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.PreferenceScreen;
 
+import com.android.launcher3.LauncherAppState;
 import com.android.launcher3.LauncherFiles;
 import com.android.launcher3.LauncherPrefs;
 import com.android.launcher3.R;
@@ -62,7 +63,7 @@ public class SettingsRecents extends CollapsingToolbarBaseActivity
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         if (LauncherPrefs.RECENTS_MEMINFO.getSharedPrefKey().equals(key) ||
                 LauncherPrefs.RECENTS_MEMINFO_ZRAM.getSharedPrefKey().equals(key)) {
-            recreate();
+            LauncherAppState.setNeedsRecreate();
         }
     }
 

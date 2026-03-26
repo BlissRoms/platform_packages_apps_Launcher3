@@ -17,6 +17,7 @@
 package com.android.launcher3.allapps;
 
 import android.content.Context;
+import android.os.UserManager;
 
 import com.android.launcher3.LauncherPrefs;
 
@@ -30,6 +31,10 @@ public final class AppDrawerStyle {
     private AppDrawerStyle() { }
 
     public static String get(Context context) {
+        UserManager um = context.getSystemService(UserManager.class);
+        if (um == null || !um.isUserUnlocked()) {
+            return NORMAL;
+        }
         String style = LauncherPrefs.APP_DRAWER_STYLE.get(context);
         return isSupported(style) ? style : NORMAL;
     }

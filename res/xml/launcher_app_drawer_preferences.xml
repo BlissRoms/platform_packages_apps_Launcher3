@@ -70,6 +70,13 @@
         launcher:iconSpaceReserved="false" />
 
     <SwitchPreferenceCompat
+        android:key="pref_drawer_show_labels"
+        android:title="@string/drawer_show_labels"
+        android:defaultValue="true"
+        android:persistent="true"
+        launcher:iconSpaceReserved="false" />
+
+    <SwitchPreferenceCompat
         android:key="pref_all_apps_dark_text"
         android:title="@string/all_apps_dark_text_title"
         android:summary="@string/all_apps_dark_text_summary"

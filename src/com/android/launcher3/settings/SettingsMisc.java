@@ -34,7 +34,10 @@ import androidx.annotation.VisibleForTesting;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceScreen;
 
+import android.content.SharedPreferences;
+
 import com.android.launcher3.BuildConfig;
+import com.android.launcher3.LauncherAppState;
 import com.android.launcher3.LauncherFiles;
 import com.android.launcher3.Flags;
 import com.android.launcher3.InvariantDeviceProfile;
@@ -52,7 +55,8 @@ import com.android.systemui.shared.system.BlurUtils;
 /**
  * Miscellaneous settings activity for Launcher.
  */
-public class SettingsMisc extends CollapsingToolbarBaseActivity {
+public class SettingsMisc extends CollapsingToolbarBaseActivity
+        implements SharedPreferences.OnSharedPreferenceChangeListener {
 
     public static final String FIXED_LANDSCAPE_MODE = "pref_fixed_landscape_mode";
 
@@ -68,6 +72,21 @@ public class SettingsMisc extends CollapsingToolbarBaseActivity {
                     .beginTransaction()
                     .replace(com.android.settingslib.collapsingtoolbar.R.id.content_frame, new MiscSettingsFragment())
                     .commit();
+        }
+        LauncherPrefs.getPrefs(this).registerOnSharedPreferenceChangeListener(this);
+    }
+
+    @Override
+    public void onDestroy() {
+        LauncherPrefs.getPrefs(this).unregisterOnSharedPreferenceChangeListener(this);
+        super.onDestroy();
+    }
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        if (LauncherPrefs.BLUR_DEPTH.getSharedPrefKey().equals(key) ||
+                LauncherPrefs.FIXED_LANDSCAPE_MODE.getSharedPrefKey().equals(key)) {
+            LauncherAppState.setNeedsRecreate();
         }
     }
 

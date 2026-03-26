@@ -28,6 +28,7 @@ import androidx.preference.PreferenceCategory;
 import androidx.preference.PreferenceGroup;
 import androidx.preference.PreferenceScreen;
 
+import com.android.launcher3.LauncherAppState;
 import com.android.launcher3.LauncherFiles;
 import com.android.launcher3.LauncherPrefs;
 import com.android.launcher3.Utilities;
@@ -86,6 +87,10 @@ public class SettingsHomescreen extends CollapsingToolbarBaseActivity
                 LauncherPrefs.DOCK_THEME.getSharedPrefKey().equals(key) ||
                 LauncherPrefs.SEARCH_RADIUS_SIZE.getSharedPrefKey().equals(key) ||
                 LauncherPrefs.DOCK_MUSIC_SEARCH.getSharedPrefKey().equals(key) ||
+                LauncherPrefs.HOTSEAT_QSB_OPACITY.getSharedPrefKey().equals(key) ||
+                LauncherPrefs.HOTSEAT_QSB_STROKE_WIDTH.getSharedPrefKey().equals(key) ||
+                LauncherPrefs.SHOW_HOTSEAT_BG.getSharedPrefKey().equals(key) ||
+                LauncherPrefs.HOTSEAT_OPACITY.getSharedPrefKey().equals(key) ||
                 LauncherPrefs.SHOW_QUICKSPACE.getSharedPrefKey().equals(key) ||
                 LauncherPrefs.QUICKSPACE_STYLE.getSharedPrefKey().equals(key) ||
                 LauncherPrefs.SHOW_QUICKSPACE_PSONALITY.getSharedPrefKey().equals(key) ||
@@ -95,7 +100,7 @@ public class SettingsHomescreen extends CollapsingToolbarBaseActivity
                 LauncherPrefs.SHOW_QUICKSPACE_WEATHER_PROVIDER.getSharedPrefKey().equals(key) ||
                 LauncherPrefs.SHOW_QUICKSPACE_WEATHER_TEXT.getSharedPrefKey().equals(key) ||
                 LauncherPrefs.AUTO_HIDE_DOTS.getSharedPrefKey().equals(key)) {
-            recreate();
+            LauncherAppState.setNeedsRecreate();
         }
     }
 

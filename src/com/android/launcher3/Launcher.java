@@ -426,10 +426,6 @@ public class Launcher extends StatefulActivity<LauncherState>
 
     private boolean mIsNaturalScrollingEnabled;
 
-    // Snapshots of prefs taken in onStop to detect changes while Launcher is in the background.
-    private boolean mStoppedDockSearch;
-    private boolean mStoppedDrawerSearch;
-    private boolean mStoppedDrawerScrollbar;
     private boolean mHasStopped = false;
 
     private final SettingsCache.OnChangeListener mNaturalScrollingChangedListener =
@@ -459,6 +455,8 @@ public class Launcher extends StatefulActivity<LauncherState>
             mAppsView.refreshSearchBarVisibility();
         } else if (LauncherPrefs.DRAWER_SCROLLBAR.getSharedPrefKey().equals(key)) {
             mAppsView.refreshScrollbarVisibility();
+        } else if (LauncherPrefs.BLUR_DEPTH.getSharedPrefKey().equals(key)) {
+            onBlurRadiusChanged();
         }
     };
 
@@ -1037,9 +1035,6 @@ public class Launcher extends StatefulActivity<LauncherState>
 
     @Override
     protected void onStop() {
-        mStoppedDockSearch = LauncherPrefs.DOCK_SEARCH.get(this);
-        mStoppedDrawerSearch = LauncherPrefs.DRAWER_SEARCH.get(this);
-        mStoppedDrawerScrollbar = LauncherPrefs.DRAWER_SCROLLBAR.get(this);
         mHasStopped = true;
         LauncherPrefs.getPrefs(this).unregisterOnSharedPreferenceChangeListener(mPrefChangeListener);
         super.onStop();
@@ -1070,8 +1065,9 @@ public class Launcher extends StatefulActivity<LauncherState>
         mAppWidgetHolder.setActivityStarted(true);
         TraceHelper.INSTANCE.endSection();
         LauncherPrefs.getPrefs(this).registerOnSharedPreferenceChangeListener(mPrefChangeListener);
-        if (mHasStopped && LauncherPrefs.DOCK_SEARCH.get(this) != mStoppedDockSearch) {
-            InvariantDeviceProfile.INSTANCE.get(this).refreshProfiles();
+        if (mHasStopped && LauncherAppState.needsRecreate) {
+            LauncherAppState.needsRecreate = false;
+            recreate();
             return;
         }
         updateHotseatBackground();
@@ -1079,14 +1075,6 @@ public class Launcher extends StatefulActivity<LauncherState>
         triggerWallpaperOffsetUpdate();
         refreshQsbBackground();
         refreshQsbIcons();
-        if (mHasStopped) {
-            if (LauncherPrefs.DRAWER_SEARCH.get(this) != mStoppedDrawerSearch) {
-                mAppsView.refreshSearchBarVisibility();
-            }
-            if (LauncherPrefs.DRAWER_SCROLLBAR.get(this) != mStoppedDrawerScrollbar) {
-                mAppsView.refreshScrollbarVisibility();
-            }
-        }
     }
 
     @Override
@@ -1434,8 +1422,9 @@ public class Launcher extends StatefulActivity<LauncherState>
             qsParent.addView(bliss, qsIndex);
             mQuickSpace = bliss;
         }
-        if (!LauncherPrefs.SHOW_QUICKSPACE.get(this) && mQuickSpace != null) {
-            mQuickSpace.setVisibility(View.GONE);
+        if (mQuickSpace != null) {
+            mQuickSpace.setVisibility(LauncherPrefs.SHOW_QUICKSPACE.get(this)
+                    ? View.VISIBLE : View.GONE);
         }
 
         // Setup the drag controller (drop targets have to be added in reverse order in priority)
@@ -1498,6 +1487,8 @@ public class Launcher extends StatefulActivity<LauncherState>
             ((QsbLayout) qsb).refreshIcons();
         }
     }
+
+    protected void onBlurRadiusChanged() { }
 
     /**
      * Add a shortcut to the workspace or to a Folder.

@@ -38,10 +38,16 @@ constructor(
 
     companion object {
         @JvmField var INSTANCE = DaggerSingletonObject { it.launcherAppState }
+        @JvmField var needsRecreate: Boolean = false
 
         @JvmStatic fun getInstance(context: Context) = INSTANCE[context]
 
         /** Shorthand for [.getInvariantDeviceProfile] */
         @JvmStatic fun getIDP(context: Context) = InvariantDeviceProfile.INSTANCE[context]
+
+        @JvmStatic
+        fun setNeedsRecreate() {
+            needsRecreate = true
+        }
     }
 }

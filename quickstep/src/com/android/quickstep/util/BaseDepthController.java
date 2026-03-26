@@ -86,7 +86,7 @@ public class BaseDepthController {
     /**
      * Blur radius when completely zoomed out, in pixels.
      */
-    protected final int mMaxBlurRadius;
+    protected int mMaxBlurRadius;
     protected final WallpaperManager mWallpaperManager;
     protected boolean mCrossWindowBlursEnabled;
 
@@ -143,6 +143,10 @@ public class BaseDepthController {
         widgetDepth = depthProperty.get(DEPTH_INDEX_WIDGET);
         mEarlyWakeupInfo.token = new Binder();
         mEarlyWakeupInfo.trace = BaseDepthController.class.getName();
+    }
+
+    public void setMaxBlurRadius(int radius) {
+        mMaxBlurRadius = radius;
     }
 
     /**

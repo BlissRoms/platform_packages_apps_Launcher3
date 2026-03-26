@@ -1422,6 +1422,13 @@ public class QuickstepLauncher extends Launcher implements RecentsViewContainer,
         return mDepthController;
     }
 
+    @Override
+    protected void onBlurRadiusChanged() {
+        if (mDepthController != null) {
+            mDepthController.setMaxBlurRadius(LauncherPrefs.BLUR_DEPTH.get(this));
+        }
+    }
+
     @Nullable
     public UnfoldTransitionProgressProvider getUnfoldTransitionProgressProvider() {
         return mUnfoldTransitionProgressProvider;
