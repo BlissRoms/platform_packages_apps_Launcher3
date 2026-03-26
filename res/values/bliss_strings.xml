@@ -149,11 +149,11 @@
     <string name="quickspace_date_format_minimalistic" translatable="false">EEEE, MMMM d</string>
 
     <!-- QuickSpace: QuickEvent: Greetings -->
-    <string name="quickspace_grt_morning">Good morning.</string>
-    <string name="quickspace_grt_evening">Good evening.</string>
-    <string name="quickspace_grt_afternoon">Good afternoon.</string>
-    <string name="quickspace_grt_night">Good night.</string>
-    <string name="quickspace_grt_general">Good day.</string>
+    <string name="quickspace_grt_morning">Morning!</string>
+    <string name="quickspace_grt_evening">Good evening!</string>
+    <string name="quickspace_grt_afternoon">Good afternoon!</string>
+    <string name="quickspace_grt_night">Sleep well!</string>
+    <string name="quickspace_grt_general">Hello there!</string>
     <string name="quickspace_ext_one">Today is</string>
     <string name="quickspace_ext_two">It\'s</string>
 
@@ -283,48 +283,36 @@
         <item>Your attitude determines your direction.</item>
     </string-array>
     <string-array name="quickspace_psa_random">
-        <item>Ignorance is Bliss</item>
-        <item>Is it time to flash another update already?</item>
-        <item>Make peace, not war</item>
-        <item>Oh hey, what\'s up?</item>
-        <item>Welcome to real Matrix!</item>
-        <item>How many screenshots do you take?</item>
-        <item>Open goodness with Bliss</item>
-        <item>Spread love, not havoc</item>
-        <item>We didn\'t start the fire!</item>
-        <item>Time for some good music</item>
-        <item>\u003C\u003C\u003C\u003C\u003C\u003C\u003C HEAD</item>
-        <item>You need Bliss Premium to see this</item>
-        <item>Remember the Lineage of the Unicorn</item>
-        <item>Enjoy Xtended battery life</item>
-        <item>Starting from the ground zero</item>
-        <item>We love you 3000</item>
-        <item>Delicious even without Sushi</item>
-        <item>Do something nice today</item>
-        <item>This is best Pixel Experience, isn\'t it?</item>
-        <item>No illusions, welcome to reality!</item>
-        <item>Thank you for your support</item>
-        <item>No festival for Derps - only perfection!</item>
-        <item>One of the buildbot\'s best picks</item>
-        <item>Sanity for your Paranoia</item>
-        <item>Rising in peace</item>
-        <item>What a lovely experience, isn\'t it?</item>
-        <item>Evolution is a myth, right?</item>
-        <item>You are what you flash, don\'t be Potato</item>
-        <item>What\'s on your mind?</item>
-        <item>Expecto Patronum</item>
-        <item>Wubba Lubba Dub Dub</item>
-        <item>Winner Winner ....?</item>
-        <item>rm -rf \/</item>
-        <item>Pringles aren\'t actually potato chips..</item>
-        <item>Remember to check device\'s battery level!</item>
-        <item>Check your email/messages.</item>
-        <item>Check your to-do list if you have one.</item>
-        <item>You can disable quickspace via home settings.</item>
-        <item>Loving us? Send us a beer</item>
-        <item>Best Rom Ever.</item>
-        <item>Say hi to us on Telegram</item>
-        <item>We love you 3000</item>
+        <item>Hydration check — when did you last drink water?</item>
+        <item>Your screen time is probably a little too high. No judgment.</item>
+        <item>Plot twist: you didn\'t need to check your phone just now.</item>
+        <item>Fun fact: blinking is free and you\'re not doing it enough.</item>
+        <item>Your charger called. It misses you.</item>
+        <item>Stand up. Stretch. Sit back down. You\'re welcome.</item>
+        <item>That email can wait. Can it? Yeah, it can.</item>
+        <item>Have you eaten today, or just scrolled?</item>
+        <item>Your future self is rooting for you. No pressure.</item>
+        <item>Somewhere out there, someone\'s to-do list is even longer. Solidarity.</item>
+        <item>This is your sign to go to bed at a reasonable time tonight.</item>
+        <item>The wifi\'s fine. Just checking if you are too.</item>
+        <item>Quick question: when did you last go outside?</item>
+        <item>Hot take: you deserve a break right now.</item>
+        <item>Things left on read: your body asking you to sleep earlier.</item>
+        <item>Ignorance is Bliss. Literally.</item>
+        <item>Your phone battery and your social battery — which one\'s lower?</item>
+        <item>Unread notifications: many. Unread books: also many. Pick one.</item>
+        <item>Step counter: probably judging you silently.</item>
+        <item>Have you called someone you actually like recently?</item>
+        <item>Reminder: you\'ve survived 100% of your bad days so far.</item>
+        <item>It\'s a good day to do that thing you\'ve been putting off.</item>
+        <item>Snack break. You\'ve earned it (or you haven\'t, but eat anyway).</item>
+        <item>Your posture while reading this is probably not great. Fix it.</item>
+        <item>Some people are still using stock launchers. You\'re not one of them.</item>
+        <item>No pressure, but the week isn\'t getting any shorter.</item>
+        <item>Current mood: loading…</item>
+        <item>Did you know? Naps under 20 minutes are scientifically excellent.</item>
+        <item>Consider: doing nothing on purpose, just for a minute.</item>
+        <item>This message brought to you by the part of your brain that procrastinates.</item>
     </string-array>
     <string name="intent_no_app_clock_found">Unable to find calendar or clock activity</string>
 
