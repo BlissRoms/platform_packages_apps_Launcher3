@@ -448,8 +448,9 @@ public class Launcher extends StatefulActivity<LauncherState>
         } else if (LauncherPrefs.HOTSEAT_QSB_OPACITY.getSharedPrefKey().equals(key) ||
                 LauncherPrefs.HOTSEAT_QSB_STROKE_WIDTH.getSharedPrefKey().equals(key)) {
             refreshQsbBackground();
-        } else if (LauncherPrefs.DOCK_SEARCH.getSharedPrefKey().equals(key)) {
-            InvariantDeviceProfile.INSTANCE.get(this).refreshProfiles();
+        } else if (LauncherPrefs.DOCK_SEARCH.getSharedPrefKey().equals(key) ||
+                LauncherPrefs.RECENTS_MEMINFO.getSharedPrefKey().equals(key)) {
+            recreate();
         } else if (LauncherPrefs.DOCK_THEME.getSharedPrefKey().equals(key) ||
                 LauncherPrefs.SEARCH_RADIUS_SIZE.getSharedPrefKey().equals(key) ||
                 LauncherPrefs.DOCK_MUSIC_SEARCH.getSharedPrefKey().equals(key)) {
