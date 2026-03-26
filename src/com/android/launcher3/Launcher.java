@@ -1405,23 +1405,9 @@ public class Launcher extends StatefulActivity<LauncherState>
 
         // QuickSpace
         mQuickSpace = findViewById(R.id.reserved_container_workspace);
-        // Shadow write: keep pref_quickspace_alt accurate for QuickEventsController
         String qsStyle = LauncherPrefs.QUICKSPACE_STYLE.get(this);
         LauncherPrefs.getPrefs(this).edit()
                 .putBoolean("pref_quickspace_alt", "1".equals(qsStyle)).apply();
-        // Swap to BlissSpaceView if Bliss style is selected
-        if ("2".equals(qsStyle) && mQuickSpace != null) {
-            ViewGroup qsParent = (ViewGroup) mQuickSpace.getParent();
-            int qsIndex = qsParent.indexOfChild(mQuickSpace);
-            ViewGroup.LayoutParams qsLp = mQuickSpace.getLayoutParams();
-            ((QuickSpaceView) mQuickSpace).onDestroy();
-            qsParent.removeViewAt(qsIndex);
-            BlissSpaceView bliss = (BlissSpaceView) LayoutInflater.from(this)
-                    .inflate(R.layout.quickspace_bliss, qsParent, false);
-            bliss.setLayoutParams(qsLp);
-            qsParent.addView(bliss, qsIndex);
-            mQuickSpace = bliss;
-        }
         if (mQuickSpace != null) {
             mQuickSpace.setVisibility(LauncherPrefs.SHOW_QUICKSPACE.get(this)
                     ? View.VISIBLE : View.GONE);

@@ -655,13 +655,12 @@ public class Workspace<T extends View & PageIndicator> extends PagedView<T>
             return;
         }
 
-        if (mFirstPagePinnedItem == null) {
-            // In transposed layout, we add the first page pinned widget in the Grid.
-            // As workspace does not touch the edges, we do not need a full
-            // width first page pinned item.
-            mFirstPagePinnedItem = LayoutInflater.from(getContext())
-                    .inflate(R.layout.reserved_container_workspace, firstPage, false);
-        }
+        String qsStyle = LauncherPrefs.QUICKSPACE_STYLE.get(getContext());
+        int layoutRes = "2".equals(qsStyle)
+                ? R.layout.quickspace_bliss
+                : R.layout.reserved_container_workspace;
+        mFirstPagePinnedItem = LayoutInflater.from(getContext())
+                .inflate(layoutRes, firstPage, false);
 
         int cellHSpan = mLauncher.getDeviceProfile().inv.numSearchContainerColumns;
         CellLayoutLayoutParams lp = new CellLayoutLayoutParams(0, 0, cellHSpan, 1);
