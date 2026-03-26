@@ -680,7 +680,7 @@ public class Workspace<T extends View & PageIndicator> extends PagedView<T>
         disableLayoutTransitions();
 
         // Recycle the first page pinned item
-        if (mFirstPagePinnedItem != null) {
+        if (mFirstPagePinnedItem != null && mFirstPagePinnedItem.getParent() != null) {
             ((ViewGroup) mFirstPagePinnedItem.getParent()).removeView(mFirstPagePinnedItem);
         }
 
