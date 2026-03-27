@@ -16,125 +16,302 @@
 
     <LinearLayout
         android:id="@+id/bliss_quickspace_content"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="start|center_vertical"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:minHeight="80dp">
 
-        <!-- Row 1: Large date -->
-        <com.android.launcher3.quickspace.views.DoubleShadowTextView
-            android:id="@+id/bliss_date"
-            style="@style/QuickSpaceText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="start|center_vertical"
-            android:paddingStart="16dp"
-            android:paddingTop="6dp"
-            android:singleLine="true"
-            android:textColor="?workspaceTextColor"
-            android:textSize="26sp"
-            launcher:ambientShadowBlur="3dp"
-            launcher:ambientShadowColor="?workspaceAmbientShadowColor"
-            launcher:keyShadowBlur="2dp"
-            launcher:keyShadowColor="?workspaceKeyShadowColor"
-            launcher:keyShadowOffsetX="0.5dip" />
-
-        <!-- Row 2: Weather chip · dot · Greeting chip -->
+        <!-- Shared rows: bliss / weather / calendar pages -->
         <LinearLayout
+            android:id="@+id/bliss_shared_rows"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="start|center_vertical"
-            android:orientation="horizontal"
-            android:gravity="start|center_vertical"
-            android:paddingStart="16dp"
-            android:paddingTop="4dp">
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:gravity="center_vertical">
 
-            <ImageView
-                android:id="@+id/bliss_weather_icon"
-                android:layout_width="18dp"
-                android:layout_height="18dp"
-                android:layout_gravity="center_vertical"
-                android:scaleType="fitXY"
-                android:visibility="gone" />
-
-            <com.android.launcher3.quickspace.views.DoubleShadowTextView
-                android:id="@+id/bliss_weather_text"
-                style="@style/QuickSpaceSubText"
+            <!-- Row 1: Date · dot · Alarm (bliss) / page title (other pages) -->
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:paddingStart="4dp"
-                android:textColor="?workspaceTextColor"
-                android:textSize="13sp"
-                android:visibility="gone"
-                launcher:ambientShadowBlur="3dp"
-                launcher:ambientShadowColor="?workspaceAmbientShadowColor"
-                launcher:keyShadowBlur="2dp"
-                launcher:keyShadowColor="?workspaceKeyShadowColor"
-                launcher:keyShadowOffsetX="0.5dip" />
+                android:layout_gravity="start|center_vertical"
+                android:orientation="horizontal"
+                android:gravity="start|center_vertical"
+                android:paddingStart="16dp"
+                android:paddingTop="6dp">
 
-            <!-- Dot separator — only shown when both weather and greeting are visible -->
-            <View
-                android:id="@+id/bliss_row2_dot"
-                android:layout_width="3dp"
-                android:layout_height="3dp"
-                android:layout_gravity="center_vertical"
-                android:layout_marginStart="6dp"
-                android:layout_marginEnd="6dp"
-                android:background="@drawable/dot_separator"
-                android:visibility="gone" />
+                <com.android.launcher3.quickspace.views.DoubleShadowTextView
+                    android:id="@+id/bliss_date"
+                    style="@style/QuickSpaceText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:singleLine="true"
+                    android:textColor="?workspaceTextColor"
+                    android:textSize="26sp"
+                    launcher:ambientShadowBlur="3dp"
+                    launcher:ambientShadowColor="?workspaceAmbientShadowColor"
+                    launcher:keyShadowBlur="2dp"
+                    launcher:keyShadowColor="?workspaceKeyShadowColor"
+                    launcher:keyShadowOffsetX="0.5dip" />
 
-            <com.android.launcher3.quickspace.views.DoubleShadowTextView
-                android:id="@+id/bliss_greeting_text"
-                style="@style/QuickSpaceSubText"
+                <View
+                    android:id="@+id/bliss_row2_dot"
+                    android:layout_width="3dp"
+                    android:layout_height="3dp"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:background="@drawable/dot_separator"
+                    android:visibility="gone" />
+
+                <ImageView
+                    android:id="@+id/bliss_alarm_icon"
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginEnd="4dp"
+                    android:src="@drawable/ic_qs_alarm"
+                    android:scaleType="fitCenter"
+                    android:visibility="gone" />
+
+                <com.android.launcher3.quickspace.views.DoubleShadowTextView
+                    android:id="@+id/bliss_alarm_text"
+                    style="@style/QuickSpaceText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:singleLine="true"
+                    android:textColor="?workspaceTextColor"
+                    android:textSize="26sp"
+                    android:visibility="gone"
+                    launcher:ambientShadowBlur="3dp"
+                    launcher:ambientShadowColor="?workspaceAmbientShadowColor"
+                    launcher:keyShadowBlur="2dp"
+                    launcher:keyShadowColor="?workspaceKeyShadowColor"
+                    launcher:keyShadowOffsetX="0.5dip" />
+
+            </LinearLayout>
+
+            <!-- Row 2: Greeting (bliss) / weather+city (weather) / subtitle (calendar) -->
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:textColor="?workspaceTextColor"
-                android:textSize="13sp"
-                launcher:ambientShadowBlur="3dp"
-                launcher:ambientShadowColor="?workspaceAmbientShadowColor"
-                launcher:keyShadowBlur="2dp"
-                launcher:keyShadowColor="?workspaceKeyShadowColor"
-                launcher:keyShadowOffsetX="0.5dip" />
+                android:layout_gravity="start|center_vertical"
+                android:orientation="horizontal"
+                android:gravity="start|center_vertical"
+                android:paddingStart="16dp"
+                android:paddingTop="4dp">
+
+                <ImageView
+                    android:id="@+id/bliss_weather_icon"
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
+                    android:layout_gravity="center_vertical"
+                    android:scaleType="fitXY"
+                    android:visibility="gone" />
+
+                <com.android.launcher3.quickspace.views.DoubleShadowTextView
+                    android:id="@+id/bliss_weather_text"
+                    style="@style/QuickSpaceSubText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:paddingStart="4dp"
+                    android:textColor="?workspaceTextColor"
+                    android:textSize="13sp"
+                    android:visibility="gone"
+                    launcher:ambientShadowBlur="3dp"
+                    launcher:ambientShadowColor="?workspaceAmbientShadowColor"
+                    launcher:keyShadowBlur="2dp"
+                    launcher:keyShadowColor="?workspaceKeyShadowColor"
+                    launcher:keyShadowOffsetX="0.5dip" />
+
+                <com.android.launcher3.quickspace.views.DoubleShadowTextView
+                    android:id="@+id/bliss_greeting_text"
+                    style="@style/QuickSpaceSubText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:textColor="?workspaceTextColor"
+                    android:textSize="13sp"
+                    android:visibility="gone"
+                    launcher:ambientShadowBlur="3dp"
+                    launcher:ambientShadowColor="?workspaceAmbientShadowColor"
+                    launcher:keyShadowBlur="2dp"
+                    launcher:keyShadowColor="?workspaceKeyShadowColor"
+                    launcher:keyShadowOffsetX="0.5dip" />
+
+            </LinearLayout>
+
+            <!-- Row 3: PSA (bliss) / extra subtitle (other pages) -->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start|center_vertical"
+                android:orientation="horizontal"
+                android:gravity="start|center_vertical"
+                android:paddingStart="16dp"
+                android:paddingTop="4dp"
+                android:paddingBottom="6dp">
+
+                <ImageView
+                    android:id="@+id/bliss_row3_icon"
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
+                    android:layout_gravity="center_vertical"
+                    android:scaleType="fitXY"
+                    android:paddingEnd="5dp"
+                    android:visibility="gone" />
+
+                <com.android.launcher3.quickspace.views.DoubleShadowTextView
+                    android:id="@+id/bliss_row3_text"
+                    style="@style/QuickSpaceSubText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:singleLine="true"
+                    android:ellipsize="end"
+                    android:textColor="?workspaceTextColor"
+                    android:textSize="13sp"
+                    launcher:ambientShadowBlur="3dp"
+                    launcher:ambientShadowColor="?workspaceAmbientShadowColor"
+                    launcher:keyShadowBlur="2dp"
+                    launcher:keyShadowColor="?workspaceKeyShadowColor"
+                    launcher:keyShadowOffsetX="0.5dip" />
+
+            </LinearLayout>
 
         </LinearLayout>
 
-        <!-- Row 3: Icon + PSA / Now Playing / Calendar event -->
+        <!-- Music page: info + controls on left, album art on right -->
         <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="start|center_vertical"
+            android:id="@+id/bliss_music_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:orientation="horizontal"
-            android:gravity="start|center_vertical"
-            android:paddingStart="16dp"
-            android:paddingTop="4dp"
+            android:gravity="center_vertical"
+            android:visibility="gone"
             android:paddingBottom="6dp">
 
-            <ImageView
-                android:id="@+id/bliss_row3_icon"
-                android:layout_width="18dp"
-                android:layout_height="18dp"
-                android:layout_gravity="center_vertical"
-                android:scaleType="fitXY"
-                android:paddingEnd="5dp"
-                android:visibility="gone" />
-
-            <com.android.launcher3.quickspace.views.DoubleShadowTextView
-                android:id="@+id/bliss_row3_text"
-                style="@style/QuickSpaceSubText"
-                android:layout_width="wrap_content"
+            <!-- Left: title + artist + controls -->
+            <LinearLayout
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:singleLine="true"
-                android:ellipsize="end"
-                android:textColor="?workspaceTextColor"
-                android:textSize="13sp"
-                launcher:ambientShadowBlur="3dp"
-                launcher:ambientShadowColor="?workspaceAmbientShadowColor"
-                launcher:keyShadowBlur="2dp"
-                launcher:keyShadowColor="?workspaceKeyShadowColor"
-                launcher:keyShadowOffsetX="0.5dip" />
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:gravity="center_vertical">
+
+                <!-- Title row: app icon + track title -->
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="start|center_vertical"
+                    android:paddingStart="16dp"
+                    android:paddingTop="6dp">
+
+                    <ImageView
+                        android:id="@+id/bliss_music_app_icon"
+                        android:layout_width="18dp"
+                        android:layout_height="18dp"
+                        android:layout_gravity="center_vertical"
+                        android:scaleType="fitXY"
+                        android:visibility="gone" />
+
+                    <com.android.launcher3.quickspace.views.DoubleShadowTextView
+                        android:id="@+id/bliss_music_title"
+                        style="@style/QuickSpaceText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:paddingStart="6dp"
+                        android:singleLine="true"
+                        android:ellipsize="end"
+                        android:textColor="?workspaceTextColor"
+                        android:textSize="18sp"
+                        launcher:ambientShadowBlur="3dp"
+                        launcher:ambientShadowColor="?workspaceAmbientShadowColor"
+                        launcher:keyShadowBlur="2dp"
+                        launcher:keyShadowColor="?workspaceKeyShadowColor"
+                        launcher:keyShadowOffsetX="0.5dip" />
+
+                </LinearLayout>
+
+                <!-- Artist row -->
+                <com.android.launcher3.quickspace.views.DoubleShadowTextView
+                    android:id="@+id/bliss_music_artist"
+                    style="@style/QuickSpaceSubText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="16dp"
+                    android:paddingTop="2dp"
+                    android:singleLine="true"
+                    android:ellipsize="end"
+                    android:textColor="?workspaceTextColor"
+                    android:textSize="13sp"
+                    android:visibility="gone"
+                    launcher:ambientShadowBlur="3dp"
+                    launcher:ambientShadowColor="?workspaceAmbientShadowColor"
+                    launcher:keyShadowBlur="2dp"
+                    launcher:keyShadowColor="?workspaceKeyShadowColor"
+                    launcher:keyShadowOffsetX="0.5dip" />
+
+                <!-- Controls row: prev / play-pause / next -->
+                <LinearLayout
+                    android:id="@+id/bliss_music_controls"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="start|center_vertical"
+                    android:paddingStart="12dp"
+                    android:paddingTop="4dp"
+                    android:visibility="gone">
+
+                    <ImageView
+                        android:id="@+id/bliss_music_prev"
+                        android:layout_width="28dp"
+                        android:layout_height="28dp"
+                        android:padding="4dp"
+                        android:src="@drawable/ic_qs_prev"
+                        android:scaleType="fitCenter"
+                        android:background="?android:selectableItemBackgroundBorderless" />
+
+                    <ImageView
+                        android:id="@+id/bliss_music_play_pause"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:layout_marginStart="4dp"
+                        android:layout_marginEnd="4dp"
+                        android:padding="4dp"
+                        android:src="@drawable/ic_qs_play"
+                        android:scaleType="fitCenter"
+                        android:background="?android:selectableItemBackgroundBorderless" />
+
+                    <ImageView
+                        android:id="@+id/bliss_music_next"
+                        android:layout_width="28dp"
+                        android:layout_height="28dp"
+                        android:padding="4dp"
+                        android:src="@drawable/ic_qs_next"
+                        android:scaleType="fitCenter"
+                        android:background="?android:selectableItemBackgroundBorderless" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <!-- Right: album art -->
+            <ImageView
+                android:id="@+id/bliss_music_album_art"
+                android:layout_width="56dp"
+                android:layout_height="56dp"
+                android:layout_marginStart="12dp"
+                android:layout_marginEnd="16dp"
+                android:scaleType="centerCrop"
+                android:background="@drawable/qs_album_art_bg"
+                android:clipToOutline="true"
+                android:visibility="gone" />
 
         </LinearLayout>
 

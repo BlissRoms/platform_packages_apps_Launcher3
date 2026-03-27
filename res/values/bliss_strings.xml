@@ -160,6 +160,22 @@
     <string name="quickspace_ext_one">Today is</string>
     <string name="quickspace_ext_two">It\'s</string>
 
+   <!-- QuickSpace: Bliss Extended -->
+   <string name="qs_media_prev_desc">Previous track</string>
+    <string name="qs_media_play_pause_desc">Play or pause</string>
+    <string name="qs_media_next_desc">Next track</string>
+    <string name="qs_event_now">Now</string>
+    <plurals name="qs_event_in_minutes">
+        <item quantity="one">In 1 min</item>
+        <item quantity="other">In %d min</item>
+    </plurals>
+    <plurals name="qs_event_in_hours">
+        <item quantity="one">In 1 hr</item>
+        <item quantity="other">In %d hr</item>
+    </plurals>
+    <string name="qs_no_upcoming_events">No upcoming events</string>
+    <string name="qs_no_media_playing">Nothing playing</string>
+
     <!-- QuickSpace: QuickEvent: Ambient Play -->
     <string name="qe_now_playing_unknown_artist">Unknown Artist</string>
     <string name="qe_now_playing_ext_one">Now playing</string>

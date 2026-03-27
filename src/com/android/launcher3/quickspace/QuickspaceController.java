@@ -329,6 +329,27 @@ public class QuickspaceController implements OmniJawsClient.OmniJawsObserver,
         }
     }
 
+    public String getWeatherTempOnly() {
+        if (mProvider == WeatherProvider.SERAPHIX) {
+            return mSeraphixText;
+        } else {
+            if (mWeatherInfo == null) return null;
+            boolean showWeatherText = LauncherPrefs.SHOW_QUICKSPACE_WEATHER_TEXT.get(mContext);
+            StringBuilder sb = new StringBuilder();
+            sb.append(mWeatherInfo.temp).append(mWeatherInfo.tempUnits);
+            if (showWeatherText) {
+                sb.append(" • ").append(getConditionText(mWeatherInfo.condition));
+            }
+            return sb.toString();
+        }
+    }
+
+    public String getWeatherCity() {
+        if (mProvider == WeatherProvider.SERAPHIX) return "";
+        if (mWeatherInfo == null) return "";
+        return mWeatherInfo.city != null ? mWeatherInfo.city : "";
+    }
+
     private String getConditionText(String input) {
         if (input == null || input.isEmpty()) return "";
 

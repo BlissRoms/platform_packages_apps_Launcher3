@@ -9,6 +9,7 @@ package com.android.launcher3.util
 
 import android.content.Context
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import android.media.MediaMetadata
 import android.media.session.MediaController
@@ -293,6 +294,21 @@ class MediaSessionManagerHelper private constructor(ctx: Context) {
         return try {
             context.packageManager.getApplicationIcon(packageName)
         } catch (_: PackageManager.NameNotFoundException) {
+            null
+        }
+    }
+
+    fun getAlbumArt(): Bitmap? {
+        val meta = mediaMetadata.value ?: return null
+        meta.getBitmap(MediaMetadata.METADATA_KEY_ALBUM_ART)?.let { return it }
+        meta.getBitmap(MediaMetadata.METADATA_KEY_ART)?.let { return it }
+        val desc = meta.description ?: return null
+        desc.iconBitmap?.let { return it }
+        val iconUri = desc.iconUri ?: return null
+        return try {
+            val stream = context.contentResolver.openInputStream(iconUri) ?: return null
+            android.graphics.BitmapFactory.decodeStream(stream).also { stream.close() }
+        } catch (e: Exception) {
             null
         }
     }

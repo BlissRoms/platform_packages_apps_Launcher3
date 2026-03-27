@@ -11,21 +11,31 @@ package com.android.launcher3.quickspace;
 
 import android.content.Context;
 import android.content.res.ColorStateList;
+import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
+import android.media.MediaMetadata;
 import android.util.AttributeSet;
+import android.view.GestureDetector;
+import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.Interpolator;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.android.launcher3.LauncherPrefs;
 import com.android.launcher3.R;
 import com.android.launcher3.quickspace.QuickspaceController.OnDataListener;
 import com.android.launcher3.quickspace.receivers.QuickSpaceActionReceiver;
+import com.android.launcher3.util.MediaSessionManagerHelper;
 import com.android.launcher3.util.Themes;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class BlissSpaceView extends FrameLayout implements OnDataListener {
 
@@ -33,46 +43,107 @@ public class BlissSpaceView extends FrameLayout implements OnDataListener {
 
     private static final Interpolator ANIMATE_IN  = new DecelerateInterpolator();
     private static final Interpolator ANIMATE_OUT = new AccelerateInterpolator();
+    private static final long PAGE_ANIM_DURATION = 180;
+
+    private static final int PAGE_BLISS    = 0;
+    private static final int PAGE_WEATHER  = 1;
+    private static final int PAGE_CALENDAR = 2;
+    private static final int PAGE_MUSIC    = 3;
 
     private QuickspaceController mController;
     private BlissEventsController mEventsController;
     private boolean mFinishedInflate;
     private boolean mListenerRegistered;
 
-    // Views
+    private View      mContentContainer;
+    private View      mSharedRows;
     private TextView  mDateView;
+    private View      mDotSeparator;
+    private TextView  mAlarmText;
     private ImageView mWeatherIcon;
     private TextView  mWeatherText;
-    private View      mDotSeparator;
     private TextView  mGreetingText;
     private ImageView mRow3Icon;
     private TextView  mRow3Text;
+    private ColorStateList mDotTint;
+
+    private ImageView mAlarmIcon;
+
+    private View      mMusicContainer;
+    private ImageView mMusicAppIcon;
+    private TextView  mMusicTitle;
+    private TextView  mMusicArtist;
+    private View      mMusicControls;
+    private ImageView mMusicPrev;
+    private ImageView mMusicPlayPause;
+    private ImageView mMusicNext;
+    private ImageView mAlbumArt;
+
+    private LinearLayout mDotsContainer;
+
+    private final List<Integer> mPages = new ArrayList<>();
+    private int mCurrentPage = 0;
+    private GestureDetector mGestureDetector;
+
+    private boolean mInterceptionDisallowed = false;
 
     public BlissSpaceView(Context context, AttributeSet attrs) {
         super(context, attrs);
         if (!LauncherPrefs.SHOW_QUICKSPACE.get(context)) return;
         mController = new QuickspaceController(context);
         mEventsController = new BlissEventsController(context);
-        mEventsController.setOnRow3ChangedListener(this::bindRow3);
+        mEventsController.setOnRow3ChangedListener(this::onRow3Changed);
+        mEventsController.setOnPagesChangedListener(this::onEventsPageDataChanged);
         setClipChildren(false);
+        mGestureDetector = new GestureDetector(context, new PageGestureListener());
     }
 
     @Override
     public void onFinishInflate() {
         super.onFinishInflate();
         if (mController == null) return;
+
+        mContentContainer = findViewById(R.id.bliss_quickspace_content);
+        mSharedRows   = findViewById(R.id.bliss_shared_rows);
         mDateView     = findViewById(R.id.bliss_date);
+        mDotSeparator = findViewById(R.id.bliss_row2_dot);
+        mAlarmIcon    = findViewById(R.id.bliss_alarm_icon);
+        mAlarmText    = findViewById(R.id.bliss_alarm_text);
         mWeatherIcon  = findViewById(R.id.bliss_weather_icon);
         mWeatherText  = findViewById(R.id.bliss_weather_text);
-        mDotSeparator = findViewById(R.id.bliss_row2_dot);
         mGreetingText = findViewById(R.id.bliss_greeting_text);
         mRow3Icon     = findViewById(R.id.bliss_row3_icon);
         mRow3Text     = findViewById(R.id.bliss_row3_text);
 
-        // Tint the dot separator to workspace text color (shape drawable can't use theme attrs)
-        ColorStateList dotTint = ColorStateList.valueOf(
+        mMusicContainer  = findViewById(R.id.bliss_music_container);
+        mMusicAppIcon    = findViewById(R.id.bliss_music_app_icon);
+        mMusicTitle      = findViewById(R.id.bliss_music_title);
+        mMusicArtist     = findViewById(R.id.bliss_music_artist);
+        mMusicControls   = findViewById(R.id.bliss_music_controls);
+        mMusicPrev       = findViewById(R.id.bliss_music_prev);
+        mMusicPlayPause  = findViewById(R.id.bliss_music_play_pause);
+        mMusicNext       = findViewById(R.id.bliss_music_next);
+        mAlbumArt        = findViewById(R.id.bliss_music_album_art);
+        mAlbumArt.setClipToOutline(true);
+
+        mDotTint = ColorStateList.valueOf(
                 Themes.getAttrColor(getContext(), R.attr.workspaceTextColor));
-        mDotSeparator.setBackgroundTintList(dotTint);
+        mDotSeparator.setBackgroundTintList(mDotTint);
+        mAlarmIcon.setImageTintList(mDotTint);
+        mMusicPrev.setImageTintList(mDotTint);
+        mMusicPlayPause.setImageTintList(mDotTint);
+        mMusicNext.setImageTintList(mDotTint);
+
+        mDotsContainer = new LinearLayout(getContext());
+        mDotsContainer.setOrientation(LinearLayout.HORIZONTAL);
+        int dotsPad = (int) (getResources().getDisplayMetrics().density * 6);
+        FrameLayout.LayoutParams dotsLp = new FrameLayout.LayoutParams(
+                FrameLayout.LayoutParams.WRAP_CONTENT,
+                FrameLayout.LayoutParams.WRAP_CONTENT,
+                android.view.Gravity.END | android.view.Gravity.BOTTOM);
+        dotsLp.setMarginEnd(dotsPad);
+        dotsLp.bottomMargin = dotsPad;
+        addView(mDotsContainer, dotsLp);
 
         mFinishedInflate = true;
         if (isAttachedToWindow() && !mListenerRegistered) {
@@ -102,83 +173,340 @@ public class BlissSpaceView extends FrameLayout implements OnDataListener {
     }
 
     @Override
+    public boolean onInterceptTouchEvent(MotionEvent ev) {
+        if (mPages.size() > 1) {
+            if (ev.getAction() == MotionEvent.ACTION_DOWN) {
+                mInterceptionDisallowed = false;
+            }
+            mGestureDetector.onTouchEvent(ev);
+        }
+        return false;
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent ev) {
+        if (mPages.size() > 1) {
+            int action = ev.getAction();
+            if (action == MotionEvent.ACTION_DOWN) {
+                mInterceptionDisallowed = false;
+            } else if (action == MotionEvent.ACTION_MOVE && !mInterceptionDisallowed) {
+                getParent().requestDisallowInterceptTouchEvent(true);
+                mInterceptionDisallowed = true;
+            } else if (action == MotionEvent.ACTION_UP
+                    || action == MotionEvent.ACTION_CANCEL) {
+                if (mInterceptionDisallowed) {
+                    getParent().requestDisallowInterceptTouchEvent(false);
+                    mInterceptionDisallowed = false;
+                }
+            }
+            mGestureDetector.onTouchEvent(ev);
+            return true;
+        }
+        return super.onTouchEvent(ev);
+    }
+
+    @Override
     public void onDataUpdated() {
         if (mController == null || mDateView == null) return;
+        MediaSessionManagerHelper msm = MediaSessionManagerHelper.getInstance(getContext());
+        boolean sessionActive = msm != null && msm.isMediaSessionActive();
+        MediaMetadata meta = sessionActive ? msm.getCurrentMediaMetadata() : null;
+        String mediaTitle  = meta != null ? meta.getString(MediaMetadata.METADATA_KEY_TITLE) : null;
+        String mediaArtist = meta != null ? meta.getString(MediaMetadata.METADATA_KEY_ARTIST) : null;
+        if (mediaArtist == null || mediaArtist.isEmpty()) {
+            mediaArtist = meta != null ? meta.getString(MediaMetadata.METADATA_KEY_ALBUM_ARTIST) : null;
+        }
+        mEventsController.setMediaInfo(mediaTitle, mediaArtist, sessionActive);
+        rebuildPages();
+        bindCurrentPage();
+    }
 
-        // Bridge Now Playing state from QuickspaceController's QuickEventsController
-        // into BlissEventsController so the rotation logic has accurate NP data.
-        QuickEventsController events = mController.getEventController();
-        mEventsController.setMediaInfo(
-                events.getTitle(),
-                events.getActionTitle(),
-                events.isNowPlaying());
+    private void onRow3Changed() {
+        if (mCurrentPage == PAGE_BLISS) bindBlissPage();
+    }
 
-        // Row 1: date
+    private void onEventsPageDataChanged() {
+        if (mDateView == null) return;
+        int previousPage = mCurrentPage;
+        rebuildPages();
+        if (mCurrentPage != previousPage) bindCurrentPage();
+        else updateDots();
+    }
+
+    private void rebuildPages() {
+        int previousPageType = mPages.isEmpty() ? PAGE_BLISS : mPages.get(mCurrentPage);
+
+        mPages.clear();
+        mPages.add(PAGE_BLISS);
+        if (mController.isWeatherAvailable()) mPages.add(PAGE_WEATHER);
+        mPages.add(PAGE_CALENDAR);
+        mPages.add(PAGE_MUSIC);
+
+        int newIndex = mPages.indexOf(previousPageType);
+        mCurrentPage = newIndex >= 0 ? newIndex : 0;
+
+        rebuildDots();
+    }
+
+    private void rebuildDots() {
+        if (mDotsContainer == null) return;
+        mDotsContainer.removeAllViews();
+        if (mPages.size() <= 1) return;
+        LayoutInflater inflater = LayoutInflater.from(getContext());
+        int gap = (int) (getResources().getDisplayMetrics().density * 4);
+        for (int i = 0; i < mPages.size(); i++) {
+            View dot = inflater.inflate(R.layout.qs_dot_indicator, mDotsContainer, false);
+            if (i > 0) {
+                LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) dot.getLayoutParams();
+                lp.setMarginStart(gap);
+                dot.setLayoutParams(lp);
+            }
+            mDotsContainer.addView(dot);
+        }
+        updateDots();
+    }
+
+    private void updateDots() {
+        if (mDotsContainer == null) return;
+        float density = getResources().getDisplayMetrics().density;
+        int activeW  = (int) (14 * density);
+        int inactiveW = (int) (4 * density);
+        int dotH = (int) (4 * density);
+        for (int i = 0; i < mDotsContainer.getChildCount(); i++) {
+            View dot = mDotsContainer.getChildAt(i);
+            boolean selected = (i == mCurrentPage);
+            dot.setSelected(selected);
+            LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) dot.getLayoutParams();
+            lp.width = selected ? activeW : inactiveW;
+            lp.height = dotH;
+            dot.setLayoutParams(lp);
+        }
+    }
+
+    private void bindCurrentPage() {
+        switch (mPages.get(mCurrentPage)) {
+            case PAGE_WEATHER:  bindWeatherPage();  break;
+            case PAGE_CALENDAR: bindCalendarPage(); break;
+            case PAGE_MUSIC:    bindMusicPage();    break;
+            default:            bindBlissPage();    break;
+        }
+        updateDots();
+    }
+
+    private void navigateTo(int newPage) {
+        if (mPages.isEmpty()) return;
+        newPage = ((newPage % mPages.size()) + mPages.size()) % mPages.size();
+        if (newPage == mCurrentPage) return;
+        mCurrentPage = newPage;
+        mContentContainer.animate().cancel();
+        mContentContainer.animate()
+                .alpha(0f)
+                .setDuration(PAGE_ANIM_DURATION)
+                .setInterpolator(ANIMATE_OUT)
+                .withEndAction(() -> {
+                    bindCurrentPage();
+                    mContentContainer.animate()
+                            .alpha(1f)
+                            .setDuration(PAGE_ANIM_DURATION)
+                            .setInterpolator(ANIMATE_IN)
+                            .start();
+                })
+                .start();
+    }
+
+    private void bindBlissPage() {
+        showMusicRows(false);
+        mDateView.setTextSize(android.util.TypedValue.COMPLEX_UNIT_SP, 26f);
         mDateView.setText(mEventsController.getDateText());
         mDateView.setOnClickListener(QuickSpaceActionReceiver.getCalendarAction());
 
-        // Row 2: weather + greeting
-        boolean weatherAvailable = mController.isWeatherAvailable();
-        String weatherTemp = mController.getWeatherTemp();
-        Drawable weatherIcon = mController.getWeatherIcon();
-
-        if (weatherAvailable && weatherTemp != null && !weatherTemp.isEmpty()) {
-            mWeatherText.setText(weatherTemp);
-            mWeatherText.setVisibility(View.VISIBLE);
-            mWeatherText.setOnClickListener(QuickSpaceActionReceiver.getWeatherAction());
-            if (weatherIcon != null) {
-                mWeatherIcon.setImageDrawable(weatherIcon);
-                mWeatherIcon.setVisibility(View.VISIBLE);
-                mWeatherIcon.setOnClickListener(QuickSpaceActionReceiver.getWeatherAction());
-            } else {
-                mWeatherIcon.setVisibility(View.GONE);
-            }
+        String alarm = mEventsController.getNextAlarmText();
+        if (alarm != null) {
+            mAlarmText.setText(alarm);
+            mAlarmText.setVisibility(View.VISIBLE);
+            mAlarmIcon.setVisibility(View.VISIBLE);
             mDotSeparator.setVisibility(View.VISIBLE);
         } else {
-            mWeatherIcon.setVisibility(View.GONE);
-            mWeatherText.setVisibility(View.GONE);
+            mAlarmText.setVisibility(View.GONE);
+            mAlarmIcon.setVisibility(View.GONE);
             mDotSeparator.setVisibility(View.GONE);
         }
 
-        mGreetingText.setText(mEventsController.getGreeting());
+        mWeatherIcon.setVisibility(View.GONE);
+        mWeatherText.setVisibility(View.GONE);
 
-        // Row 3
-        bindRow3();
+        mGreetingText.setText(mEventsController.getGreeting());
+        mGreetingText.setVisibility(View.VISIBLE);
+        mGreetingText.setOnClickListener(null);
+
+        mRow3Icon.setVisibility(View.GONE);
+        mRow3Text.setText(mEventsController.getPsaText());
+        mRow3Text.setOnClickListener(null);
     }
 
-    private void bindRow3() {
-        if (mRow3Text == null) return;
-        String text = mEventsController.getRow3Text();
-        Drawable icon = mEventsController.getRow3Icon();
+    private void bindWeatherPage() {
+        showMusicRows(false);
+        String temp = mController.getWeatherTempOnly();
+        String city = mController.getWeatherCity();
+        Drawable icon = mController.getWeatherIcon();
 
-        mRow3Text.setText(text != null ? text : "");
-        mRow3Text.setOnClickListener(mEventsController.getRow3Action());
+        mDateView.setTextSize(android.util.TypedValue.COMPLEX_UNIT_SP, 20f);
+        mDateView.setText(temp != null ? temp : "");
+        mDateView.setOnClickListener(QuickSpaceActionReceiver.getWeatherAction());
 
         if (icon != null) {
-            mRow3Icon.setImageDrawable(icon);
-            mRow3Icon.setOnClickListener(mEventsController.getRow3Action());
-            if (mRow3Icon.getVisibility() != View.VISIBLE) animateIn(mRow3Icon);
+            mWeatherIcon.setImageDrawable(icon);
+            mWeatherIcon.setVisibility(View.VISIBLE);
         } else {
-            if (mRow3Icon.getVisibility() == View.VISIBLE) animateOut(mRow3Icon);
+            mWeatherIcon.setVisibility(View.GONE);
+        }
+        boolean showCity = LauncherPrefs.SHOW_QUICKSPACE_WEATHER_CITY.get(getContext());
+        if (showCity && city != null && !city.isEmpty()) {
+            mWeatherText.setText(city);
+            mWeatherText.setVisibility(View.VISIBLE);
+        } else {
+            mWeatherText.setVisibility(View.GONE);
+        }
+        mWeatherText.setOnClickListener(QuickSpaceActionReceiver.getWeatherAction());
+        mDotSeparator.setVisibility(View.GONE);
+        mAlarmIcon.setVisibility(View.GONE);
+        mAlarmText.setVisibility(View.GONE);
+        mGreetingText.setVisibility(View.GONE);
+        mRow3Icon.setVisibility(View.GONE);
+        mRow3Text.setText("");
+        mRow3Text.setOnClickListener(QuickSpaceActionReceiver.getWeatherAction());
+    }
+
+    private void bindCalendarPage() {
+        showMusicRows(false);
+        String title    = mEventsController.getEventTitle();
+        String subtitle = mEventsController.getEventSubtitle();
+        boolean hasEvent = title != null && !title.isEmpty();
+
+        mDateView.setTextSize(android.util.TypedValue.COMPLEX_UNIT_SP, 20f);
+        mDateView.setText(hasEvent ? title
+                : getContext().getString(R.string.qs_no_upcoming_events));
+        mDateView.setOnClickListener(QuickSpaceActionReceiver.getCalendarAction());
+
+        mWeatherIcon.setImageResource(R.drawable.ic_qs_calendar);
+        mWeatherIcon.setVisibility(View.VISIBLE);
+        mWeatherIcon.setOnClickListener(QuickSpaceActionReceiver.getCalendarAction());
+
+        if (hasEvent && subtitle != null && !subtitle.isEmpty()) {
+            mWeatherText.setText(subtitle);
+            mWeatherText.setVisibility(View.VISIBLE);
+            mWeatherText.setOnClickListener(QuickSpaceActionReceiver.getCalendarAction());
+        } else {
+            mWeatherText.setVisibility(View.GONE);
+        }
+        mDotSeparator.setVisibility(View.GONE);
+        mAlarmIcon.setVisibility(View.GONE);
+        mAlarmText.setVisibility(View.GONE);
+        mGreetingText.setVisibility(View.GONE);
+        mRow3Icon.setVisibility(View.GONE);
+        mRow3Text.setText("");
+        mRow3Text.setOnClickListener(QuickSpaceActionReceiver.getCalendarAction());
+    }
+
+    private void showMusicRows(boolean music) {
+        if (mSharedRows != null) mSharedRows.setVisibility(music ? View.GONE : View.VISIBLE);
+        if (mMusicContainer != null) mMusicContainer.setVisibility(music ? View.VISIBLE : View.GONE);
+    }
+
+    private void bindMusicPage() {
+        showMusicRows(true);
+
+        MediaSessionManagerHelper msm = MediaSessionManagerHelper.getInstance(getContext());
+        boolean sessionActive = msm != null && msm.isMediaSessionActive();
+
+        MediaMetadata meta = sessionActive ? msm.getCurrentMediaMetadata() : null;
+
+        String title  = meta != null ? meta.getString(MediaMetadata.METADATA_KEY_TITLE)  : null;
+        String artist = meta != null ? meta.getString(MediaMetadata.METADATA_KEY_ARTIST) : null;
+        if (artist == null || artist.isEmpty()) {
+            artist = meta != null ? meta.getString(MediaMetadata.METADATA_KEY_ALBUM_ARTIST) : null;
+        }
+
+        boolean hasInfo = sessionActive && (title != null && !title.isEmpty());
+
+        if (hasInfo) {
+            mMusicTitle.setText(title);
+            mMusicTitle.setOnClickListener(v -> { if (msm != null) msm.launchMediaApp(); });
+
+            Drawable appIcon = msm != null ? msm.getMediaAppIcon() : null;
+            if (appIcon != null) {
+                mMusicAppIcon.setImageDrawable(appIcon);
+                mMusicAppIcon.setVisibility(View.VISIBLE);
+            } else {
+                mMusicAppIcon.setImageResource(R.drawable.ic_qs_music);
+                mMusicAppIcon.setVisibility(View.VISIBLE);
+            }
+
+            if (artist != null && !artist.isEmpty()) {
+                mMusicArtist.setText(artist);
+                mMusicArtist.setVisibility(View.VISIBLE);
+            } else {
+                mMusicArtist.setVisibility(View.GONE);
+            }
+
+            mMusicControls.setVisibility(View.VISIBLE);
+            mMusicPrev.setOnClickListener(v -> { if (msm != null) msm.prevSong(); });
+            mMusicNext.setOnClickListener(v -> { if (msm != null) msm.nextSong(); });
+            boolean playing = msm != null && msm.isMediaPlaying();
+            mMusicPlayPause.setImageResource(playing ? R.drawable.ic_qs_pause : R.drawable.ic_qs_play);
+            mMusicPlayPause.setOnClickListener(v -> {
+                if (msm != null) {
+                    msm.toggleMediaPlaybackState();
+                    mMusicPlayPause.setImageResource(msm.isMediaPlaying()
+                            ? R.drawable.ic_qs_pause : R.drawable.ic_qs_play);
+                }
+            });
+
+            loadAlbumArt(msm);
+        } else {
+            mMusicAppIcon.setImageResource(R.drawable.ic_qs_music);
+            mMusicAppIcon.setVisibility(View.VISIBLE);
+            mMusicTitle.setText(getContext().getString(R.string.qs_no_media_playing));
+            mMusicTitle.setOnClickListener(null);
+            mMusicArtist.setVisibility(View.GONE);
+            mMusicControls.setVisibility(View.GONE);
+            mAlbumArt.setVisibility(View.GONE);
         }
     }
 
-    private void animateIn(View view) {
-        view.animate().cancel();
-        view.setVisibility(View.VISIBLE);
-        view.setAlpha(0f);
-        view.setTranslationY(view.getHeight() / 2f);
-        view.animate().alpha(1f).translationY(0f).setDuration(300)
-                .setInterpolator(ANIMATE_IN).start();
+    private void loadAlbumArt(MediaSessionManagerHelper msm) {
+        if (mAlbumArt == null) return;
+        Bitmap art = msm != null ? msm.getAlbumArt() : null;
+        if (art != null) {
+            mAlbumArt.setImageBitmap(art);
+            mAlbumArt.setVisibility(View.VISIBLE);
+        } else {
+            mAlbumArt.setVisibility(View.GONE);
+        }
     }
 
-    private void animateOut(View view) {
-        if (view.getVisibility() != View.VISIBLE) return;
-        view.animate().cancel();
-        view.animate().alpha(0f).translationY(view.getHeight() / 2f).setDuration(400)
-                .setInterpolator(ANIMATE_OUT)
-                .withEndAction(() -> view.setVisibility(View.GONE))
-                .start();
+    private class PageGestureListener extends GestureDetector.SimpleOnGestureListener {
+        private static final int SWIPE_MIN_DISTANCE = 60;
+        private static final int SWIPE_MIN_VELOCITY = 150;
+
+        @Override
+        public boolean onDown(MotionEvent e) {
+            return true;
+        }
+
+        @Override
+        public boolean onFling(MotionEvent e1, MotionEvent e2, float vX, float vY) {
+            if (e1 == null || e2 == null) return false;
+            float dX = e2.getX() - e1.getX();
+            float dY = e2.getY() - e1.getY();
+            if (Math.abs(dX) > Math.abs(dY) * 1.2f
+                    && Math.abs(dX) > SWIPE_MIN_DISTANCE
+                    && Math.abs(vX) > SWIPE_MIN_VELOCITY) {
+                navigateTo(dX < 0 ? mCurrentPage + 1 : mCurrentPage - 1);
+                return true;
+            }
+            return false;
+        }
     }
 
     public void onPause() {
@@ -200,9 +528,9 @@ public class BlissSpaceView extends FrameLayout implements OnDataListener {
             mController.onDestroy();
             mController = null;
         }
-        mDateView = mWeatherText = mGreetingText = mRow3Text = null;
-        mWeatherIcon = mRow3Icon = null;
-        mDotSeparator = null;
+        mDateView = mAlarmText = mWeatherText = mGreetingText = mRow3Text = mMusicTitle = mMusicArtist = null;
+        mWeatherIcon = mAlarmIcon = mRow3Icon = mMusicAppIcon = mMusicPrev = mMusicPlayPause = mMusicNext = mAlbumArt = null;
+        mDotSeparator = mMusicContainer = mMusicControls = mSharedRows = null;
     }
 
     @Override

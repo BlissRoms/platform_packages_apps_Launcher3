@@ -35,6 +35,12 @@ public class QuickSpaceActionReceiver {
 
     private static final OnClickListener calendarClick = v -> openGoogleCalendar(v);
     private static final OnClickListener weatherClick  = v -> openGoogleWeather(v);
+    private static final OnClickListener alarmClick = v -> {
+        Intent i = new Intent(android.provider.AlarmClock.ACTION_SHOW_ALARMS)
+                .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        try { launcherFrom(v).startActivitySafely(v, i, null); }
+        catch (ActivityNotFoundException ignored) { }
+    };
 
     private static Launcher launcherFrom(View v) {
         return Launcher.getLauncher(v.getContext());
@@ -85,4 +91,5 @@ public class QuickSpaceActionReceiver {
 
     public static OnClickListener getCalendarAction() { return calendarClick; }
     public static OnClickListener getWeatherAction()  { return weatherClick; }
+    public static OnClickListener getAlarmAction()    { return alarmClick; }
 }

@@ -1302,17 +1302,17 @@ public class Launcher extends StatefulActivity<LauncherState>
 
     private void dispatchQuickSpacePause() {
         if (mQuickSpace instanceof QuickSpaceView) ((QuickSpaceView) mQuickSpace).onPause();
-        else if (mQuickSpace instanceof BlissSpaceView) ((BlissSpaceView) mQuickSpace).onPause();
+        if (mQuickSpace instanceof BlissSpaceView) ((BlissSpaceView) mQuickSpace).onPause();
     }
 
     private void dispatchQuickSpaceResume() {
         if (mQuickSpace instanceof QuickSpaceView) ((QuickSpaceView) mQuickSpace).onResume();
-        else if (mQuickSpace instanceof BlissSpaceView) ((BlissSpaceView) mQuickSpace).onResume();
+        if (mQuickSpace instanceof BlissSpaceView) ((BlissSpaceView) mQuickSpace).onResume();
     }
 
     private void dispatchQuickSpaceDestroy() {
         if (mQuickSpace instanceof QuickSpaceView) ((QuickSpaceView) mQuickSpace).onDestroy();
-        else if (mQuickSpace instanceof BlissSpaceView) ((BlissSpaceView) mQuickSpace).onDestroy();
+        if (mQuickSpace instanceof BlissSpaceView) ((BlissSpaceView) mQuickSpace).onDestroy();
     }
 
     /**
