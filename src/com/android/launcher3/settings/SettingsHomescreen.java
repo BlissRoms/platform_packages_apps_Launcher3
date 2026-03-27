@@ -23,10 +23,12 @@ import android.content.pm.LauncherApps;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
+import androidx.preference.ListPreference;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceCategory;
 import androidx.preference.PreferenceGroup;
 import androidx.preference.PreferenceScreen;
+import androidx.preference.SwitchPreferenceCompat;
 
 import com.android.launcher3.LauncherAppState;
 import com.android.launcher3.LauncherFiles;
@@ -119,6 +121,8 @@ public class SettingsHomescreen extends CollapsingToolbarBaseActivity
         private static final String KEY_DOCK_MUSIC_SEARCH = "pref_dock_music_search";
         private static final String KEY_HOTSEAT_QSB_OPACITY = "pref_hotseat_qsb_opacity";
         private static final String KEY_HOTSEAT_QSB_STROKE_WIDTH = "pref_hotseat_qsb_stroke_width";
+        private static final String KEY_WEATHER_PROVIDER = "pref_quickspace_weather_provider";
+        private static final String KEY_WEATHER_CITY = "pref_quickspace_weather_city";
 
         @Override
         public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
@@ -134,6 +138,20 @@ public class SettingsHomescreen extends CollapsingToolbarBaseActivity
                 generalCategory.removePreference(d2SHaptic);
             }
 
+            ListPreference providerPref = findPreference(KEY_WEATHER_PROVIDER);
+            SwitchPreferenceCompat cityPref = findPreference(KEY_WEATHER_CITY);
+            if (providerPref != null && cityPref != null) {
+                updateCityToggleState(cityPref, providerPref.getValue());
+                providerPref.setOnPreferenceChangeListener((pref, newValue) -> {
+                    updateCityToggleState(cityPref, (String) newValue);
+                    return true;
+                });
+            }
+        }
+
+        private void updateCityToggleState(SwitchPreferenceCompat cityPref, String providerValue) {
+            boolean omniJawsPossible = "omnijaws".equals(providerValue) || "auto".equals(providerValue);
+            cityPref.setEnabled(omniJawsPossible);
         }
 
         private void filterPreferenceGroup(PreferenceGroup group) {
