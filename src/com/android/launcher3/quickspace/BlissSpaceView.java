@@ -31,6 +31,7 @@ import com.android.launcher3.LauncherPrefs;
 import com.android.launcher3.R;
 import com.android.launcher3.quickspace.QuickspaceController.OnDataListener;
 import com.android.launcher3.quickspace.receivers.QuickSpaceActionReceiver;
+import com.android.launcher3.util.BluetoothBatteryHelper;
 import com.android.launcher3.util.MediaSessionManagerHelper;
 import com.android.launcher3.util.Themes;
 
@@ -49,6 +50,7 @@ public class BlissSpaceView extends FrameLayout implements OnDataListener {
     private static final int PAGE_WEATHER  = 1;
     private static final int PAGE_CALENDAR = 2;
     private static final int PAGE_MUSIC    = 3;
+    private static final int PAGE_BLUETOOTH = 4;
 
     private QuickspaceController mController;
     private BlissEventsController mEventsController;
@@ -80,6 +82,8 @@ public class BlissSpaceView extends FrameLayout implements OnDataListener {
     private ImageView mAlbumArt;
 
     private LinearLayout mDotsContainer;
+    private LinearLayout mBtCompact;
+    private LinearLayout mBtContainer;
 
     private final List<Integer> mPages = new ArrayList<>();
     private int mCurrentPage = 0;
@@ -125,6 +129,8 @@ public class BlissSpaceView extends FrameLayout implements OnDataListener {
         mMusicNext       = findViewById(R.id.bliss_music_next);
         mAlbumArt        = findViewById(R.id.bliss_music_album_art);
         mAlbumArt.setClipToOutline(true);
+        mBtCompact   = findViewById(R.id.bliss_bt_compact);
+        mBtContainer = findViewById(R.id.bliss_bt_container);
 
         mDotTint = ColorStateList.valueOf(
                 Themes.getAttrColor(getContext(), R.attr.workspaceTextColor));
@@ -241,6 +247,7 @@ public class BlissSpaceView extends FrameLayout implements OnDataListener {
         if (mController.isWeatherAvailable()) mPages.add(PAGE_WEATHER);
         mPages.add(PAGE_CALENDAR);
         mPages.add(PAGE_MUSIC);
+        if (mController.isBluetoothAvailable()) mPages.add(PAGE_BLUETOOTH);
 
         int newIndex = mPages.indexOf(previousPageType);
         mCurrentPage = newIndex >= 0 ? newIndex : 0;
@@ -285,10 +292,11 @@ public class BlissSpaceView extends FrameLayout implements OnDataListener {
 
     private void bindCurrentPage() {
         switch (mPages.get(mCurrentPage)) {
-            case PAGE_WEATHER:  bindWeatherPage();  break;
-            case PAGE_CALENDAR: bindCalendarPage(); break;
-            case PAGE_MUSIC:    bindMusicPage();    break;
-            default:            bindBlissPage();    break;
+            case PAGE_WEATHER:    bindWeatherPage();    break;
+            case PAGE_CALENDAR:   bindCalendarPage();   break;
+            case PAGE_MUSIC:      bindMusicPage();      break;
+            case PAGE_BLUETOOTH:  bindBluetoothPage();  break;
+            default:              bindBlissPage();      break;
         }
         updateDots();
     }
@@ -315,7 +323,7 @@ public class BlissSpaceView extends FrameLayout implements OnDataListener {
     }
 
     private void bindBlissPage() {
-        showMusicRows(false);
+        showContentRows(0);
         mDateView.setTextSize(android.util.TypedValue.COMPLEX_UNIT_SP, 26f);
         mDateView.setText(mEventsController.getDateText());
         mDateView.setOnClickListener(QuickSpaceActionReceiver.getCalendarAction());
@@ -339,13 +347,63 @@ public class BlissSpaceView extends FrameLayout implements OnDataListener {
         mGreetingText.setVisibility(View.VISIBLE);
         mGreetingText.setOnClickListener(null);
 
+        // Bluetooth compact indicator
+        if (mBtCompact != null) {
+            mBtCompact.removeAllViews();
+            if (mController.isBluetoothAvailable()) {
+                java.util.List<BluetoothBatteryHelper.BtDeviceInfo> devices =
+                        mController.getBluetoothDevices();
+                int count = Math.min(devices.size(), 3);
+                float density = getResources().getDisplayMetrics().density;
+                int iconSize = (int) (16 * density);
+                for (int i = 0; i < count; i++) {
+                    BluetoothBatteryHelper.BtDeviceInfo info = devices.get(i);
+                    LinearLayout item = new LinearLayout(getContext());
+                    item.setOrientation(LinearLayout.HORIZONTAL);
+                    item.setGravity(android.view.Gravity.CENTER_VERTICAL);
+                    if (i > 0) {
+                        LinearLayout.LayoutParams itemLp = new LinearLayout.LayoutParams(
+                                LinearLayout.LayoutParams.WRAP_CONTENT,
+                                LinearLayout.LayoutParams.WRAP_CONTENT);
+                        itemLp.setMarginStart((int) (12 * density));
+                        item.setLayoutParams(itemLp);
+                    }
+
+                    ImageView icon = new ImageView(getContext());
+                    icon.setLayoutParams(new LinearLayout.LayoutParams(iconSize, iconSize));
+                    icon.setImageResource(getBluetoothDeviceIcon(info.deviceType));
+                    icon.setImageTintList(mDotTint);
+                    item.addView(icon);
+
+                    TextView text = new TextView(getContext());
+                    text.setTextSize(android.util.TypedValue.COMPLEX_UNIT_SP, 13f);
+                    text.setTextColor(mDotTint);
+                    LinearLayout.LayoutParams textLp = new LinearLayout.LayoutParams(
+                            LinearLayout.LayoutParams.WRAP_CONTENT,
+                            LinearLayout.LayoutParams.WRAP_CONTENT);
+                    textLp.setMarginStart((int) (3 * density));
+                    text.setLayoutParams(textLp);
+                    text.setText(info.batteryLevel >= 0
+                            ? info.batteryLevel + "%"
+                            : getContext().getString(R.string.bt_device_connected));
+                    item.addView(text);
+
+                    mBtCompact.addView(item);
+                }
+                mBtCompact.setVisibility(View.VISIBLE);
+            } else {
+                mBtCompact.setVisibility(View.GONE);
+            }
+        }
+
         mRow3Icon.setVisibility(View.GONE);
         mRow3Text.setText(mEventsController.getPsaText());
         mRow3Text.setOnClickListener(null);
     }
 
     private void bindWeatherPage() {
-        showMusicRows(false);
+        showContentRows(0);
+        if (mBtCompact != null) mBtCompact.setVisibility(View.GONE);
         String temp = mController.getWeatherTempOnly();
         String city = mController.getWeatherCity();
         Drawable icon = mController.getWeatherIcon();
@@ -378,7 +436,8 @@ public class BlissSpaceView extends FrameLayout implements OnDataListener {
     }
 
     private void bindCalendarPage() {
-        showMusicRows(false);
+        showContentRows(0);
+        if (mBtCompact != null) mBtCompact.setVisibility(View.GONE);
         String title    = mEventsController.getEventTitle();
         String subtitle = mEventsController.getEventSubtitle();
         boolean hasEvent = title != null && !title.isEmpty();
@@ -408,13 +467,15 @@ public class BlissSpaceView extends FrameLayout implements OnDataListener {
         mRow3Text.setOnClickListener(QuickSpaceActionReceiver.getCalendarAction());
     }
 
-    private void showMusicRows(boolean music) {
-        if (mSharedRows != null) mSharedRows.setVisibility(music ? View.GONE : View.VISIBLE);
-        if (mMusicContainer != null) mMusicContainer.setVisibility(music ? View.VISIBLE : View.GONE);
+    private void showContentRows(int mode) {
+        // mode 0 = shared rows, 1 = music, 2 = bluetooth
+        if (mSharedRows != null) mSharedRows.setVisibility(mode == 0 ? View.VISIBLE : View.GONE);
+        if (mMusicContainer != null) mMusicContainer.setVisibility(mode == 1 ? View.VISIBLE : View.GONE);
+        if (mBtContainer != null) mBtContainer.setVisibility(mode == 2 ? View.VISIBLE : View.GONE);
     }
 
     private void bindMusicPage() {
-        showMusicRows(true);
+        showContentRows(1);
 
         MediaSessionManagerHelper msm = MediaSessionManagerHelper.getInstance(getContext());
         boolean sessionActive = msm != null && msm.isMediaSessionActive();
@@ -485,6 +546,56 @@ public class BlissSpaceView extends FrameLayout implements OnDataListener {
         }
     }
 
+    private void bindBluetoothPage() {
+        showContentRows(2);
+
+        if (mBtContainer == null) return;
+        mBtContainer.removeAllViews();
+
+        java.util.List<BluetoothBatteryHelper.BtDeviceInfo> devices =
+                mController.getBluetoothDevices();
+
+        LayoutInflater inflater = LayoutInflater.from(getContext());
+        for (BluetoothBatteryHelper.BtDeviceInfo info : devices) {
+            View row = inflater.inflate(R.layout.quickspace_bt_device_row, mBtContainer, false);
+
+            ImageView icon = row.findViewById(R.id.bt_device_icon);
+            icon.setImageResource(getBluetoothDeviceIcon(info.deviceType));
+            icon.setImageTintList(mDotTint);
+
+            TextView name = row.findViewById(R.id.bt_device_name);
+            name.setText(info.name);
+
+            View dot = row.findViewById(R.id.bt_device_dot);
+            dot.setBackgroundTintList(mDotTint);
+
+            TextView battery = row.findViewById(R.id.bt_device_battery);
+            battery.setText(info.batteryLevel >= 0
+                    ? info.batteryLevel + "%"
+                    : getContext().getString(R.string.bt_device_connected));
+
+            mBtContainer.addView(row);
+        }
+
+        mBtContainer.setOnClickListener(v -> {
+            try {
+                getContext().startActivity(
+                        new android.content.Intent(android.provider.Settings.ACTION_BLUETOOTH_SETTINGS));
+            } catch (Exception ignored) {}
+        });
+    }
+
+    private int getBluetoothDeviceIcon(int deviceType) {
+        switch (deviceType) {
+            case BluetoothBatteryHelper.TYPE_WATCH:
+                return R.drawable.ic_qs_bt_watch;
+            case BluetoothBatteryHelper.TYPE_SPEAKER:
+                return R.drawable.ic_qs_bt_speaker;
+            default:
+                return R.drawable.ic_qs_bt_headphone;
+        }
+    }
+
     private class PageGestureListener extends GestureDetector.SimpleOnGestureListener {
         private static final int SWIPE_MIN_DISTANCE = 60;
         private static final int SWIPE_MIN_VELOCITY = 150;
@@ -531,6 +642,7 @@ public class BlissSpaceView extends FrameLayout implements OnDataListener {
         mDateView = mAlarmText = mWeatherText = mGreetingText = mRow3Text = mMusicTitle = mMusicArtist = null;
         mWeatherIcon = mAlarmIcon = mRow3Icon = mMusicAppIcon = mMusicPrev = mMusicPlayPause = mMusicNext = mAlbumArt = null;
         mDotSeparator = mMusicContainer = mMusicControls = mSharedRows = null;
+        mBtCompact = mBtContainer = null;
     }
 
     @Override

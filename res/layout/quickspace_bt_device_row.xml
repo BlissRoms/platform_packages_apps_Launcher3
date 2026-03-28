@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+     Copyright (C) 2026 The BlissRoms Project
+     Licensed under the Apache License, Version 2.0 (the "License");
+     you may not use this file except in compliance with the License.
+-->
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:launcher="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:gravity="start|center_vertical"
+    android:baselineAligned="true"
+    android:paddingTop="2dp"
+    android:paddingBottom="2dp">
+
+    <ImageView
+        android:id="@+id/bt_device_icon"
+        android:layout_width="18dp"
+        android:layout_height="18dp"
+        android:layout_gravity="center_vertical"
+        android:scaleType="fitCenter" />
+
+    <com.android.launcher3.quickspace.views.DoubleShadowTextView
+        android:id="@+id/bt_device_name"
+        style="@style/QuickSpaceText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:paddingStart="6dp"
+        android:singleLine="true"
+        android:ellipsize="end"
+        android:textColor="?workspaceTextColor"
+        android:textSize="18sp"
+        launcher:ambientShadowBlur="3dp"
+        launcher:ambientShadowColor="?workspaceAmbientShadowColor"
+        launcher:keyShadowBlur="2dp"
+        launcher:keyShadowColor="?workspaceKeyShadowColor"
+        launcher:keyShadowOffsetX="0.5dip" />
+
+    <View
+        android:id="@+id/bt_device_dot"
+        android:layout_width="3dp"
+        android:layout_height="3dp"
+        android:layout_gravity="center_vertical"
+        android:layout_marginStart="8dp"
+        android:background="@drawable/dot_separator" />
+
+    <com.android.launcher3.quickspace.views.DoubleShadowTextView
+        android:id="@+id/bt_device_battery"
+        style="@style/QuickSpaceSubText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:paddingStart="8dp"
+        android:textColor="?workspaceTextColor"
+        android:textSize="18sp"
+        launcher:ambientShadowBlur="3dp"
+        launcher:ambientShadowColor="?workspaceAmbientShadowColor"
+        launcher:keyShadowBlur="2dp"
+        launcher:keyShadowColor="?workspaceKeyShadowColor"
+        launcher:keyShadowOffsetX="0.5dip" />
+
+</LinearLayout>

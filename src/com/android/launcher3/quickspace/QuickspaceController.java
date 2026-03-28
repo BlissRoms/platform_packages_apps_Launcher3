@@ -36,6 +36,7 @@ import com.android.internal.util.bliss.OmniJawsClient;
 
 import com.android.launcher3.LauncherPrefs;
 import com.android.launcher3.R;
+import com.android.launcher3.util.BluetoothBatteryHelper;
 import com.android.launcher3.util.MediaSessionManagerHelper;
 import com.android.launcher3.util.PackageUserKey;
 
@@ -79,6 +80,8 @@ public class QuickspaceController implements OmniJawsClient.OmniJawsObserver,
     private int mLastBmpHash;
 
     private final MediaSessionManagerHelper mMediaSessionHelper;
+    private final BluetoothBatteryHelper mBluetoothHelper;
+    private boolean mBluetoothRegistered = false;
 
     private final Runnable mOnDataUpdatedRunnable = new Runnable() {
             @Override
@@ -126,6 +129,8 @@ public class QuickspaceController implements OmniJawsClient.OmniJawsObserver,
         mConditionMap = initializeConditionMap();
         mEventsController = new QuickEventsController(context);
         mMediaSessionHelper = MediaSessionManagerHelper.Companion.getInstance(context);
+        mBluetoothHelper = new BluetoothBatteryHelper(mHandler);
+        mBluetoothHelper.setListener(() -> notifyListeners());
     }
 
     private void decideWeatherProvider() {
@@ -248,6 +253,7 @@ public class QuickspaceController implements OmniJawsClient.OmniJawsObserver,
         if (wasEmpty) {
             decideWeatherProvider();
             registerMediaController();
+            registerBluetooth();
             mEventsController.initQuickEvents();
             updatePSAevent();
         }
@@ -274,6 +280,7 @@ public class QuickspaceController implements OmniJawsClient.OmniJawsObserver,
                 unbindSeraphix();
             }
             unregisterMediaController();
+            unregisterBluetooth();
             mHandler.removeCallbacks(mPsaRunnable);
             mHandler.removeCallbacks(mWeatherRunnable);
             mHandler.removeCallbacks(mOnDataUpdatedRunnable);
@@ -406,6 +413,7 @@ public class QuickspaceController implements OmniJawsClient.OmniJawsObserver,
 
     public void onResume() {
         registerMediaController();
+        registerBluetooth();
         updateMediaController();
         decideWeatherProvider();
         if (mProvider == WeatherProvider.SERAPHIX && mSeraphix != null) {
@@ -417,6 +425,7 @@ public class QuickspaceController implements OmniJawsClient.OmniJawsObserver,
 
     public void onDestroy() {
         unregisterMediaController();
+        unregisterBluetooth();
         mHandler.removeCallbacks(mPsaRunnable);
         mHandler.removeCallbacks(mWeatherRunnable);
         mHandler.removeCallbacks(mOnDataUpdatedRunnable);
@@ -470,6 +479,28 @@ public class QuickspaceController implements OmniJawsClient.OmniJawsObserver,
         if (!mMediaRegistered) return;
         mMediaSessionHelper.removeMediaMetadataListener(this);
         mMediaRegistered = false;
+    }
+
+    private void registerBluetooth() {
+        if (mBluetoothRegistered) return;
+        if (!LauncherPrefs.SHOW_QUICKSPACE_BLUETOOTH.get(mContext)) return;
+        mBluetoothHelper.register(mContext);
+        mBluetoothRegistered = true;
+    }
+
+    private void unregisterBluetooth() {
+        if (!mBluetoothRegistered) return;
+        mBluetoothHelper.unregister(mContext);
+        mBluetoothRegistered = false;
+    }
+
+    public boolean isBluetoothAvailable() {
+        if (!LauncherPrefs.SHOW_QUICKSPACE_BLUETOOTH.get(mContext)) return false;
+        return mBluetoothHelper.hasConnectedDevices();
+    }
+
+    public java.util.List<BluetoothBatteryHelper.BtDeviceInfo> getBluetoothDevices() {
+        return mBluetoothHelper.getConnectedDevices();
     }
 
     private boolean updateMediaController() {

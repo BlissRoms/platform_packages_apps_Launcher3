@@ -302,6 +302,7 @@ constructor(@ApplicationContext private val encryptedContext: Context) {
         @JvmField val QUICKSPACE_STYLE = backedUpItem("pref_quickspace_style", "0")
         @JvmField val SHOW_QUICKSPACE_PSONALITY = backedUpItem("pref_quickspace_psonality", true)
         @JvmField val SHOW_QUICKSPACE_NOWPLAYING = backedUpItem("pref_quickspace_np", true)
+        @JvmField val SHOW_QUICKSPACE_BLUETOOTH = backedUpItem("pref_quickspace_bt", true)
         @JvmField val SHOW_QUICKSPACE_WEATHER = backedUpItem("pref_quickspace_weather", true)
         @JvmField val SHOW_QUICKSPACE_WEATHER_CITY = backedUpItem("pref_quickspace_weather_city", false)
         @JvmField val SHOW_QUICKSPACE_WEATHER_PROVIDER = backedUpItem("pref_quickspace_weather_provider", "auto")

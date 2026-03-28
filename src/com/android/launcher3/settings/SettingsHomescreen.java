@@ -101,6 +101,7 @@ public class SettingsHomescreen extends CollapsingToolbarBaseActivity
                 LauncherPrefs.SHOW_QUICKSPACE_WEATHER_CITY.getSharedPrefKey().equals(key) ||
                 LauncherPrefs.SHOW_QUICKSPACE_WEATHER_PROVIDER.getSharedPrefKey().equals(key) ||
                 LauncherPrefs.SHOW_QUICKSPACE_WEATHER_TEXT.getSharedPrefKey().equals(key) ||
+                LauncherPrefs.SHOW_QUICKSPACE_BLUETOOTH.getSharedPrefKey().equals(key) ||
                 LauncherPrefs.AUTO_HIDE_DOTS.getSharedPrefKey().equals(key)) {
             LauncherAppState.setNeedsRecreate();
         }

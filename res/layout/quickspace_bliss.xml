@@ -144,6 +144,18 @@
 
             </LinearLayout>
 
+            <!-- Bluetooth compact row -->
+            <LinearLayout
+                android:id="@+id/bliss_bt_compact"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start|center_vertical"
+                android:orientation="horizontal"
+                android:gravity="start|center_vertical"
+                android:paddingStart="16dp"
+                android:paddingTop="2dp"
+                android:visibility="gone" />
+
             <!-- Row 3: PSA (bliss) / extra subtitle (other pages) -->
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -314,6 +326,18 @@
                 android:visibility="gone" />
 
         </LinearLayout>
+
+        <!-- Bluetooth page: device list -->
+        <LinearLayout
+            android:id="@+id/bliss_bt_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:gravity="center_vertical"
+            android:visibility="gone"
+            android:paddingStart="16dp"
+            android:paddingTop="6dp"
+            android:paddingBottom="6dp" />
 
     </LinearLayout>
 
