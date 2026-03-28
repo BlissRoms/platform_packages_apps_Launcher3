@@ -451,6 +451,15 @@ public class Launcher extends StatefulActivity<LauncherState>
                 LauncherPrefs.SEARCH_RADIUS_SIZE.getSharedPrefKey().equals(key) ||
                 LauncherPrefs.DOCK_MUSIC_SEARCH.getSharedPrefKey().equals(key)) {
             refreshQsbIcons();
+        } else if (LauncherPrefs.NOTIFICATION_BADGE_COUNTS.getSharedPrefKey().equals(key)) {
+            getWorkspace().mapOverItems((info, view) -> {
+                view.invalidate();
+                return false;
+            });
+            mHotseat.mapOverItems((info, view) -> {
+                view.invalidate();
+                return false;
+            });
         } else if (LauncherPrefs.DRAWER_SEARCH.getSharedPrefKey().equals(key)) {
             mAppsView.refreshSearchBarVisibility();
         } else if (LauncherPrefs.DRAWER_SCROLLBAR.getSharedPrefKey().equals(key)) {

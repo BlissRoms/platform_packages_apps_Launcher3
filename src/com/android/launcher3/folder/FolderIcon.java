@@ -63,7 +63,6 @@ import com.android.launcher3.Utilities;
 import com.android.launcher3.Workspace;
 import com.android.launcher3.allapps.ActivityAllAppsContainerView;
 import com.android.launcher3.celllayout.CellLayoutLayoutParams;
-import com.android.launcher3.LauncherPrefs;
 import com.android.launcher3.bliss.badge.BlissBadgeRenderer;
 import com.android.launcher3.dot.FolderDotInfo;
 import com.android.launcher3.dragndrop.BaseItemDragListener;
@@ -138,7 +137,6 @@ public class FolderIcon extends FrameLayout implements FloatingIconViewCompanion
     private DotRenderer mDotRenderer;
     private BlissBadgeRenderer mBadgeRenderer;
     private int mBadgeColor;
-    private boolean mShowBadgeCounts;
     @ViewDebug.ExportedProperty(category = "launcher", deepExport = true)
     private final DotRenderer.DrawParams mDotParams;
     private float mDotScale;
@@ -178,7 +176,6 @@ public class FolderIcon extends FrameLayout implements FloatingIconViewCompanion
         mBadgeColor = Themes.getAttrColor(context, R.attr.notificationDotColor);
         mDotParams.setDotColor(mBadgeColor);
         mDotParams.shapeInfo = ThemeManager.INSTANCE.get(context).getIconState().getIconShapeInfo();
-        mShowBadgeCounts = LauncherPrefs.get(context).get(LauncherPrefs.NOTIFICATION_BADGE_COUNTS);
     }
 
     public static <T extends Context & ActivityContext> FolderIcon inflateFolderAndIcon(int resId,
@@ -640,7 +637,8 @@ public class FolderIcon extends FrameLayout implements FloatingIconViewCompanion
             // If we are animating to the accepting state, animate the dot out.
             mDotParams.scale = Math.max(0, mDotScale - mBackground.getAcceptScaleProgress());
 
-            if (mShowBadgeCounts && mBadgeRenderer != null
+            if (LauncherPrefs.get(getContext()).get(LauncherPrefs.NOTIFICATION_BADGE_COUNTS)
+                    && mBadgeRenderer != null
                     && mDotInfo != null && mDotInfo.getNotificationCount() > 0) {
                 mBadgeRenderer.draw(canvas, iconBounds,
                         mDotInfo.getNotificationCount(), mBadgeColor, mDotParams.scale);

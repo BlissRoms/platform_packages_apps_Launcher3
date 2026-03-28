@@ -62,8 +62,7 @@ public class SettingsIcons extends CollapsingToolbarBaseActivity
         if (LauncherPrefs.ICON_SIZE.getSharedPrefKey().equals(key) ||
                 LauncherPrefs.FONT_SIZE.getSharedPrefKey().equals(key) ||
                 LauncherPrefs.ALLAPPS_THEMED_ICONS.getSharedPrefKey().equals(key) ||
-                LauncherPrefs.SHOW_DESKTOP_LABELS.getSharedPrefKey().equals(key) ||
-                LauncherPrefs.NOTIFICATION_BADGE_COUNTS.getSharedPrefKey().equals(key)) {
+                LauncherPrefs.SHOW_DESKTOP_LABELS.getSharedPrefKey().equals(key)) {
             LauncherAppState.setNeedsRecreate();
         }
     }
