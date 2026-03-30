@@ -397,7 +397,12 @@ public class BlissSpaceView extends FrameLayout implements OnDataListener {
         }
 
         mRow3Icon.setVisibility(View.GONE);
-        mRow3Text.setText(mEventsController.getPsaText());
+        if (LauncherPrefs.SHOW_QUICKSPACE_PSONALITY.get(getContext())) {
+            mRow3Text.setText(mEventsController.getPsaText());
+            mRow3Text.setVisibility(View.VISIBLE);
+        } else {
+            mRow3Text.setVisibility(View.GONE);
+        }
         mRow3Text.setOnClickListener(null);
     }
 
