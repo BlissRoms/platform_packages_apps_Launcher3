@@ -40,6 +40,7 @@ public class SettingsRecents extends CollapsingToolbarBaseActivity
         implements SharedPreferences.OnSharedPreferenceChangeListener {
 
     private static final String RECENTS_CATEGORY_ACTION = "recents_category_actions";
+    private static final String RECENTS_STYLE_PREF = "pref_recents_style";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,7 +89,7 @@ public class SettingsRecents extends CollapsingToolbarBaseActivity
             for (int i = group.getPreferenceCount() - 1; i >= 0; i--) {
                 Preference preference = group.getPreference(i);
                 if (preference instanceof PreferenceGroup) {
-                    if (RECENTS_CATEGORY_ACTION.equals(preference.getKey())) {
+                    if (RECENTS_CATEGORY_ACTION.equals(preference.getKey()) || RECENTS_STYLE_PREF.equals(preference.getKey())) {
                         DisplayController.Info info =
                                 DisplayController.INSTANCE.get(getContext()).getInfo();
                         if (info.isTablet(info.realBounds)) {
