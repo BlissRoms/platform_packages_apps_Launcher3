@@ -138,4 +138,8 @@
     <string name="app_drawer_sort_install_date">Sort by install date</string>
     <string name="app_drawer_sort_usage">Sort by usage</string>
 
+    <!-- Rename app shortcut -->
+    <string name="rename_app_label">Rename app</string>
+    <string name="rename_app_reset">Reset</string>
+
 </resources>
