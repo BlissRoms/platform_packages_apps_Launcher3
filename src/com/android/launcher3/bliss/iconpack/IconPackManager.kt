@@ -209,7 +209,7 @@ constructor(
         val dayOfMonth = java.util.Calendar.getInstance().get(java.util.Calendar.DAY_OF_MONTH)
         val drawableName = "${config.drawablePrefix}$dayOfMonth"
 
-        return loadDrawableFromPack(activePackage, drawableName, density)
+        return loadDrawableFromPack(activePackage, drawableName, density)?.let(::IconPackDrawable)
     }
 
     /**
@@ -225,7 +225,7 @@ constructor(
         val mapping = getOrParseMappings(activePackage)
         val drawableName = mapping[componentName] ?: return null
 
-        return loadDrawableFromPack(activePackage, drawableName, density)
+        return loadDrawableFromPack(activePackage, drawableName, density)?.let(::IconPackDrawable)
     }
 
     /**
@@ -257,12 +257,14 @@ constructor(
         val maskDrawable = selectLayer(activePackage, config.iconMaskDrawables, seed, density)
         val uponDrawable = selectLayer(activePackage, config.iconUponDrawables, seed, density)
 
-        return IconPackMaskedDrawable(
-            originalIcon = originalIcon,
-            backDrawable = backDrawable,
-            maskDrawable = maskDrawable,
-            uponDrawable = uponDrawable,
-            scaleFactor = config.scaleFactor,
+        return IconPackDrawable(
+            IconPackMaskedDrawable(
+                originalIcon = originalIcon,
+                backDrawable = backDrawable,
+                maskDrawable = maskDrawable,
+                uponDrawable = uponDrawable,
+                scaleFactor = config.scaleFactor,
+            )
         )
     }
 

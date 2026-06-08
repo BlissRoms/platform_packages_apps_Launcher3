@@ -80,6 +80,7 @@ import androidx.annotation.Nullable;
 import androidx.annotation.WorkerThread;
 import androidx.core.graphics.ColorUtils;
 
+import com.android.launcher3.bliss.iconpack.IconPackDrawable;
 import com.android.launcher3.deviceprofile.DeviceProperties;
 import com.android.launcher3.dragndrop.FolderAdaptiveIcon;
 import com.android.launcher3.graphics.ThemeManager;
@@ -741,6 +742,11 @@ public final class Utilities {
         }
 
         if (mainIcon == null) {
+            return null;
+        }
+        if (mainIcon instanceof IconPackDrawable) {
+            // Icon-pack assets are pre-shaped flat images; skip adaptive wrapping so the
+            // open/close animation and drag fall back to the flat BubbleTextView bitmap.
             return null;
         }
         AdaptiveIconDrawable result;

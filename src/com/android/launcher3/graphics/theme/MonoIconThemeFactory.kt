@@ -16,6 +16,7 @@
 
 package com.android.launcher3.graphics.theme
 
+import com.android.launcher3.bliss.iconpack.IconPackExemptThemeController
 import com.android.launcher3.icons.IconThemeController
 import com.android.launcher3.icons.mono.MonoIconThemeController
 import com.android.launcher3.logging.StatsLogManager.LauncherEvent.LAUNCHER_THEMED_ICON_ENABLED
@@ -45,7 +46,8 @@ object MonoIconThemeFactory : IconThemeFactory {
     const val MONO_FACTORY_ID = "mono-icons"
 
     // Use a constant to allow equality check in verifyIconState
-    val MONO_THEME_CONTROLLER = MonoIconThemeController(shouldForceThemeIcon = true)
+    val MONO_THEME_CONTROLLER: IconThemeController =
+        IconPackExemptThemeController(MonoIconThemeController(shouldForceThemeIcon = true))
 
     override fun logThemeEvent(themeId: String, logger: StatsLogger) {
         logger.log(LAUNCHER_THEMED_ICON_ENABLED)
