@@ -120,6 +120,7 @@ public class SettingsHomescreen extends CollapsingToolbarBaseActivity
         private static final String SUGGESTIONS_PACKAGE = "com.google.android.as";
         private static final String KEY_GENERAL_CATEGORY = "general_category";
         private static final String KEY_DOCK_SEARCH = "pref_dock_search";
+        private static final String KEY_DOCK_SEARCH_PIXEL_STYLE = "pref_dock_search_pixel_style";
         private static final String KEY_DOCK_MUSIC_SEARCH = "pref_dock_music_search";
         private static final String KEY_HOTSEAT_QSB_OPACITY = "pref_hotseat_qsb_opacity";
         private static final String KEY_HOTSEAT_QSB_STROKE_WIDTH = "pref_hotseat_qsb_stroke_width";
@@ -199,6 +200,7 @@ public class SettingsHomescreen extends CollapsingToolbarBaseActivity
                     });
                     return true;
                 case KEY_DOCK_SEARCH:
+                case KEY_DOCK_SEARCH_PIXEL_STYLE:
                 case KEY_DOCK_MUSIC_SEARCH:
                 case KEY_HOTSEAT_QSB_OPACITY:
                 case KEY_HOTSEAT_QSB_STROKE_WIDTH:
