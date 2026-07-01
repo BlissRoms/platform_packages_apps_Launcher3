@@ -39,6 +39,7 @@ import androidx.annotation.Nullable;
 
 import com.android.launcher3.AbstractFloatingView;
 import com.android.launcher3.AbstractFloatingViewHelper;
+import com.android.launcher3.BaseActivity;
 import com.android.launcher3.DropTargetHandler;
 import com.android.launcher3.Flags;
 import com.android.launcher3.LauncherAppState;
@@ -49,6 +50,7 @@ import com.android.launcher3.SecondaryDropTarget;
 import com.android.launcher3.Utilities;
 import com.android.launcher3.accessibility.LauncherAccessibilityDelegate;
 import com.android.launcher3.allapps.PrivateProfileManager;
+import com.android.launcher3.customization.IconPickerBottomSheet;
 import com.android.launcher3.dagger.LauncherComponentProvider;
 import com.android.launcher3.homescreenfiles.HomeScreenFilesRenameDialogViewModel;
 import com.android.launcher3.logging.StatsLogManager;
@@ -759,6 +761,40 @@ public abstract class SystemShortcut<T extends ActivityContext> extends ItemInfo
             dismissTaskMenuView();
             new Dialog<>(mTarget,
                     HomeScreenFilesRenameDialogViewModel.forApp(mTarget, mItemInfo)).show();
+        }
+    }
+
+    public static final Factory<ActivityContext> CUSTOM_ICON =
+            (activity, itemInfo, originalView) -> {
+                if (!(activity instanceof BaseActivity)
+                        || itemInfo.itemType != LauncherSettings.Favorites.ITEM_TYPE_APPLICATION
+                        || itemInfo.getComponentKey() == null) {
+                    return null;
+                }
+                if (!LauncherComponentProvider.get(activity.asContext()).getIconPackManager()
+                        .hasInstalledIconPacks()) {
+                    return null;
+                }
+                return new CustomIcon<>(activity, itemInfo, originalView);
+            };
+
+    public static class CustomIcon<T extends ActivityContext> extends SystemShortcut<T> {
+        public CustomIcon(T target, ItemInfo itemInfo, @NonNull View originalView) {
+            super(R.drawable.ic_palette, R.string.app_info_custom_icon_title, target,
+                    itemInfo, originalView);
+        }
+
+        @Override
+        public void onClick(View view) {
+            dismissTaskMenuView();
+            ComponentKey key = mItemInfo.getComponentKey();
+            if (key == null) {
+                return;
+            }
+            IconPickerBottomSheet picker = (IconPickerBottomSheet) mTarget.getLayoutInflater()
+                    .inflate(R.layout.icon_picker_bottom_sheet, mTarget.getDragLayer(), false);
+            picker.show(key, () -> LauncherAppState.getInstance(mTarget.asContext()).getModel()
+                    .onCustomIconChanged(key.componentName.getPackageName(), key.user));
         }
     }
 }
