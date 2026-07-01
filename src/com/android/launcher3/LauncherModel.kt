@@ -44,6 +44,7 @@ import com.android.launcher3.model.ModelWriterFactory
 import com.android.launcher3.model.data.WorkspaceItemInfo
 import com.android.launcher3.model.tasks.CacheDataUpdatedTask
 import com.android.launcher3.model.tasks.CustomAppNameChangedTask
+import com.android.launcher3.model.tasks.PackageUpdatedTask
 import com.android.launcher3.pm.UserCache
 import com.android.launcher3.util.CustomAppNameStore
 import com.android.launcher3.util.DaggerSingletonTracker
@@ -334,6 +335,10 @@ constructor(
     fun onCustomAppNameChanged(component: ComponentName, user: UserHandle) {
         enqueueModelUpdateTask(CustomAppNameChangedTask(component, user))
         validateModelDataOnResume()
+    }
+
+    fun onCustomIconChanged(packageName: String, user: UserHandle) {
+        enqueueModelUpdateTask(PackageUpdatedTask(PackageUpdatedTask.OP_UPDATE, user, packageName))
     }
 
     fun enqueueModelUpdateTask(task: ModelUpdateTask) {

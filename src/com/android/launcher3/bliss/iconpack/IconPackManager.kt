@@ -8,8 +8,10 @@ package com.android.launcher3.bliss.iconpack
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.content.pm.LauncherApps
 import android.content.pm.PackageManager
+import android.content.pm.ResolveInfo
 import android.content.res.Resources
 import android.graphics.drawable.Drawable
 import android.os.Process
@@ -51,6 +53,13 @@ constructor(
     /** Cached calendar icon configs keyed by icon pack package name. */
     private val cachedCalendarConfigs = ConcurrentHashMap<String, List<CalendarIconConfig>>()
 
+    private val cachedDrawables = ConcurrentHashMap<String, List<IconPackDrawable>>()
+
+    private val overridePrefs: SharedPreferences =
+        context
+            .createDeviceProtectedStorageContext()
+            .getSharedPreferences(OVERRIDES_PREFS_NAME, Context.MODE_PRIVATE)
+
     /** Cached Resources for icon pack packages. */
     private val cachedResources = ConcurrentHashMap<String, Resources>()
 
@@ -90,29 +99,75 @@ constructor(
      * @return A list of [IconPackInfo] representing available icon packs. Does NOT include
      *   the system default entry (the caller should prepend it).
      */
-    fun getInstalledIconPacks(): List<IconPackInfo> {
-        val packs = mutableMapOf<String, IconPackInfo>()
-
-        for (action in ICON_PACK_INTENT_ACTIONS) {
-            val intent = Intent(action)
-            val resolveInfos =
-                packageManager.queryIntentActivities(intent, PackageManager.GET_META_DATA)
-            for (ri in resolveInfos) {
-                val pkg = ri.activityInfo.packageName
-                if (pkg == context.packageName) continue
-                if (packs.containsKey(pkg)) continue
-
-                packs[pkg] =
-                    IconPackInfo(
-                        packageName = pkg,
-                        label = ri.loadLabel(packageManager),
-                        icon = ri.loadIcon(packageManager),
-                        previewIcons = loadPreviewIcons(pkg),
-                    )
+    fun getInstalledIconPacks(): List<IconPackInfo> =
+        queryIconPacks()
+            .map { (pkg, ri) ->
+                IconPackInfo(
+                    packageName = pkg,
+                    label = ri.loadLabel(packageManager),
+                    icon = ri.loadIcon(packageManager),
+                    previewIcons = loadPreviewIcons(pkg),
+                )
             }
+            .sortedBy { it.label.toString().lowercase() }
+
+    fun getInstalledIconPackLabels(): Map<String, CharSequence> =
+        queryIconPacks()
+            .mapValues { (_, ri) -> ri.loadLabel(packageManager) }
+            .entries
+            .sortedBy { it.value.toString().lowercase() }
+            .associate { it.key to it.value }
+
+    fun hasInstalledIconPacks(): Boolean = queryIconPacks().isNotEmpty()
+
+    fun getIconPackDrawables(iconPackPackage: String): List<IconPackDrawable> =
+        cachedDrawables.getOrPut(iconPackPackage) {
+            val resources = getPackResources(iconPackPackage) ?: return@getOrPut emptyList()
+            IconPackParser.parseDrawables(resources, iconPackPackage)
         }
 
-        return packs.values.sortedBy { it.label.toString().lowercase() }
+    fun loadIconOverride(componentName: ComponentName, density: Int): Drawable? {
+        val value = overridePrefs.getString(componentName.flattenToString(), null) ?: return null
+        val iconPackPackage = value.substringBefore(OVERRIDE_SEPARATOR)
+        val drawableName = value.substringAfter(OVERRIDE_SEPARATOR, "")
+        if (drawableName.isEmpty()) return null
+        return loadDrawableFromPack(iconPackPackage, drawableName, density)
+    }
+
+    fun setIconOverride(
+        componentName: ComponentName,
+        iconPackPackage: String,
+        drawableName: String,
+    ) {
+        overridePrefs
+            .edit()
+            .putString(
+                componentName.flattenToString(),
+                iconPackPackage + OVERRIDE_SEPARATOR + drawableName,
+            )
+            .apply()
+    }
+
+    fun clearIconOverride(componentName: ComponentName) {
+        overridePrefs.edit().remove(componentName.flattenToString()).apply()
+    }
+
+    fun hasIconOverride(componentName: ComponentName): Boolean =
+        overridePrefs.contains(componentName.flattenToString())
+
+    private fun queryIconPacks(): Map<String, ResolveInfo> {
+        val packs = mutableMapOf<String, ResolveInfo>()
+        for (action in ICON_PACK_INTENT_ACTIONS) {
+            val resolveInfos =
+                packageManager.queryIntentActivities(Intent(action), PackageManager.GET_META_DATA)
+            for (ri in resolveInfos) {
+                val pkg = ri.activityInfo.packageName
+                if (pkg != context.packageName) {
+                    packs.putIfAbsent(pkg, ri)
+                }
+            }
+        }
+        return packs
     }
 
     /**
@@ -348,6 +403,7 @@ constructor(
         cachedMaskConfigs.remove(packageName)
         cachedCalendarConfigs.remove(packageName)
         cachedResources.remove(packageName)
+        cachedDrawables.remove(packageName)
 
         val activePackage = getActiveIconPackPackage() ?: return
         if (activePackage != packageName) return
@@ -369,6 +425,8 @@ constructor(
 
     companion object {
         private const val TAG = "IconPackManager"
+        private const val OVERRIDES_PREFS_NAME = "icon_pack_overrides"
+        private const val OVERRIDE_SEPARATOR = '/'
 
         /** Standard intent actions used by icon packs to advertise themselves. */
         private val ICON_PACK_INTENT_ACTIONS =

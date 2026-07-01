@@ -25,3 +25,5 @@ data class IconPackInfo(
     val isSystemDefault: Boolean
         get() = packageName.isEmpty()
 }
+
+data class IconPackDrawable(val name: String, val resId: Int)

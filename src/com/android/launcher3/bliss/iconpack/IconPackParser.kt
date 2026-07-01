@@ -110,6 +110,40 @@ object IconPackParser {
         iconPackPackage: String,
     ): Map<ComponentName, String> = parseAppFilterFull(resources, iconPackPackage).mappings
 
+    fun parseDrawables(resources: Resources, iconPackPackage: String): List<IconPackDrawable> {
+        val names = LinkedHashSet<String>()
+        collectItemDrawables(resources, iconPackPackage, "drawable", names)
+        if (names.isEmpty()) {
+            collectItemDrawables(resources, iconPackPackage, "appfilter", names)
+        }
+        return names.mapNotNull { name ->
+            val resId = resources.getIdentifier(name, "drawable", iconPackPackage)
+            if (resId != 0) IconPackDrawable(name, resId) else null
+        }
+    }
+
+    private fun collectItemDrawables(
+        resources: Resources,
+        iconPackPackage: String,
+        xmlName: String,
+        out: MutableSet<String>,
+    ) {
+        val xmlId = resources.getIdentifier(xmlName, "xml", iconPackPackage)
+        if (xmlId == 0) return
+        try {
+            resources.getXml(xmlId).use { parser ->
+                var type: Int
+                while (parser.next().also { type = it } != XmlPullParser.END_DOCUMENT) {
+                    if (type == XmlPullParser.START_TAG && parser.name == TAG_ITEM) {
+                        parser.getAttributeValue(null, ATTR_DRAWABLE)?.let(out::add)
+                    }
+                }
+            }
+        } catch (e: Exception) {
+            Log.e(TAG, "Failed to parse $xmlName.xml from $iconPackPackage", e)
+        }
+    }
+
     private fun parseItem(parser: XmlResourceParser, out: MutableMap<ComponentName, String>) {
         val componentStr = parser.getAttributeValue(null, ATTR_COMPONENT) ?: return
         val drawableName = parser.getAttributeValue(null, ATTR_DRAWABLE) ?: return
