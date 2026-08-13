@@ -92,13 +92,6 @@ public class NotificationDotsPreference extends Preference {
         getContext().getContentResolver().registerContentObserver(
                 Settings.Secure.getUriFor(NOTIFICATION_ENABLED_LISTENERS),
                 false, mListenerListObserver);
-
-        // Update intent
-        Bundle extras = new Bundle();
-        extras.putString(EXTRA_FRAGMENT_HIGHLIGHT_KEY, "notification_badging");
-
-        setIntent(new Intent("android.settings.NOTIFICATION_SETTINGS")
-                .putExtra(EXTRA_SHOW_FRAGMENT_ARGS, extras));
     }
 
     @Override
@@ -150,6 +143,15 @@ public class NotificationDotsPreference extends Preference {
         }
         setWidgetFrameVisible(!serviceEnabled);
         setFragment(serviceEnabled ? null : NotificationAccessConfirmation.class.getName());
+        if (serviceEnabled) {
+            // Update intent
+            Bundle extras = new Bundle();
+            extras.putString(EXTRA_FRAGMENT_HIGHLIGHT_KEY, "notification_badging");
+            setIntent(new Intent("android.settings.NOTIFICATION_SETTINGS")
+                    .putExtra(EXTRA_SHOW_FRAGMENT_ARGS, extras));
+        } else {
+            setIntent(null);
+        }
         setSummary(summary);
         return null;
     }

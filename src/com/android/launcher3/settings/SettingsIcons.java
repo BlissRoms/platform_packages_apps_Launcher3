@@ -19,10 +19,16 @@ package com.android.launcher3.settings;
 import static com.android.launcher3.util.Executors.MAIN_EXECUTOR;
 import static com.android.launcher3.util.SettingsCache.NOTIFICATION_BADGING_URI;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
+import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.preference.Preference;
+import androidx.preference.PreferenceFragmentCompat;
+import androidx.preference.PreferenceFragmentCompat.OnPreferenceStartFragmentCallback;
 import androidx.preference.PreferenceScreen;
 
 import com.android.launcher3.BuildConfig;
@@ -39,7 +45,24 @@ import com.android.settingslib.widget.SettingsBasePreferenceFragment;
 /**
  * Icons settings activity for Launcher.
  */
-public class SettingsIcons extends CollapsingToolbarBaseActivity {
+public class SettingsIcons extends CollapsingToolbarBaseActivity implements OnPreferenceStartFragmentCallback {
+
+    @Override
+    public boolean onPreferenceStartFragment(PreferenceFragmentCompat caller, Preference pref) {
+        if (getSupportFragmentManager().isStateSaved()) {
+            return false;
+        }
+        final FragmentManager fm = getSupportFragmentManager();
+        final Fragment f = fm.getFragmentFactory().instantiate(getClassLoader(), pref.getFragment());
+        if (f instanceof DialogFragment) {
+            f.setArguments(pref.getExtras());
+            ((DialogFragment) f).show(fm, pref.getKey());
+        } else {
+            startActivity(new Intent(this, SettingsActivity.class)
+                    .putExtra(SettingsActivity.EXTRA_FRAGMENT_ARGS, pref.getExtras()));
+        }
+        return true;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
