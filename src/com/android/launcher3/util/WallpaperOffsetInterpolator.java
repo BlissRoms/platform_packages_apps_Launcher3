@@ -50,14 +50,14 @@ public class WallpaperOffsetInterpolator implements
     private boolean mAllowScrolling;
 
     public WallpaperOffsetInterpolator(Workspace<?> workspace) {
-        mContext = workspace.getContext();
+        mContext = workspace.getContext().getApplicationContext();
         mWorkspace = workspace;
         mWallpaperChangeReceiver = new SimpleBroadcastReceiver(
-                workspace.getContext(), UI_HELPER_EXECUTOR, i -> onWallpaperChanged());
+                mContext, UI_HELPER_EXECUTOR, i -> onWallpaperChanged());
         mIsRtl = Utilities.isRtl(workspace.getResources());
-        mHandler = new OffsetHandler(workspace.getContext());
-        mAllowScrolling = LauncherPrefs.WALLPAPER_SCROLLING.get(workspace.getContext());
-        mPrefs = LauncherPrefs.getPrefs(workspace.getContext());
+        mHandler = new OffsetHandler(mContext);
+        mAllowScrolling = LauncherPrefs.WALLPAPER_SCROLLING.get(mContext);
+        mPrefs = LauncherPrefs.getPrefs(mContext);
         mPrefs.registerOnSharedPreferenceChangeListener(this);
     }
 
@@ -89,7 +89,7 @@ public class WallpaperOffsetInterpolator implements
     }
 
     private int getMinimumScrollableScreensForParallax() {
-        return LauncherPrefs.SINGLE_PAGE_CENTER.get(mWorkspace.getContext()) ? 0 : 1;
+        return LauncherPrefs.SINGLE_PAGE_CENTER.get(mContext) ? 0 : 1;
     }
 
     /**
@@ -220,7 +220,7 @@ public class WallpaperOffsetInterpolator implements
 
     private int getMinParallaxPageSpan() {
         // Don't use all the wallpaper for parallax until you have at least this many pages
-        return LauncherPrefs.SHORT_PARALLAX.get(mWorkspace.getContext()) ? 1 : 4;
+        return LauncherPrefs.SHORT_PARALLAX.get(mContext) ? 1 : 4;
     }
 
     @AnyThread

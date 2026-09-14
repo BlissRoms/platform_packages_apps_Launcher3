@@ -16,6 +16,7 @@
 package com.android.launcher3.util
 
 import android.annotation.SuppressLint
+import android.app.Application
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -27,13 +28,16 @@ import java.util.function.Consumer
 class SimpleBroadcastReceiver
 @JvmOverloads
 constructor(
-    private val context: Context,
+    context: Context,
     // Executor on which the registration will be done
     private val executor: LooperExecutor,
     // Executor on with the callback should be executed
     private val callbackExecutor: LooperExecutor = executor,
     private val intentConsumer: Consumer<Intent>,
 ) : BroadcastReceiver(), SafeCloseable {
+
+    private val context: Context =
+        if (context is Application) context else (context.applicationContext ?: context)
 
     override fun onReceive(context: Context, intent: Intent) {
         intentConsumer.accept(intent)
