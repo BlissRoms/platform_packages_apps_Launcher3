@@ -468,9 +468,9 @@ public class QuickstepTransitionManager implements OnDeviceProfileChangeListener
 
         long statusBarTransitionDelay = duration - STATUS_BAR_TRANSITION_DURATION
                 - STATUS_BAR_TRANSITION_PRE_DELAY;
-      ActivityOptions options = ActivityOptions.makeRemoteAnimation(
-              new RemoteAnimationAdapter(appLaunchRunner, duration, statusBarTransitionDelay),
-              remoteTransition);
+        ActivityOptions options = ActivityOptions.makeRemoteAnimation(
+                new RemoteAnimationAdapter(appLaunchRunner, duration, statusBarTransitionDelay),
+                remoteTransition);
         IRemoteCallback endCallback = completeRunnableListCallback(
                 onEndCallback, mLauncher, MAIN_EXECUTOR);
         options.setOnAnimationAbortListener(endCallback);
@@ -887,6 +887,7 @@ public class QuickstepTransitionManager implements OnDeviceProfileChangeListener
                 null /* fadeOutView */, !appTargetsAreTranslucent, launcherIconBounds,
                 true /* isOpening */);
         Rect crop = new Rect();
+        Rect closingTargetCrop = new Rect();
         Matrix matrix = new Matrix();
 
         SurfaceTransactionApplier surfaceApplier =
@@ -1109,20 +1110,24 @@ public class QuickstepTransitionManager implements OnDeviceProfileChangeListener
                         } else {
                             tmpPos.set(surface.position.x, surface.position.y);
                         }
-                        final Rect crop = new Rect(surface.screenSpaceBounds);
-                        crop.offsetTo(0, 0);
+                        if (surface.screenSpaceBounds != null) {
+                            closingTargetCrop.set(surface.screenSpaceBounds);
+                            closingTargetCrop.offsetTo(0, 0);
+                        } else {
+                            closingTargetCrop.setEmpty();
+                        }
 
-                        if ((rotationChange % 2) == 1) {
-                            int tmp = crop.right;
-                            crop.right = crop.bottom;
-                            crop.bottom = tmp;
+                        if ((rotationChange % 2) != 0) {
+                            int tmp = closingTargetCrop.right;
+                            closingTargetCrop.right = closingTargetCrop.bottom;
+                            closingTargetCrop.bottom = tmp;
                             tmp = tmpPos.x;
                             tmpPos.x = tmpPos.y;
                             tmpPos.y = tmp;
                         }
                         matrix.setTranslate(tmpPos.x, tmpPos.y);
                         builder.setMatrix(matrix)
-                                .setWindowCrop(crop)
+                                .setWindowCrop(closingTargetCrop)
                                 .setAlpha(1f);
                     }
                 }
@@ -1543,6 +1548,9 @@ public class QuickstepTransitionManager implements OnDeviceProfileChangeListener
      * Called when the overview-target changes. Updates the back callback registration state.
      */
     public void onOverviewTargetChange() {
+        if (mBackAnimationController == null) {
+            return;
+        }
         if (isHomeRoleHeld()) {
             mBackAnimationController.registerBackCallbacks(mHandler);
         } else {
@@ -1570,18 +1578,16 @@ public class QuickstepTransitionManager implements OnDeviceProfileChangeListener
 
     protected void unregisterRemoteTransitions() {
         SystemUiProxy.INSTANCE.get(mLauncher).unshareTransactionQueue();
-        if (SEPARATE_RECENTS_ACTIVITY.get()) {
-            return;
-        }
-        if (mLauncherOpenTransition == null) return;
-        SystemUiProxy.INSTANCE.get(mLauncher).unregisterRemoteTransition(
-                mLauncherOpenTransition);
-        mLauncherOpenTransition = null;
-        mWallpaperOpenTransitionRunner = null;
-        if (mMoveDisplayTransition != null) {
-            SystemUiProxy.INSTANCE.get(mLauncher)
-                    .unregisterRemoteTransition(mMoveDisplayTransition);
-            mMoveDisplayTransition = null;
+        if (!SEPARATE_RECENTS_ACTIVITY.get() && mLauncherOpenTransition != null) {
+            SystemUiProxy.INSTANCE.get(mLauncher).unregisterRemoteTransition(
+                    mLauncherOpenTransition);
+            mLauncherOpenTransition = null;
+            mWallpaperOpenTransitionRunner = null;
+            if (mMoveDisplayTransition != null) {
+                SystemUiProxy.INSTANCE.get(mLauncher)
+                        .unregisterRemoteTransition(mMoveDisplayTransition);
+                mMoveDisplayTransition = null;
+            }
         }
         if (mBackAnimationController != null) {
             mBackAnimationController.cleanupForDestroy();
@@ -1626,7 +1632,7 @@ public class QuickstepTransitionManager implements OnDeviceProfileChangeListener
                 rotationChange = surface.rotationChange;
             }
         }
-        return rotationChange;
+        return ((rotationChange % 4) + 4) % 4;
     }
 
     /**
@@ -1857,6 +1863,7 @@ public class QuickstepTransitionManager implements OnDeviceProfileChangeListener
         Matrix matrix = new Matrix();
         Point tmpPos = new Point();
         Rect tmpRect = new Rect();
+        Rect fallbackCrop = new Rect();
         ValueAnimator closingAnimator = ValueAnimator.ofFloat(0, 1);
         int duration = CLOSING_TRANSITION_DURATION_MS;
         float windowCornerRadius = getWindowCornerRadius(mLauncher);
@@ -1887,14 +1894,24 @@ public class QuickstepTransitionManager implements OnDeviceProfileChangeListener
                         tmpPos.set(target.position.x, target.position.y);
                     }
 
-                    final Rect crop = new Rect(target.localBounds);
-                    crop.offsetTo(0, 0);
+                    if (target.localBounds != null) {
+                        fallbackCrop.set(target.localBounds);
+                        fallbackCrop.offsetTo(0, 0);
+                    } else {
+                        fallbackCrop.setEmpty();
+                    }
                     if (target.mode == MODE_CLOSING) {
-                        tmpRect.set(target.screenSpaceBounds);
+                        if (target.screenSpaceBounds != null) {
+                            tmpRect.set(target.screenSpaceBounds);
+                        } else {
+                            tmpRect.set(tmpPos.x, tmpPos.y,
+                                    tmpPos.x + fallbackCrop.width(),
+                                    tmpPos.y + fallbackCrop.height());
+                        }
                         if ((rotationChange % 2) != 0) {
-                            final int right = crop.right;
-                            crop.right = crop.bottom;
-                            crop.bottom = right;
+                            final int right = fallbackCrop.right;
+                            fallbackCrop.right = fallbackCrop.bottom;
+                            fallbackCrop.bottom = right;
                         }
                         matrix.setScale(mScale.value, mScale.value,
                                 tmpRect.centerX(),
@@ -1902,14 +1919,14 @@ public class QuickstepTransitionManager implements OnDeviceProfileChangeListener
                         matrix.postTranslate(0, mDy.value);
                         matrix.postTranslate(tmpPos.x, tmpPos.y);
                         builder.setMatrix(matrix)
-                                .setWindowCrop(crop)
+                                .setWindowCrop(fallbackCrop)
                                 .setAlpha(mAlpha.value)
                                 .setCornerRadius(windowCornerRadius)
                                 .setShadowRadius(mShadowRadius.value);
                     } else if (target.mode == MODE_OPENING) {
                         matrix.setTranslate(tmpPos.x, tmpPos.y);
                         builder.setMatrix(matrix)
-                                .setWindowCrop(crop)
+                                .setWindowCrop(fallbackCrop)
                                 .setAlpha(1f);
                     }
                 }
