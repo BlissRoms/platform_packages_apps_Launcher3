@@ -170,7 +170,7 @@ public class DepthController<
 
     public void dump(String prefix, PrintWriter writer) {
         writer.println(prefix + "DepthController");
-        writer.println(prefix + "\tmMaxBlurRadius=" + mMaxBlurRadius);
+        writer.println(prefix + "\tmMaxBlurRadius=" + getMaxBlurRadius());
         writer.println(prefix + "\tmCrossWindowBlursEnabled=" + mCrossWindowBlursEnabled);
         writer.println(prefix + "\tmBaseSurface=" + mBaseSurface);
         writer.println(prefix + "\tmBaseSurfaceOverride=" + mBaseSurfaceOverride);

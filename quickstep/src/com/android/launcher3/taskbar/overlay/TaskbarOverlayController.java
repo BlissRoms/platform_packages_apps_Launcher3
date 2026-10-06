@@ -53,7 +53,6 @@ import androidx.annotation.Nullable;
 import com.android.launcher3.AbstractFloatingView;
 import com.android.launcher3.DeviceProfile;
 import com.android.launcher3.Flags;
-import com.android.launcher3.LauncherPrefs;
 import com.android.launcher3.R;
 import com.android.launcher3.Utilities;
 import com.android.launcher3.taskbar.TaskbarActivityContext;
@@ -61,6 +60,7 @@ import com.android.launcher3.taskbar.TaskbarBootAppContext;
 import com.android.launcher3.taskbar.TaskbarControllers;
 import com.android.launcher3.taskbar.bubbles.BubbleActivityStarter;
 import com.android.launcher3.taskbar.bubbles.BubbleActivityStarter.Listener;
+import com.android.quickstep.util.BlurDepthPref;
 import com.android.systemui.shared.system.BlurUtils;
 import com.android.systemui.shared.system.TaskStackChangeListener;
 import com.android.systemui.shared.system.TaskStackChangeListeners;
@@ -86,7 +86,6 @@ public final class TaskbarOverlayController
     private final Context mWindowContext;
     private final TaskbarOverlayProxyView mProxyView;
     private final LayoutParams mLayoutParams;
-    private final int mMaxBlurRadius;
     private final BubbleActivityStarter mBubbleBarActivityStarter;
     private String mDebugTouchableReason = "";
     private final Rect mDebugTouchableBounds = new Rect();
@@ -156,7 +155,6 @@ public final class TaskbarOverlayController
         mProxyView = new TaskbarOverlayProxyView();
         mLayoutParams = createLayoutParams();
         mLauncherDeviceProfile = launcherDeviceProfile;
-        mMaxBlurRadius = LauncherPrefs.BLUR_DEPTH.get(mTaskbarContext);
         mEarlyWakeupInfo.token = new Binder();
         mEarlyWakeupInfo.trace = TaskbarOverlayController.class.getName();
         mBubbleBarActivityStarter = BubbleActivityStarter.INSTANCE.get(taskbarContext);
@@ -369,7 +367,8 @@ public final class TaskbarOverlayController
         try (transaction) {
             // Set early wake-up flags when we know we're executing an expensive operation, this way
             // SurfaceFlinger will adjust its internal offsets to avoid jank.
-            boolean wantsEarlyWakeUp = radius > 0 && radius < mMaxBlurRadius;
+            boolean wantsEarlyWakeUp = radius > 0
+                    && radius < BlurDepthPref.getMaxBlurRadius(mTaskbarContext);
             if (wantsEarlyWakeUp && !mInEarlyWakeUp) {
                Log.d(TAG, "setBackgroundBlurRadius: setting early wakeup with token "
                                                     + mEarlyWakeupInfo);

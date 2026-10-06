@@ -21,7 +21,6 @@ import android.content.Context;
 import com.android.launcher3.dagger.LauncherAppComponent;
 import com.android.launcher3.dagger.LauncherComponentProvider;
 
-import java.util.function.Consumer;
 import java.util.function.Function;
 
 /**
@@ -31,28 +30,12 @@ import java.util.function.Function;
 
 public class DaggerSingletonObject<T> {
     private final Function<LauncherAppComponent, T> mFunction;
-    private T mValue;
 
     public DaggerSingletonObject(Function<LauncherAppComponent, T> function) {
         mFunction = function;
     }
 
     public T get(Context context) {
-        mValue = mFunction.apply(LauncherComponentProvider.get(context));
-        return mValue;
-    }
-
-    /**
-     * Executes the callback is the value is already created
-     * @return true if the callback was executed, false otherwise
-     */
-    public boolean executeIfCreated(Consumer<T> callback) {
-        T v = mValue;
-        if (v != null) {
-            callback.accept(v);
-            return true;
-        } else {
-            return false;
-        }
+        return mFunction.apply(LauncherComponentProvider.get(context));
     }
 }
