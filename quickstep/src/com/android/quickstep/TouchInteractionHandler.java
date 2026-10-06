@@ -342,7 +342,11 @@ public class TouchInteractionHandler extends ContextWrapper {
         Log.d(TAG, "onUserUnlocked: userId=" + getUserId()
                 + " instance=" + System.identityHashCode(this));
         mUserUnlocked = true;
-        mInputConsumer.registerInputConsumer();
+        try {
+            mInputConsumer.registerInputConsumer();
+        } catch (Exception e) {
+            Log.e(TAG, "Failure registering InputConsumer", e);
+        }
         mDeviceStateRepository.forEach(/* createIfAbsent= */ true, deviceState ->
                 onSystemUiFlagsChanged(deviceState.getSysuiStateFlags(),
                         deviceState.getDisplayId()));
