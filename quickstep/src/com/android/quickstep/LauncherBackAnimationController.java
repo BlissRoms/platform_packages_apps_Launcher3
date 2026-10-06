@@ -60,7 +60,6 @@ import com.android.internal.view.AppearanceRegion;
 import com.android.launcher3.AbstractFloatingView;
 import com.android.launcher3.BubbleTextView;
 import com.android.launcher3.Flags;
-import com.android.launcher3.LauncherPrefs;
 import com.android.launcher3.LauncherState;
 import com.android.launcher3.QuickstepTransitionManager;
 import com.android.launcher3.R;
@@ -72,6 +71,7 @@ import com.android.launcher3.uioverrides.QuickstepLauncher;
 import com.android.launcher3.util.NavigationMode;
 import com.android.launcher3.widget.LauncherAppWidgetHostView;
 import com.android.quickstep.util.BackAnimState;
+import com.android.quickstep.util.BlurDepthPref;
 import com.android.quickstep.util.ScalingWorkspaceRevealAnim;
 import com.android.systemui.shared.system.QuickStepContract;
 
@@ -129,7 +129,6 @@ public class LauncherBackAnimationController {
     private ValueAnimator mScrimAlphaAnimator;
     private float mScrimAlpha;
     private boolean mOverridingStatusBarFlags;
-    private int mMaxBlurRadius;
     private int mLastBlurRadius = 0;
 
     private boolean mCallbacksRegistered;
@@ -417,7 +416,7 @@ public class LauncherBackAnimationController {
         final float[] colorComponents = new float[] { 0f, 0f, 0f };
         mScrimAlpha = (isDarkTheme)
                 ? MAX_SCRIM_ALPHA_DARK : MAX_SCRIM_ALPHA_LIGHT;
-        setBlur(mMaxBlurRadius);
+        setBlur(BlurDepthPref.getMaxBlurRadius(mLauncher));
         mTransaction
                 .setColor(mScrimLayer, colorComponents)
                 .setAlpha(mScrimLayer, mScrimAlpha)
@@ -445,7 +444,8 @@ public class LauncherBackAnimationController {
             // Scrim hasn't been attached yet. Let's attach it.
             addScrimLayer();
         } else {
-            mLastBlurRadius = (int) lerp(mMaxBlurRadius, MIN_BLUR_RADIUS_PRE_COMMIT, progress);
+            mLastBlurRadius = (int) lerp(BlurDepthPref.getMaxBlurRadius(mLauncher),
+                    MIN_BLUR_RADIUS_PRE_COMMIT, progress);
             setBlur(mLastBlurRadius);
         }
         float screenWidth = mStartRect.width();
@@ -630,7 +630,6 @@ public class LauncherBackAnimationController {
                 : 0;
         mWindowScaleStartCornerRadius = QuickStepContract.getWindowCornerRadius(mLauncher);
         mStatusBarHeight = SystemBarUtils.getStatusBarHeight(mLauncher);
-        mMaxBlurRadius = LauncherPrefs.BLUR_DEPTH.get(mLauncher);
     }
 
     /**

@@ -89,7 +89,6 @@ public class BaseDepthControllerImpl<
     /**
      * Blur radius when completely zoomed out, in pixels.
      */
-    protected final int mMaxBlurRadius;
     protected final WallpaperManager mWallpaperManager;
     protected boolean mCrossWindowBlursEnabled;
 
@@ -136,7 +135,6 @@ public class BaseDepthControllerImpl<
     public BaseDepthControllerImpl(CONTAINER container, ListenableRef<Boolean> blurState) {
         mContainer = container;
         mCrossWindowBlursEnabled = blurState.getValue();
-        mMaxBlurRadius = LauncherPrefs.BLUR_DEPTH.get(container);
         mWallpaperManager = container.getSystemService(WallpaperManager.class);
 
         MultiPropertyFactory<BaseDepthControllerImpl<?, ?>> depthProperty =
@@ -261,7 +259,7 @@ public class BaseDepthControllerImpl<
         SurfaceControl blurSurface = mBlurSurface != null ? mBlurSurface : mBaseSurface;
 
         int previousBlur = mCurrentBlur;
-        int newBlur = shouldBlur() ? (int) (blurAmount * mMaxBlurRadius) : 0;
+        int newBlur = shouldBlur() ? (int) (blurAmount * getMaxBlurRadius()) : 0;
         int delta = Math.abs(newBlur - previousBlur);
         if (skipSimilarBlur && delta < Utilities.dpToPx(1) && newBlur != 0 && previousBlur != 0
                 && blurAmount != 1f) {
@@ -426,6 +424,10 @@ public class BaseDepthControllerImpl<
      * Maps depth values to blur amounts as a percentage of the max blur.
      * The blur percentage grows linearly with depth, and maxes out at 30% depth.
      */
+    protected int getMaxBlurRadius() {
+        return BlurDepthPref.getMaxBlurRadius(mContainer);
+    }
+
     private static float mapDepthToBlur(float depth) {
         return Interpolators.clampToProgress(depth, 0, 0.3f);
     }

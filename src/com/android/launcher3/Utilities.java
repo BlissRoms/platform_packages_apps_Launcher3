@@ -85,8 +85,6 @@ import java.util.Objects;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-import static com.android.launcher3.util.Executors.MAIN_EXECUTOR;
-
 /**
  * Various utilities shared amongst the Launcher's classes.
  */
@@ -111,10 +109,6 @@ public final class Utilities {
     @ChecksSdkIntAtLeast(api = VERSION_CODES.VANILLA_ICE_CREAM, codename = "V")
     public static final boolean ATLEAST_V = Build.VERSION.SDK_INT
             >= VERSION_CODES.VANILLA_ICE_CREAM;
-
-    private static final long WAIT_BEFORE_RESTART = 300; // ms
-    private static final Object sRestartLock = new Object();
-    private static boolean sRestartScheduled = false;
 
     /**
      * Set on a motion event dispatched from the nav bar. See {@link MotionEvent#setEdgeFlags(int)}.
@@ -885,19 +879,6 @@ public final class Utilities {
         if (BuildConfig.IS_DEBUG_DEVICE) {
             Log.d(tag, message);
         }
-    }
-
-    public static void restart() {
-        synchronized (sRestartLock) {
-            if (sRestartScheduled) {
-                return;
-            }
-            sRestartScheduled = true;
-        }
-
-        MAIN_EXECUTOR.getHandler().postDelayed(() -> {
-            System.exit(0);
-        }, WAIT_BEFORE_RESTART);
     }
 
     /**

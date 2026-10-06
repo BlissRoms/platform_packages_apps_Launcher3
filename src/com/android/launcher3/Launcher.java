@@ -500,9 +500,10 @@ public class Launcher extends StatefulActivity<LauncherState>
 
         // Listen for screen turning off
         ScreenOnTracker.INSTANCE.get(this).addListener(mScreenOnListener);
-        getSystemUiController().updateUiState(SystemUiController.UI_STATE_BASE_WINDOW,
-                Themes.getAttrBoolean(this, R.attr.isWorkspaceDarkText)
-                || LauncherPrefs.DARK_STATUS_BAR.get(this));
+        LauncherPrefs.get(this).addListener(mHomePrefListener,
+                LauncherPrefs.DARK_STATUS_BAR, LauncherPrefs.AUTO_HIDE_DOTS,
+                LauncherPrefs.SHOW_STATUS_BAR);
+        updateBaseWindowStatusBarTheme();
 
         mOverlayManager = getDefaultOverlay();
 
@@ -1040,9 +1041,7 @@ public class Launcher extends StatefulActivity<LauncherState>
             mWorkspace.showPageIndicatorAtCurrentScroll();
             mWorkspace.setClipChildren(false);
         }
-        // When multiple pages are visible or desktop devices, show persistent page indicator
-        mWorkspace.getPageIndicator().setShouldAutoHide(LauncherPrefs.AUTO_HIDE_DOTS.get(this)
-                && !shouldEnableMouseInteractionChanges(mWorkspace.getContext()));
+        updatePageIndicatorAutoHide();
 
         mPrevLauncherState = mStateManager.getCurrentStableState();
         if (mPrevLauncherState != state && ALL_APPS.equals(state)
@@ -1217,8 +1216,7 @@ public class Launcher extends StatefulActivity<LauncherState>
         mDropTargetBar.setup(mDragController);
         mAllAppsController.setupViews(mScrimView, mAppsView);
 
-        mWorkspace.getPageIndicator().setShouldAutoHide(LauncherPrefs.AUTO_HIDE_DOTS.get(this) &&
-                !shouldEnableMouseInteractionChanges(mWorkspace.getContext()));
+        updatePageIndicatorAutoHide();
         mWorkspace.getPageIndicator().setPaintColor(Themes.getAttrBoolean(
                 this, R.attr.isWorkspaceDarkText) ? Color.BLACK : Color.WHITE);
 
@@ -1410,6 +1408,27 @@ public class Launcher extends StatefulActivity<LauncherState>
     }
 
     private final ScreenOnListener mScreenOnListener = this::onScreenOnChanged;
+    private final LauncherPrefChangeListener mHomePrefListener = this::onHomePrefChanged;
+
+    protected void onHomePrefChanged(String key) {
+        if (LauncherPrefs.DARK_STATUS_BAR.getSharedPrefKey().equals(key)) {
+            updateBaseWindowStatusBarTheme();
+        } else if (LauncherPrefs.AUTO_HIDE_DOTS.getSharedPrefKey().equals(key)) {
+            updatePageIndicatorAutoHide();
+        }
+    }
+
+    private void updateBaseWindowStatusBarTheme() {
+        getSystemUiController().updateUiState(SystemUiController.UI_STATE_BASE_WINDOW,
+                Themes.getAttrBoolean(this, R.attr.isWorkspaceDarkText)
+                || LauncherPrefs.DARK_STATUS_BAR.get(this));
+    }
+
+    private void updatePageIndicatorAutoHide() {
+        // When multiple pages are visible or desktop devices, show persistent page indicator
+        mWorkspace.getPageIndicator().setShouldAutoHide(LauncherPrefs.AUTO_HIDE_DOTS.get(this)
+                && !shouldEnableMouseInteractionChanges(mWorkspace.getContext()));
+    }
 
     @Override
     public void onDetachedFromWindow() {
@@ -1597,6 +1616,9 @@ public class Launcher extends StatefulActivity<LauncherState>
             mNaturalScrollingChangedSafeCloseable = null;
         }
         ScreenOnTracker.INSTANCE.get(this).removeListener(mScreenOnListener);
+        LauncherPrefs.get(this).removeListener(mHomePrefListener,
+                LauncherPrefs.DARK_STATUS_BAR, LauncherPrefs.AUTO_HIDE_DOTS,
+                LauncherPrefs.SHOW_STATUS_BAR);
 
         mModel.removeCallbacks(modelCallbacks);
         mRotationHelper.destroy();

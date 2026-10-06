@@ -16,7 +16,6 @@
 package com.android.launcher3
 
 import android.content.Context
-import android.widget.Toast;
 import com.android.launcher3.dagger.ApplicationContext
 import com.android.launcher3.icons.IconCache
 import com.android.launcher3.icons.LauncherIconProvider
@@ -37,42 +36,7 @@ constructor(
     @Named("SAFE_MODE") val isSafeModeEnabled: Boolean,
 ) {
 
-    // Held strongly: SharedPreferences only keeps weak references to its listeners.
-    private val restartPrefListener = LauncherPrefChangeListener { key ->
-        if (RESTART_PREFS.any { it.sharedPrefKey == key }) setNeedsRestart()
-    }
-
-    init {
-        LauncherPrefs.get(context).addListener(restartPrefListener, *RESTART_PREFS)
-    }
-
-    fun setNeedsRestart() {
-        needsRestart = true
-    }
-
-    fun checkIfRestartNeeded() {
-        // we destroyed Settings activity with the back button
-        // so we force a restart now if needed without waiting for home button press
-        if (needsRestart) {
-            Toast.makeText(context, R.string.restarting_launcher_changes, Toast.LENGTH_SHORT).show();
-            Utilities.restart()
-        }
-    }
-
     companion object {
-        @JvmField var needsRestart: Boolean = false
-
-        /** Preferences that are only applied when the launcher process starts. */
-        private val RESTART_PREFS: Array<Item> = arrayOf(
-            LauncherPrefs.SHOW_STATUS_BAR,
-            LauncherPrefs.RECENTS_MEMINFO,
-            LauncherPrefs.SHORT_PARALLAX,
-            LauncherPrefs.SINGLE_PAGE_CENTER,
-            LauncherPrefs.DRAWER_SCROLLBAR,
-            LauncherPrefs.DARK_STATUS_BAR,
-            LauncherPrefs.AUTO_HIDE_DOTS,
-            LauncherPrefs.BLUR_DEPTH,
-        )
 
         @JvmField var INSTANCE = DaggerSingletonObject { it.launcherAppState }
 

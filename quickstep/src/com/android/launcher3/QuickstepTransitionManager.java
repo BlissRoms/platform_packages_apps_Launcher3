@@ -126,7 +126,6 @@ import com.android.internal.jank.Cuj;
 import com.android.internal.util.LatencyTracker;
 import com.android.launcher3.DeviceProfile.OnDeviceProfileChangeListener;
 import com.android.launcher3.LauncherAnimationRunner.RemoteAnimationFactory;
-import com.android.launcher3.LauncherPrefs;
 import com.android.launcher3.anim.AnimationSuccessListener;
 import com.android.launcher3.anim.AnimatorListeners;
 import com.android.launcher3.compat.AccessibilityManagerCompat;
@@ -157,6 +156,7 @@ import com.android.quickstep.TaskViewUtils;
 import com.android.quickstep.util.AlreadyStartedBackAnimState;
 import com.android.quickstep.util.AnimatorBackState;
 import com.android.quickstep.util.BackAnimState;
+import com.android.quickstep.util.BlurDepthPref;
 import com.android.quickstep.util.CrossDisplayMoveTransition;
 import com.android.quickstep.util.MultiValueUpdateListener;
 import com.android.quickstep.util.RectFSpringAnim;
@@ -252,7 +252,6 @@ public class QuickstepTransitionManager implements OnDeviceProfileChangeListener
     private final float mClosingWindowTransY;
     private final float mClosingFreeformWindowTransY;
     private final float mMaxShadowRadius;
-    private final int mMaxBlurRadius;
     private final boolean mIsAppLaunchBlurEnabled;
 
     private final StartingWindowListener mStartingWindowListener = new StartingWindowListener();
@@ -367,7 +366,6 @@ public class QuickstepTransitionManager implements OnDeviceProfileChangeListener
                 launcher, R.interpolator.emphasized_interpolator);
         mLatencyTracker = LatencyTracker.getInstance(launcher);
 
-        mMaxBlurRadius = LauncherPrefs.BLUR_DEPTH.get(launcher);
         mIsAppLaunchBlurEnabled = appLaunchBlur() && res.getBoolean(
                 com.android.internal.R.bool.config_enableAppLaunchBlur);
     }
@@ -991,7 +989,8 @@ public class QuickstepTransitionManager implements OnDeviceProfileChangeListener
                     NAV_FADE_IN_INTERPOLATOR, ANIMATION_DELAY_NAV_FADE_IN,
                     ANIMATION_NAV_FADE_IN_DURATION, APP_LAUNCH_DURATION));
 
-            FloatProp mBlurRadius = new FloatProp(0f, mMaxBlurRadius, DECELERATE_1_5);
+            FloatProp mBlurRadius = new FloatProp(0f,
+                    BlurDepthPref.getMaxBlurRadius(mLauncher), DECELERATE_1_5);
             FloatProp mBlurScrimAlpha = new FloatProp(0f, scrimAlpha, DECELERATE_1_5);
 
             @Override
@@ -1308,7 +1307,8 @@ public class QuickstepTransitionManager implements OnDeviceProfileChangeListener
                 if (mIsAppLaunchBlurEnabled && scrimLayer != null && scrimLayer.isValid()) {
                     SurfaceProperties builder = transaction.forSurface(scrimLayer);
                     builder.setAlpha(percent * scrimAlpha);
-                    builder.setBackgroundBlurRadius((int) (percent * mMaxBlurRadius));
+                    builder.setBackgroundBlurRadius(
+                            (int) (percent * BlurDepthPref.getMaxBlurRadius(mLauncher)));
                 }
 
                 surfaceApplier.scheduleApply(transaction);

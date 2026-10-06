@@ -85,6 +85,11 @@ public class WallpaperOffsetInterpolator implements
     public void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
         if (LauncherPrefs.WALLPAPER_SCROLLING.getSharedPrefKey().equals(key)) {
             mAllowScrolling = prefs.getBoolean(key, true);
+            syncWithScroll();
+        } else if (LauncherPrefs.SHORT_PARALLAX.getSharedPrefKey().equals(key)
+                || LauncherPrefs.SINGLE_PAGE_CENTER.getSharedPrefKey().equals(key)) {
+            updateOffset();
+            syncWithScroll();
         }
     }
 

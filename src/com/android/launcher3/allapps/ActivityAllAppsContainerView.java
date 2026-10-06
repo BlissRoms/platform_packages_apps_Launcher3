@@ -75,6 +75,7 @@ import com.android.launcher3.DropTarget.DragObject;
 import com.android.launcher3.Flags;
 import com.android.launcher3.Insettable;
 import com.android.launcher3.InsettableFrameLayout;
+import com.android.launcher3.LauncherPrefChangeListener;
 import com.android.launcher3.LauncherPrefs;
 import com.android.launcher3.R;
 import com.android.launcher3.Utilities;
@@ -176,6 +177,14 @@ public class ActivityAllAppsContainerView<T extends Context & ActivityContext>
     /** {@code true} when rendered view is in search state instead of the scroll state. */
     private boolean mIsSearching;
     private boolean mShowFastScroller;
+    private final LauncherPrefChangeListener mScrollbarPrefListener = key -> {
+        if (LauncherPrefs.DRAWER_SCROLLBAR.getSharedPrefKey().equals(key)) {
+            mShowFastScroller = LauncherPrefs.DRAWER_SCROLLBAR.get(getContext());
+            if (!isSearching()) {
+                updateFastScrollerVisibility();
+            }
+        }
+    };
     private boolean mRebindAdaptersAfterSearchAnimation;
     private int mNavBarScrimHeight = 0;
     private SearchRecyclerView mSearchRecyclerView;
@@ -282,8 +291,7 @@ public class ActivityAllAppsContainerView<T extends Context & ActivityContext>
         mFastScroller = findViewById(R.id.fast_scroller);
         mFastScroller.setPopupView(findViewById(R.id.fast_scroller_popup));
         mFastScrollLetterLayout = findViewById(R.id.scroll_letter_layout);
-        mFastScroller.setVisibility(mShowFastScroller ? VISIBLE : INVISIBLE);
-        mFastScrollLetterLayout.setVisibility(mShowFastScroller ? VISIBLE : INVISIBLE);
+        updateFastScrollerVisibility();
         setClipChildren(false);
 
         mSearchContainer = inflateSearchBar();
@@ -348,12 +356,21 @@ public class ActivityAllAppsContainerView<T extends Context & ActivityContext>
             mSearchUiDelegate.onInitializeSearchBar();
         }
         mActivityContext.addOnDeviceProfileChangeListener(this);
+        LauncherPrefs.get(getContext()).addListener(mScrollbarPrefListener,
+                LauncherPrefs.DRAWER_SCROLLBAR);
     }
 
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
         mActivityContext.removeOnDeviceProfileChangeListener(this);
+        LauncherPrefs.get(getContext()).removeListener(mScrollbarPrefListener,
+                LauncherPrefs.DRAWER_SCROLLBAR);
+    }
+
+    private void updateFastScrollerVisibility() {
+        mFastScroller.setVisibility(mShowFastScroller ? VISIBLE : INVISIBLE);
+        mFastScrollLetterLayout.setVisibility(mShowFastScroller ? VISIBLE : INVISIBLE);
     }
 
     public SearchUiManager getSearchUiManager() {
@@ -408,15 +425,14 @@ public class ActivityAllAppsContainerView<T extends Context & ActivityContext>
         if (!mSearchTransitionController.isRunning() && goingToSearch == isSearching()) {
             return;
         }
-        mFastScroller.setVisibility(goingToSearch ? INVISIBLE : VISIBLE);
+        mFastScroller.setVisibility(goingToSearch || !mShowFastScroller ? INVISIBLE : VISIBLE);
         if (goingToSearch) {
             // Fade out the button to pause work apps.
             mWorkManager.onActivePageChanged(SEARCH);
         } else if (mAllAppsTransitionController != null) {
             // If exiting search, revert predictive back scale on all apps
             mAllAppsTransitionController.animateAllAppsToNoScale();
-            mFastScroller.setVisibility(mShowFastScroller ? VISIBLE : INVISIBLE);
-            mFastScrollLetterLayout.setVisibility(mShowFastScroller ? VISIBLE : INVISIBLE);
+            updateFastScrollerVisibility();
         }
         setScrollbarVisibility(!goingToSearch);
         mSearchTransitionController.animateToState(goingToSearch, durationMs,
