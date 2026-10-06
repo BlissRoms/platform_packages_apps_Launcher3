@@ -64,7 +64,6 @@ import com.android.launcher3.Utilities;
 import com.android.launcher3.anim.AnimatorListeners;
 import com.android.launcher3.apppairs.AppPairIcon;
 import com.android.launcher3.celllayout.CellInfo;
-import com.android.launcher3.dagger.LauncherComponentProvider;
 import com.android.launcher3.folder.FolderIcon;
 import com.android.launcher3.folder.PreviewBackground;
 import com.android.launcher3.graphics.ThemeManager;
@@ -232,11 +231,7 @@ public class TaskbarView extends FrameLayout implements FolderIcon.FolderIconPar
         mTaskbarUiState.setIsTaskbarViewShown(isShown());
         mTransientTaskbarMinWidth = resources.getDimension(R.dimen.transient_taskbar_min_width);
 
-        if (mActivityContext.getDeviceProfile().isHotseatQsbEnabled()) {
-            mQsb = LauncherComponentProvider.get(context).getQsbWidgetFactory().createView(this);
-        } else {
-            mQsb = null;
-        }
+        mQsb = null;
         onDeviceProfileChanged(mActivityContext.getDeviceProfile());
 
         final TaskbarSpecsEvaluator specsEvaluator = mActivityContext.getTaskbarSpecsEvaluator();
@@ -482,9 +477,7 @@ public class TaskbarView extends FrameLayout implements FolderIcon.FolderIconPar
 
             @Override
             public int calculateDropIndexInContainer(int dropIndex, int hiddenChildIndex) {
-                int dropSpotOffset =
-                        mActivityContext.getDeviceProfile().getHotseatProfile().isQsbInline()
-                                ? 2 : 1;
+                int dropSpotOffset = hasInlineQsb() ? 2 : 1;
                 int dividerIndex = indexOfChild(mTaskbarDividerContainer);
 
                 int maxIndex = indexOfChild(mTaskbarPinnedOverflowView);
@@ -1645,7 +1638,7 @@ public class TaskbarView extends FrameLayout implements FolderIcon.FolderIconPar
         int count = getChildCount()
                 - numContainers
                 + numIconsInContainers;
-        if (mActivityContext.getDeviceProfile().getHotseatProfile().isQsbInline()) {
+        if (hasInlineQsb()) {
             count--; // Exclude QSB
         }
         // count can be negative if views aren't added
@@ -1812,6 +1805,10 @@ public class TaskbarView extends FrameLayout implements FolderIcon.FolderIconPar
     @Nullable
     public View getQsb() {
         return mQsb;
+    }
+
+    private boolean hasInlineQsb() {
+        return mQsb != null && mQsb.getParent() == this;
     }
 
     // FolderIconParent implemented methods.
