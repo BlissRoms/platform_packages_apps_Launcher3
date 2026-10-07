@@ -95,5 +95,7 @@ object CustomAppNameStore {
         "$packageName/$className/${user.identifier}"
 
     private fun prefs(context: Context): SharedPreferences =
-        context.getSharedPreferences(CUSTOM_NAMES_PREFS, Context.MODE_PRIVATE)
+        context
+            .createDeviceProtectedStorageContext()
+            .getSharedPreferences(CUSTOM_NAMES_PREFS, Context.MODE_PRIVATE)
 }
