@@ -15,6 +15,7 @@ import android.content.pm.ResolveInfo
 import android.content.res.Resources
 import android.graphics.drawable.Drawable
 import android.os.Process
+import android.os.UserHandle
 import android.util.Log
 import com.android.launcher3.bliss.iconpack.IconPackThemeFactory.ICON_PACK_FACTORY_ID
 import com.android.launcher3.dagger.ApplicationContext
@@ -54,6 +55,8 @@ constructor(
     private val cachedCalendarConfigs = ConcurrentHashMap<String, List<CalendarIconConfig>>()
 
     private val cachedDrawables = ConcurrentHashMap<String, List<IconPackDrawable>>()
+
+    @Volatile private var hasIconPacks: Boolean? = null
 
     private val overridePrefs: SharedPreferences =
         context
@@ -118,7 +121,8 @@ constructor(
             .sortedBy { it.value.toString().lowercase() }
             .associate { it.key to it.value }
 
-    fun hasInstalledIconPacks(): Boolean = queryIconPacks().isNotEmpty()
+    fun hasInstalledIconPacks(): Boolean =
+        hasIconPacks ?: queryIconPacks().isNotEmpty().also { hasIconPacks = it }
 
     fun getIconPackDrawables(iconPackPackage: String): List<IconPackDrawable> =
         cachedDrawables.getOrPut(iconPackPackage) {
@@ -126,8 +130,8 @@ constructor(
             IconPackParser.parseDrawables(resources, iconPackPackage)
         }
 
-    fun loadIconOverride(componentName: ComponentName, density: Int): Drawable? {
-        val value = overridePrefs.getString(componentName.flattenToString(), null) ?: return null
+    fun loadIconOverride(componentName: ComponentName, user: UserHandle, density: Int): Drawable? {
+        val value = overridePrefs.getString(overrideKey(componentName, user), null) ?: return null
         val iconPackPackage = value.substringBefore(OVERRIDE_SEPARATOR)
         val drawableName = value.substringAfter(OVERRIDE_SEPARATOR, "")
         if (drawableName.isEmpty()) return null
@@ -136,24 +140,28 @@ constructor(
 
     fun setIconOverride(
         componentName: ComponentName,
+        user: UserHandle,
         iconPackPackage: String,
         drawableName: String,
     ) {
         overridePrefs
             .edit()
             .putString(
-                componentName.flattenToString(),
+                overrideKey(componentName, user),
                 iconPackPackage + OVERRIDE_SEPARATOR + drawableName,
             )
             .apply()
     }
 
-    fun clearIconOverride(componentName: ComponentName) {
-        overridePrefs.edit().remove(componentName.flattenToString()).apply()
+    fun clearIconOverride(componentName: ComponentName, user: UserHandle) {
+        overridePrefs.edit().remove(overrideKey(componentName, user)).apply()
     }
 
-    fun hasIconOverride(componentName: ComponentName): Boolean =
-        overridePrefs.contains(componentName.flattenToString())
+    fun hasIconOverride(componentName: ComponentName, user: UserHandle): Boolean =
+        overridePrefs.contains(overrideKey(componentName, user))
+
+    private fun overrideKey(componentName: ComponentName, user: UserHandle) =
+        "${componentName.flattenToString()}#${user.identifier}"
 
     private fun queryIconPacks(): Map<String, ResolveInfo> {
         val packs = mutableMapOf<String, ResolveInfo>()
@@ -399,6 +407,7 @@ constructor(
     }
 
     private fun onPackageChanged(packageName: String) {
+        hasIconPacks = null
         cachedMappings.remove(packageName)
         cachedMaskConfigs.remove(packageName)
         cachedCalendarConfigs.remove(packageName)
