@@ -192,6 +192,9 @@ public class ActivityAllAppsContainerView<T extends Context & ActivityContext>
             rebindAdapters(true);
             updateFastScrollerBottomMargin();
             setInsets(new Rect(mInsets));
+            if (mWorkManager.getWorkUtilityView() != null) {
+                mWorkManager.getWorkUtilityView().setInsets(mInsets);
+            }
         } else if (LauncherPrefs.APP_DRAWER_SORT_MODE.getSharedPrefKey().equals(key)) {
             mAH.get(MAIN).mAppsList.onAppsUpdated();
             mAH.get(WORK).mAppsList.onAppsUpdated();
@@ -984,6 +987,15 @@ public class ActivityAllAppsContainerView<T extends Context & ActivityContext>
                 && SEARCH_PLACEMENT_BOTTOM.equals(getSearchPlacement());
     }
 
+    int getBottomSearchBarSpace() {
+        if (!isSearchBarAtBottom()) {
+            return 0;
+        }
+        return getResources().getDimensionPixelSize(R.dimen.all_apps_search_bar_field_height)
+                + getResources().getDimensionPixelSize(
+                        R.dimen.all_apps_search_bar_bottom_padding_extra);
+    }
+
     private int getSearchContainerBottomMargin() {
         int bottomArea = Math.max(Math.max(mInsets.bottom, mNavBarScrimHeight), mImeInsetBottom);
         return bottomArea + getResources().getDimensionPixelSize(
@@ -1075,6 +1087,7 @@ public class ActivityAllAppsContainerView<T extends Context & ActivityContext>
 
         RelativeLayout.LayoutParams layoutParams = (LayoutParams) v.getLayoutParams();
         layoutParams.addRule(RelativeLayout.BELOW, R.id.search_container_all_apps);
+        layoutParams.bottomMargin = 0;
 
         int topMargin = getContext().getResources().getDimensionPixelSize(
                 R.dimen.all_apps_search_bar_bottom_adjustment);
@@ -1094,6 +1107,7 @@ public class ActivityAllAppsContainerView<T extends Context & ActivityContext>
 
         RelativeLayout.LayoutParams layoutParams = (LayoutParams) v.getLayoutParams();
         layoutParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
+        layoutParams.bottomMargin = 0;
         layoutParams.topMargin =
                 includeTabsMargin
                         ? getContext().getResources().getDimensionPixelSize(
