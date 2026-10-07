@@ -23,6 +23,7 @@ import android.content.pm.PackageItemInfo
 import android.content.res.Resources.NotFoundException
 import android.graphics.drawable.AdaptiveIconDrawable
 import android.graphics.drawable.Drawable
+import android.os.UserHandle
 import android.util.Log
 import com.android.launcher3.LauncherModel
 import com.android.launcher3.bliss.iconpack.IconPackManager
@@ -80,7 +81,7 @@ constructor(
         val componentName = ComponentName(appInfo.packageName, info.name ?: "")
 
         iconPackManager
-            .loadIconOverride(componentName, density)
+            .loadIconOverride(componentName, UserHandle.getUserHandleForUid(appInfo.uid), density)
             ?.let { return it }
 
         // Check icon pack for dynamic calendar icons (day-specific)

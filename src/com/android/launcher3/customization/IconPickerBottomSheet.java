@@ -145,19 +145,23 @@ public class IconPickerBottomSheet extends AbstractSlideInView<BaseActivity> {
     private void showPackList() {
         mSearchField.setVisibility(View.GONE);
         mSearchField.setText("");
-        Map<String, CharSequence> packs = new LinkedHashMap<>();
-        if (mManager.hasIconOverride(mKey.componentName)) {
-            packs.put("", getContext().getString(R.string.icon_picker_default_icon));
-        }
-        packs.putAll(mManager.getInstalledIconPackLabels());
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        mRecyclerView.setAdapter(new PackListAdapter(packs, packPackage -> {
-            if (packPackage.isEmpty()) {
-                resetIcon();
-            } else {
-                showIconGrid(packPackage);
+        String defaultIconLabel = getContext().getString(R.string.icon_picker_default_icon);
+        THREAD_POOL_EXECUTOR.execute(() -> {
+            Map<String, CharSequence> packs = new LinkedHashMap<>();
+            if (mManager.hasIconOverride(mKey.componentName, mKey.user)) {
+                packs.put("", defaultIconLabel);
             }
-        }));
+            packs.putAll(mManager.getInstalledIconPackLabels());
+            MAIN_EXECUTOR.execute(() -> mRecyclerView.setAdapter(
+                    new PackListAdapter(packs, packPackage -> {
+                        if (packPackage.isEmpty()) {
+                            resetIcon();
+                        } else {
+                            showIconGrid(packPackage);
+                        }
+                    })));
+        });
     }
 
     private void showIconGrid(String packPackage) {
@@ -214,7 +218,7 @@ public class IconPickerBottomSheet extends AbstractSlideInView<BaseActivity> {
 
     private void onIconPicked(String packPackage, IconPackDrawable entry) {
         hideKeyboard();
-        mManager.setIconOverride(mKey.componentName, packPackage, entry.getName());
+        mManager.setIconOverride(mKey.componentName, mKey.user, packPackage, entry.getName());
         if (mCallback != null) {
             mCallback.onIconChosen();
         }
@@ -223,7 +227,7 @@ public class IconPickerBottomSheet extends AbstractSlideInView<BaseActivity> {
 
     private void resetIcon() {
         hideKeyboard();
-        mManager.clearIconOverride(mKey.componentName);
+        mManager.clearIconOverride(mKey.componentName, mKey.user);
         if (mCallback != null) {
             mCallback.onIconChosen();
         }
