@@ -179,7 +179,9 @@ public class ActivityAllAppsContainerView<T extends Context & ActivityContext>
     /** {@code true} when rendered view is in search state instead of the scroll state. */
     private boolean mIsSearching;
     private boolean mShowFastScroller;
-    private final LauncherPrefChangeListener mDrawerPrefListener = key -> {
+    private final LauncherPrefChangeListener mDrawerPrefListener = this::onDrawerPrefChanged;
+
+    private void onDrawerPrefChanged(String key) {
         if (LauncherPrefs.DRAWER_SCROLLBAR.getSharedPrefKey().equals(key)) {
             mShowFastScroller = LauncherPrefs.DRAWER_SCROLLBAR.get(getContext());
             if (!isSearching()) {
@@ -190,8 +192,11 @@ public class ActivityAllAppsContainerView<T extends Context & ActivityContext>
             rebindAdapters(true);
             updateFastScrollerBottomMargin();
             setInsets(new Rect(mInsets));
+        } else if (LauncherPrefs.APP_DRAWER_SORT_MODE.getSharedPrefKey().equals(key)) {
+            mAH.get(MAIN).mAppsList.onAppsUpdated();
+            mAH.get(WORK).mAppsList.onAppsUpdated();
         }
-    };
+    }
     private boolean mRebindAdaptersAfterSearchAnimation;
     private int mNavBarScrimHeight = 0;
     private int mImeInsetBottom = 0;
@@ -378,7 +383,8 @@ public class ActivityAllAppsContainerView<T extends Context & ActivityContext>
         }
         mActivityContext.addOnDeviceProfileChangeListener(this);
         LauncherPrefs.get(getContext()).addListener(mDrawerPrefListener,
-                LauncherPrefs.DRAWER_SCROLLBAR, LauncherPrefs.ALL_APPS_SEARCH_PLACEMENT);
+                LauncherPrefs.DRAWER_SCROLLBAR, LauncherPrefs.ALL_APPS_SEARCH_PLACEMENT,
+                LauncherPrefs.APP_DRAWER_SORT_MODE);
     }
 
     @Override
@@ -386,7 +392,8 @@ public class ActivityAllAppsContainerView<T extends Context & ActivityContext>
         super.onDetachedFromWindow();
         mActivityContext.removeOnDeviceProfileChangeListener(this);
         LauncherPrefs.get(getContext()).removeListener(mDrawerPrefListener,
-                LauncherPrefs.DRAWER_SCROLLBAR, LauncherPrefs.ALL_APPS_SEARCH_PLACEMENT);
+                LauncherPrefs.DRAWER_SCROLLBAR, LauncherPrefs.ALL_APPS_SEARCH_PLACEMENT,
+                LauncherPrefs.APP_DRAWER_SORT_MODE);
     }
 
     private void updateFastScrollerVisibility() {
