@@ -179,12 +179,17 @@ public class ActivityAllAppsContainerView<T extends Context & ActivityContext>
     /** {@code true} when rendered view is in search state instead of the scroll state. */
     private boolean mIsSearching;
     private boolean mShowFastScroller;
-    private final LauncherPrefChangeListener mScrollbarPrefListener = key -> {
+    private final LauncherPrefChangeListener mDrawerPrefListener = key -> {
         if (LauncherPrefs.DRAWER_SCROLLBAR.getSharedPrefKey().equals(key)) {
             mShowFastScroller = LauncherPrefs.DRAWER_SCROLLBAR.get(getContext());
             if (!isSearching()) {
                 updateFastScrollerVisibility();
             }
+        } else if (LauncherPrefs.ALL_APPS_SEARCH_PLACEMENT.getSharedPrefKey().equals(key)) {
+            mSearchPlacement = LauncherPrefs.ALL_APPS_SEARCH_PLACEMENT.get(getContext());
+            rebindAdapters(true);
+            updateFastScrollerBottomMargin();
+            setInsets(new Rect(mInsets));
         }
     };
     private boolean mRebindAdaptersAfterSearchAnimation;
@@ -372,16 +377,16 @@ public class ActivityAllAppsContainerView<T extends Context & ActivityContext>
             mSearchUiDelegate.onInitializeSearchBar();
         }
         mActivityContext.addOnDeviceProfileChangeListener(this);
-        LauncherPrefs.get(getContext()).addListener(mScrollbarPrefListener,
-                LauncherPrefs.DRAWER_SCROLLBAR);
+        LauncherPrefs.get(getContext()).addListener(mDrawerPrefListener,
+                LauncherPrefs.DRAWER_SCROLLBAR, LauncherPrefs.ALL_APPS_SEARCH_PLACEMENT);
     }
 
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
         mActivityContext.removeOnDeviceProfileChangeListener(this);
-        LauncherPrefs.get(getContext()).removeListener(mScrollbarPrefListener,
-                LauncherPrefs.DRAWER_SCROLLBAR);
+        LauncherPrefs.get(getContext()).removeListener(mDrawerPrefListener,
+                LauncherPrefs.DRAWER_SCROLLBAR, LauncherPrefs.ALL_APPS_SEARCH_PLACEMENT);
     }
 
     private void updateFastScrollerVisibility() {
