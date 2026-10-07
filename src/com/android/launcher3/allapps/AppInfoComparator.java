@@ -28,9 +28,9 @@ import com.android.launcher3.model.data.AppInfo;
 import com.android.launcher3.pm.UserCache;
 import com.android.launcher3.util.LabelComparator;
 
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -45,6 +45,9 @@ public class AppInfoComparator implements Comparator<AppInfo> {
     private final Context mContext;
     private Map<String, Long> mUsageStats = null;
     private long mLastUsageUpdateTime = 0;
+    private boolean mSortByInstallDate;
+    private boolean mSortByUsage;
+    private Map<String, Long> mUsageSnapshot = Collections.emptyMap();
 
     public AppInfoComparator(Context context) {
         mContext = context;
@@ -61,10 +64,11 @@ public class AppInfoComparator implements Comparator<AppInfo> {
             if (usm != null) {
                 long endtime = now;
                 long starttime = endtime - 1000L * 60 * 60 * 24 * 30; // 30 days
-                List<UsageStats> stats = usm.queryUsageStats(UsageStatsManager.INTERVAL_BEST, starttime, endtime);
+                Map<String, UsageStats> stats =
+                        usm.queryAndAggregateUsageStats(starttime, endtime);
                 if (stats != null) {
-                    for (UsageStats stat : stats) {
-                        mUsageStats.put(stat.getPackageName(), stat.getTotalTimeInForeground());
+                    for (Map.Entry<String, UsageStats> stat : stats.entrySet()) {
+                        mUsageStats.put(stat.getKey(), stat.getValue().getTotalTimeInForeground());
                     }
                 }
             }
@@ -73,17 +77,25 @@ public class AppInfoComparator implements Comparator<AppInfo> {
         return mUsageStats;
     }
 
+    public void prepareForSort() {
+        String sortMode = LauncherPrefs.get(mContext).get(LauncherPrefs.APP_DRAWER_SORT_MODE);
+        mSortByInstallDate = "install_date".equals(sortMode);
+        mSortByUsage = "usage".equals(sortMode);
+        mUsageSnapshot = mSortByUsage ? getUsageStats() : Collections.emptyMap();
+    }
+
+    public boolean isAlphabetical() {
+        return !mSortByInstallDate && !mSortByUsage;
+    }
+
     @Override
     public int compare(AppInfo a, AppInfo b) {
-        String sortMode = LauncherPrefs.get(mContext).get(LauncherPrefs.APP_DRAWER_SORT_MODE);
-
-        if ("install_date".equals(sortMode)) {
+        if (mSortByInstallDate) {
             int result = Long.compare(b.firstInstallTime, a.firstInstallTime);
             if (result != 0) return result;
-        } else if ("usage".equals(sortMode)) {
-            Map<String, Long> stats = getUsageStats();
-            long usageA = stats.containsKey(a.componentName.getPackageName()) ? stats.get(a.componentName.getPackageName()) : 0L;
-            long usageB = stats.containsKey(b.componentName.getPackageName()) ? stats.get(b.componentName.getPackageName()) : 0L;
+        } else if (mSortByUsage) {
+            long usageA = mUsageSnapshot.getOrDefault(a.componentName.getPackageName(), 0L);
+            long usageB = mUsageSnapshot.getOrDefault(b.componentName.getPackageName(), 0L);
             int result = Long.compare(usageB, usageA);
             if (result != 0) return result;
         }
