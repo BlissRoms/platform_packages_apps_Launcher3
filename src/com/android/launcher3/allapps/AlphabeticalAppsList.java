@@ -257,12 +257,13 @@ public class AlphabeticalAppsList implements AllAppsStore.OnUpdateListener {
                         .filter(mPrivateProviderManager.getItemInfoMatcher());
             }
         }
+        mAppNameComparator.prepareForSort();
         appSteam = appSteam.sorted(mAppNameComparator);
         privateAppStream = privateAppStream.sorted(mAppNameComparator);
 
         // As a special case for some languages (currently only Simplified Chinese), we may need to
         // coalesce sections
-        if (mSortSections) {
+        if (mSortSections && mAppNameComparator.isAlphabetical()) {
             // Compute the section headers. We use a TreeMap with the section name comparator to
             // ensure that the sections are ordered when we iterate over it later
             appSteam = appSteam.collect(Collectors.groupingBy(
@@ -474,7 +475,7 @@ public class AlphabeticalAppsList implements AllAppsStore.OnUpdateListener {
                 mAdapterItems.add(AdapterItem.asApp(info));
             }
 
-            String sectionName = info.sectionName;
+            String sectionName = mAppNameComparator.isAlphabetical() ? info.sectionName : "";
             // Create a new section if the section names do not match
             if (!sectionName.equals(lastSectionName)) {
                 Log.d(TAG, "addAppsWithSections: adding sectionName: " + sectionName
