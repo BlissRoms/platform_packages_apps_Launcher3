@@ -1154,7 +1154,8 @@ public class TaskbarLauncherStateController {
         // Switch taskbar and hotseat in last frame and if taskbar is not hidden for bubbles
         boolean isHiddenForBubbles = mControllers.taskbarStashController.isHiddenForBubbles();
 
-        if (shouldShowTransientTaskbarAnimation()) {
+        if (shouldShowTransientTaskbarAnimation()
+                || mControllers.taskbarActivityContext.showDesktopTaskbarForFreeformDisplay()) {
             updateIconAlphaForHome(taskbarWillBeVisible ? 1 : 0, ALPHA_CHANNEL_TASKBAR_ALIGNMENT,
                     /* updateTaskbarAlpha = */ !isHiddenForBubbles);
         }
