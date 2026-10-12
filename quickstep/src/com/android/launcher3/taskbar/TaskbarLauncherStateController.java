@@ -1215,6 +1215,9 @@ public class TaskbarLauncherStateController {
 
     private void updateHotseatIconAlpha(float targetAlpha, @HotseatQsbAlphaId int alphaChannel) {
         mLauncher.setHotseatIconsAlpha(targetAlpha, alphaChannel);
+        if (mIsQsbInline) {
+            mLauncher.setHotseatQsbAlpha(targetAlpha, alphaChannel);
+        }
     }
 
     /** Updates launcher home screen appearance accordingly to the bubble bar location. */
