@@ -21,6 +21,7 @@ import static android.view.MotionEvent.ACTION_UP;
 
 import android.content.Context;
 import android.util.Log;
+import android.view.InputDevice;
 import android.view.InputEvent;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
@@ -77,6 +78,9 @@ public class InputConsumerProxy {
     private boolean onInputConsumerEvent(InputEvent ev) {
         if (ev instanceof MotionEvent) {
             MotionEvent event = (MotionEvent) ev;
+            if (!event.isFromSource(InputDevice.SOURCE_CLASS_POINTER)) {
+                return false;
+            }
             int action = event.getActionMasked();
             boolean isHoverEvent = action == MotionEvent.ACTION_HOVER_ENTER
                     || action == MotionEvent.ACTION_HOVER_MOVE
