@@ -224,6 +224,19 @@ data class HotseatProfile(
 
             // Spaces should be correct when the nav buttons are not inline
             if (!hotseatProfileInitialValues.areNavButtonsInline) {
+                if (
+                    hotseatProfileInitialValues.isQsbInline &&
+                        borderAndSpace.borderSpace < hotseatProfileInitialValues.minIconSpacePx
+                ) {
+                    return fitInlineQsbWithMinIconSpace(
+                        borderAndSpace = borderAndSpace,
+                        hotseatProfileInitialValues = hotseatProfileInitialValues,
+                        workspaceProfile = workspaceProfile,
+                        inv = inv,
+                        panelCount = panelCount,
+                        numShownHotseatIcons = numShownHotseatIcons,
+                    )
+                }
                 return HotseatWithBorderAndSpace(
                     widthPx = borderAndSpace.widthPx,
                     numShownIcons = numShownHotseatIcons,
@@ -327,6 +340,42 @@ data class HotseatProfile(
                     } else {
                         borderAndSpace.borderSpace
                     },
+            )
+        }
+
+        private fun fitInlineQsbWithMinIconSpace(
+            borderAndSpace: HotseatBorderAndSpace,
+            hotseatProfileInitialValues: HotseatProfileInitialValues,
+            workspaceProfile: WorkspaceProfile,
+            inv: InvariantDeviceProfile,
+            panelCount: Int,
+            numShownHotseatIcons: Int,
+        ): HotseatWithBorderAndSpace {
+            val minSpacing =
+                borderAndSpace.copy(borderSpace = hotseatProfileInitialValues.minIconSpacePx)
+            val qsbWidthFor = { numIcons: Int ->
+                calculateQsbWidth(
+                    borderAndSpace = minSpacing,
+                    workspaceProfile = workspaceProfile,
+                    inv = inv,
+                    panelCount = panelCount,
+                    numShownHotseatIcons = numIcons,
+                    isQsbInline = true,
+                )
+            }
+            var numShownIcons = numShownHotseatIcons
+            while (
+                numShownIcons > 1 &&
+                    qsbWidthFor(numShownIcons) < hotseatProfileInitialValues.minQsbWidthPx
+            ) {
+                numShownIcons--
+            }
+            return HotseatWithBorderAndSpace(
+                widthPx = minSpacing.widthPx,
+                numShownIcons = numShownIcons,
+                columnSpan = minSpacing.columnSpan,
+                qsbWidth = qsbWidthFor(numShownIcons),
+                borderSpace = minSpacing.borderSpace,
             )
         }
 
