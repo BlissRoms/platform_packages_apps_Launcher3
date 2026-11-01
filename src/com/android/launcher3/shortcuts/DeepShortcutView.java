@@ -140,6 +140,11 @@ public class DeepShortcutView extends FrameLayout implements BubbleTextHolder {
         return mBubbleText;
     }
 
+    @Override
+    public void setIconVisible(boolean visible) {
+        setWillDrawIcon(visible);
+    }
+
     public void setWillDrawIcon(boolean willDraw) {
         mIconView.setVisibility(willDraw ? View.VISIBLE : View.INVISIBLE);
     }
