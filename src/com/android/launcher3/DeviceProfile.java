@@ -1021,22 +1021,7 @@ public class DeviceProfile {
     }
 
     public int getHotseatQsbWidth() {
-        if (!mIsHotseatQsbEnabled) {
-            return 0;
-        }
-
-        int iconExtraSpacePx = getWorkspaceProfile().getIconSizePx() - getIconVisibleSizePx(
-                getWorkspaceProfile().getIconSizePx());
-        if (mHotseatProfile.isQsbInline()) {
-            int columns = getPanelCount() * inv.numColumns;
-            return getWorkspaceProfile().getIconToIconWidthForColumns(columns)
-                    - getWorkspaceProfile().getIconSizePx() * mHotseatProfile.getNumShownIcons()
-                    - mHotseatProfile.getBorderSpace() * mHotseatProfile.getNumShownIcons()
-                    - iconExtraSpacePx;
-        } else {
-            return getWorkspaceProfile().getIconToIconWidthForColumns(
-                    mHotseatProfile.getColumnSpan()) - iconExtraSpacePx;
-        }
+        return mIsHotseatQsbEnabled ? mHotseatProfile.getQsbWidth() : 0;
     }
 
     /**
