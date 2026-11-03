@@ -67,6 +67,7 @@ import com.android.launcher3.Alarm;
 import com.android.launcher3.DeviceProfile;
 import com.android.launcher3.LauncherPrefs;
 import com.android.launcher3.R;
+import com.android.launcher3.Utilities;
 import com.android.launcher3.anim.AnimatedFloat;
 import com.android.launcher3.anim.AnimationSuccessListener;
 import com.android.launcher3.anim.AnimatorListeners;
@@ -908,6 +909,9 @@ public class TaskbarStashController implements TaskbarControllers.LoggableTaskba
 
             @Override
             public void onAnimationEnd(Animator animation) {
+                if (mAnimator != animation) {
+                    return;
+                }
                 mAnimator = null;
 
                 if (!mIsStashed) {
@@ -989,14 +993,14 @@ public class TaskbarStashController implements TaskbarControllers.LoggableTaskba
         if (isStashed) {
             play(animator, mControllers.taskbarSpringOnStashController.createSpringToStash(),
                     0, duration, LINEAR);
-            play(animator, mIconAlphaForStash.animateToValue(iconAlphaTarget),
+            play(animator, createIconAlphaForStashAnim(animator, iconAlphaTarget),
                     iconAlphaStartDelay,
                     iconAlphaDuration,
                     LINEAR);
         } else {
             play(animator, mControllers.taskbarSpringOnStashController.createResetAnimForUnstash(),
                     0, duration, LINEAR);
-            play(animator, mIconAlphaForStash.animateToValue(iconAlphaTarget),
+            play(animator, createIconAlphaForStashAnim(animator, iconAlphaTarget),
                     iconAlphaStartDelay,
                     iconAlphaDuration,
                     LINEAR);
@@ -1177,7 +1181,7 @@ public class TaskbarStashController implements TaskbarControllers.LoggableTaskba
                     () -> mTaskbarBackgroundOffset.updateValue(backgroundOffsetTarget)));
         }
 
-        play(skippable, mIconAlphaForStash.animateToValue(iconAlphaTarget), iconAlphaStartDelay,
+        play(skippable, createIconAlphaForStashAnim(as, iconAlphaTarget), iconAlphaStartDelay,
                 iconAlphaDuration,
                 LINEAR);
 
@@ -1251,6 +1255,23 @@ public class TaskbarStashController implements TaskbarControllers.LoggableTaskba
             }
         });
         mTaskbarBackgroundAlphaAnimator.start();
+    }
+
+    private Animator createIconAlphaForStashAnim(AnimatorSet owner, float targetAlpha) {
+        ValueAnimator anim = ValueAnimator.ofFloat(0f, 1f);
+        float[] startAlpha = {Float.NaN};
+        anim.addUpdateListener(animation -> {
+            // A parent set keeps playing a superseded stash animation, so it must not write.
+            if (mAnimator != owner) {
+                return;
+            }
+            if (Float.isNaN(startAlpha[0])) {
+                startAlpha[0] = mIconAlphaForStash.getValue();
+            }
+            mIconAlphaForStash.setValue(Utilities.mapRange(
+                    animation.getAnimatedFraction(), startAlpha[0], targetAlpha));
+        });
+        return anim;
     }
 
     private static void play(AnimatorSet as, @Nullable Animator a, long startDelay, long duration,
