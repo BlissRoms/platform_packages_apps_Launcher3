@@ -90,7 +90,7 @@ DeviceProfile:
 	numShownHotseatIcons: 5
 	hotseatBorderSpace: 0.0px (0.0dp)
 	isQsbInline: false
-	hotseatQsbWidth: 0.0px (0.0dp)
+	hotseatQsbWidth: 1607.0px (612.1905dp)
 	isTaskbarPresent:false
 	isTaskbarPresentInApps:false
 	taskbarHeight: 0.0px (0.0dp)
