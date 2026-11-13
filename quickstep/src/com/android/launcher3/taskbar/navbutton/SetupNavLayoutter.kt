@@ -69,9 +69,6 @@ class SetupNavLayoutter(
         val SUWTheme = SystemProperties.get(SUW_THEME_SYSTEM_PROPERTY, "")
         val expressiveThemeEnabled =
             SUWTheme == GLIF_EXPRESSIVE_THEME || SUWTheme == GLIF_EXPRESSIVE_LIGHT_THEME
-        if (expressiveThemeEnabled && !context.isSimpleViewEnabled) {
-            return
-        }
         // Since setup wizard only has back button enabled, it looks strange to be
         // end-aligned, so start-align instead.
         val navButtonsLayoutParams = navButtonContainer.layoutParams as FrameLayout.LayoutParams
@@ -100,6 +97,10 @@ class SetupNavLayoutter(
 
         endContextualContainer.removeAllViews()
         startContextualContainer.removeAllViews()
+
+        if (expressiveThemeEnabled && !context.isSimpleViewEnabled) {
+            return
+        }
 
         val contextualButtonWidth =
             resources.getDimensionPixelSize(R.dimen.taskbar_contextual_button_suw_width)

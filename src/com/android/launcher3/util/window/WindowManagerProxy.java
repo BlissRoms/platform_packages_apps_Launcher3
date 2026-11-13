@@ -126,6 +126,14 @@ public class WindowManagerProxy {
     }
 
     /**
+     * Returns whether the context's display is landscape by default.
+     */
+    private boolean isDefaultLandscape(Context context) {
+        CachedDisplayInfo info = getDisplayInfo(context).normalize(this);
+        return info.size.x > info.size.y;
+    }
+
+    /**
      * Returns the real bounds for the provided display after applying any insets normalization
      */
     public WindowBounds getRealBounds(Context displayInfoContext, CachedDisplayInfo info) {
@@ -138,7 +146,8 @@ public class WindowManagerProxy {
         normalizeWindowInsets(displayInfoContext,
                 showDesktopTaskbarForFreeformDisplay(displayInfoContext),
                 windowMetrics.getWindowInsets(), insets);
-        return new WindowBounds(windowMetrics.getBounds(), insets, info.rotation);
+        return new WindowBounds(windowMetrics.getBounds(), insets, info.rotation,
+                (int) (windowMetrics.getDensity() * 160));
     }
 
     /**
@@ -162,6 +171,7 @@ public class WindowManagerProxy {
 
         WindowInsets.Builder insetsBuilder = new WindowInsets.Builder(oldInsets);
         Insets navInsets = oldInsets.getInsets(WindowInsets.Type.navigationBars());
+        Insets cutoutInsets = oldInsets.getInsets(WindowInsets.Type.displayCutout());
 
         Resources systemRes = context.getResources();
         Configuration config = systemRes.getConfiguration();
@@ -169,17 +179,20 @@ public class WindowManagerProxy {
         boolean isLargeScreen = config.smallestScreenWidthDp > MIN_TABLET_WIDTH;
         boolean isGesture = isGestureNav(context);
         boolean isPortrait = config.screenHeightDp > config.screenWidthDp;
+        boolean isDefaultLandscape = isDefaultLandscape(context);
+
+        int navBarHeight = getDimenByName(systemRes,
+                isPortrait ? NAVBAR_HEIGHT : NAVBAR_HEIGHT_LANDSCAPE);
 
         int bottomNav = isLargeScreen
                 ? isTaskbarEnabled(context) ? 0 : getDimenByName(systemRes, NAVBAR_HEIGHT)
-                : (isPortrait
-                        ? getDimenByName(systemRes, NAVBAR_HEIGHT)
-                        : (isGesture
-                                ? getDimenByName(systemRes, NAVBAR_HEIGHT_LANDSCAPE)
-                                : 0));
+                : ((isPortrait != isDefaultLandscape || isGesture
+                        ? navBarHeight
+                        : 0)
+                + cutoutInsets.bottom);
         int leftNav = navInsets.left;
         int rightNav = navInsets.right;
-        if (!isLargeScreen && !isGesture && !isPortrait) {
+        if (!isLargeScreen && !isGesture && isPortrait == isDefaultLandscape) {
             // In 3-button landscape/seascape, Launcher should always have nav insets regardless if
             // it's initiated from fullscreen apps.
             int navBarWidth = getDimenByName(systemRes, NAVBAR_LANDSCAPE_LEFT_RIGHT_SIZE);
@@ -302,7 +315,7 @@ public class WindowManagerProxy {
      */
     protected List<WindowBounds> estimateWindowBounds(Context context,
             final CachedDisplayInfo displayInfo) {
-        int densityDpi = context.getResources().getConfiguration().densityDpi;
+        int densityDpi = displayInfo.densityDpi;
         final int rotation = displayInfo.rotation;
 
         int minSize = Math.min(displayInfo.size.x, displayInfo.size.y);
@@ -387,7 +400,7 @@ public class WindowManagerProxy {
             } else {
                 insets.right = Math.max(insets.right, navbarWidth);
             }
-            result.add(new WindowBounds(bounds, insets, i));
+            result.add(new WindowBounds(bounds, insets, i, densityDpi));
         }
         return result;
     }
@@ -432,6 +445,7 @@ public class WindowManagerProxy {
     protected CachedDisplayInfo getDisplayInfo(WindowMetrics windowMetrics, int rotation) {
         Point size = new Point(windowMetrics.getBounds().right, windowMetrics.getBounds().bottom);
         return new CachedDisplayInfo(size, rotation,
+                (int) (windowMetrics.getDensity() * 160),
                 windowMetrics.getWindowInsets().getDisplayCutout());
     }
 
