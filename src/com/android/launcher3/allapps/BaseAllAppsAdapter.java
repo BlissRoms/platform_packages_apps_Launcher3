@@ -44,6 +44,7 @@ import com.android.launcher3.R;
 import com.android.launcher3.allapps.search.SearchAdapterProvider;
 import com.android.launcher3.model.data.AppInfo;
 import com.android.launcher3.popup.PopupContainerWithArrow;
+import com.android.launcher3.secondarydisplay.SecondaryDisplayLauncher;
 import com.android.launcher3.touch.CustomActionsListener;
 import com.android.launcher3.views.ActivityContext;
 
@@ -360,9 +361,16 @@ public abstract class BaseAllAppsAdapter
     }
 
     private BubbleTextView getIconOnCreateSetup(ViewGroup parent) {
-        int layout = LauncherPrefs.ENABLE_TWOLINE_ALLAPPS_TOGGLE.get(
-                mActivityContext.asContext())
-                ? R.layout.all_apps_icon_twoline : R.layout.all_apps_icon;
+        boolean twoLines = LauncherPrefs.ENABLE_TWOLINE_ALLAPPS_TOGGLE.get(
+                mActivityContext.asContext());
+        int layout;
+        if (mActivityContext instanceof SecondaryDisplayLauncher sdl && sdl.isOnlyAppDrawer()) {
+            layout = twoLines
+                    ? R.layout.all_apps_icon_workspace_twoline
+                    : R.layout.all_apps_icon_workspace;
+        } else {
+            layout = twoLines ? R.layout.all_apps_icon_twoline : R.layout.all_apps_icon;
+        }
         BubbleTextView icon = (BubbleTextView) mLayoutInflater.inflate(
                 layout, parent, false);
         icon.setLongPressTimeoutFactor(1f);
